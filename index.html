@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toney Dudek: Daily Sequences</title>
+    <!-- Favicon link pointing to your custom icon file -->
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         :root {
             --dark-blue: #0b1a3a;
@@ -67,25 +69,21 @@
         }
 
         .game-header {
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            color: var(--grey-text);
             padding-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
             border-bottom: 1px solid rgba(137, 197, 247, 0.15);
+            height: 60px; /* Fixed functional structural ceiling for standard placement */
         }
 
-        .game-title {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 1.4rem;
+        .header-logo {
+            height: 100%;       /* Keeps height locked to header sizing bounds */
+            max-height: 48px;   /* Safety barrier to keep clean padding space around the PNG logo */
+            width: auto;        /* CRITICAL: Prevents your image from stretching or compressing unproportionally */
+            object-fit: contain;/* Fallback security formatting rule */
         }
-        
-        .game-title .title-tony { font-weight: bold; color: #8cd0ff; }
-        .game-title .title-dudek { font-weight: bold; color: #214ca3; }
-        .game-title .title-sequences { color: var(--pure-white); font-weight: bold; }
 
         .clock-wrapper-container {
             display: none;
@@ -729,9 +727,9 @@
         <div class="game-inner-border">
             
             <div class="game-header">
-                <div class="game-title">
-                    <span class="title-tony">Toney</span> <span class="title-dudek">Dudek</span><span style="color: #214ca3; font-weight: bold;">:</span> <span class="title-sequences" style="font-size: 1.4rem;">Daily</span>
-                </div>
+                <!-- Replaced text spans with the responsive image target code -->
+                <img src="logo.png" alt="Toney Dudek Logo" class="header-logo">
+                
                 <div class="header-widgets-wrap">
                     <div class="clock-wrapper-container" id="clock-wrapper-element">
                         <span class="clock-prepend-text">New sequence in:</span>
