@@ -451,6 +451,7 @@
             flex: 1; 
             overflow: hidden; 
             position: relative;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .top-nav-buttons-group {
@@ -497,12 +498,13 @@
             background: var(--dark-blue);
         }
 
+        /* Synced Disabled Styling for both A and Stats tabs */
         .ans-toggle-btn:disabled, .stats-toggle-btn:disabled {
-            border-color: var(--muted-grey);
-            color: var(--muted-grey);
-            background: transparent;
-            cursor: not-allowed;
-            box-shadow: none;
+            border-color: var(--muted-grey) !important;
+            color: var(--muted-grey) !important;
+            background: transparent !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
         }
         
         .stats-toggle-btn:disabled .bar-icon {
@@ -1014,6 +1016,39 @@
                 fetchUrl += `?forcedIndex=${forcedParam}`;
             }
 
+            // --- INSTANT HARD LOCK CIRCUIT BREAKER ---
+            const stats = getHistoricalUserStats();
+            const currentDayStamp = new Date().toDateString();
+            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
+
+            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
+                isQuestionFinalized = true;
+                highestActiveClue = 2;
+                currentEarnedPoints = parseInt(localStorage.getItem("td_today_score_cached") || "0");
+                
+                // Immediately shut down inputs pre-fetch to secure UI instantly
+                document.getElementById("game-input").disabled = true;
+                document.getElementById("submit-btn").disabled = true;
+
+                try {
+                    const response = await fetch(fetchUrl, {
+                        headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {}
+                    });
+                    const data = await response.json();
+                    currentQIdx = data.questionIndex;
+                    todaysQuestionData = data.question;
+
+                    await fetchFullFinalAnswersData(forcedParam);
+                    let fallbackVal = resolvedServerAnswerPayload?.answers[0] || "Answered";
+                    
+                    finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose");
+                    switchPanelTab('answers');
+                } catch(e) {
+                    console.error("Initialization error under circuit-break conditions:", e);
+                }
+                return;
+            }
+
             try {
                 const response = await fetch(fetchUrl, {
                     headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {}
@@ -1031,22 +1066,6 @@
             questionIncorrectAttempts = 0; 
             isQuestionFinalized = false;
             currentEarnedPoints = 0;
-
-            const stats = getHistoricalUserStats();
-            const currentDayStamp = new Date().toDateString();
-            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
-
-            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
-                highestActiveClue = 2;
-                currentEarnedPoints = parseInt(localStorage.getItem("td_today_score_cached") || "0");
-                
-                await fetchFullFinalAnswersData(forcedParam);
-                let fallbackVal = resolvedServerAnswerPayload?.answers[0] || "Answered";
-                
-                finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose");
-                switchPanelTab('answers');
-                return;
-            }
 
             refreshUiLayout();
             switchPanelTab('help');
