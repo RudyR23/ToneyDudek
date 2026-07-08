@@ -9,8 +9,8 @@
     <style>
         :root {
             --dark-blue: #0b1a3a;
-            /* Lightened up the main background gradient channels slightly */
-            --body-bg: radial-gradient(circle at bottom left, #d2ecff 0%, #3b6fb8 45%, #102347 100%);
+            /* Updated background gradient to bleed smoothly into white */
+            --body-bg: linear-gradient(135deg, #102347 0%, #3b6fb8 50%, #ffffff 100%);
             --panel-bg: rgba(14, 30, 61, 0.85);
             --light-blue: #89c5f7; 
             --accent-glow: rgba(137, 197, 247, 0.3);
@@ -26,9 +26,9 @@
             --alert-red: #ef4444;
             --purple-alt: #a855f7;
             --seq-badge-blue: #38bdf8;
-            /* Added smooth ambient shadow settings */
-            --soft-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            --button-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            /* Re-engineered ambient shadows so light comes from top-left (offsets down-right) */
+            --soft-shadow: 4px 4px 12px rgba(0, 0, 0, 0.45);
+            --button-shadow: 2px 2px 6px rgba(0, 0, 0, 0.35);
         }
 
         * {
@@ -56,7 +56,7 @@
             background-color: var(--panel-bg);
             border: 2px solid rgba(137, 197, 247, 0.25);
             border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 8px 8px 40px rgba(0, 0, 0, 0.6);
             padding: 2px;
             backdrop-filter: blur(10px);
             position: relative;
@@ -191,7 +191,6 @@
 
         .header-score-box {
             background-color: rgba(16, 37, 82, 0.85);
-            /* Modified border tracking setup to be natively orange */
             border: 1px solid var(--points-orange);
             color: var(--pure-white);
             font-weight: bold;
@@ -217,7 +216,7 @@
         .clues-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto;
+            grid-template-rows: 145px 145px; /* Hard-locked grid container row dimensions */
             row-gap: 18px; 
             column-gap: 15px;
             margin-top: 25px; 
@@ -228,6 +227,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            height: 100%;
         }
 
         .clues-container > .clue-wrapper:nth-child(1),
@@ -256,14 +256,14 @@
             color: var(--grey-text);
             position: relative;
             overflow: hidden;
-            /* Added depth shadow effect here */
-            box-shadow: var(--soft-shadow);
+            box-shadow: var(--soft-shadow); /* Left-top directional drop shadow */
         }
 
+        /* Retained directional top-left cast shadows across state upgrades */
         .clue-card.revealed {
             background-color: var(--steel-blue);
             color: var(--pure-white);
-            box-shadow: 0 4px 14px var(--accent-glow);
+            box-shadow: var(--soft-shadow);
             border: 1px solid var(--light-blue);
             font-weight: 700;
         }
@@ -329,14 +329,13 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
-            /* Added button shadow tracking */
-            box-shadow: var(--button-shadow);
+            box-shadow: var(--button-shadow); /* Left-top directional drop shadow */
         }
 
         .reveal-btn:hover:not(:disabled) {
             background: var(--light-blue);
             color: var(--dark-blue);
-            box-shadow: 0 0 10px var(--light-blue);
+            box-shadow: var(--button-shadow);
         }
 
         .reveal-btn:disabled {
@@ -375,7 +374,7 @@
 
         .card-input-element.state-correct {
             border-color: var(--success-green) !important;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6) !important;
+            box-shadow: var(--button-shadow) !important;
             color: var(--success-green) !important;
             background-color: rgba(16, 185, 129, 0.1) !important;
             font-size: 0.75rem !important;
@@ -384,7 +383,7 @@
 
         .card-input-element.state-incorrect {
             border-color: var(--alert-red) !important;
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.6) !important;
+            box-shadow: var(--button-shadow) !important;
             color: var(--alert-red) !important;
             background-color: rgba(239, 68, 68, 0.1) !important;
             font-size: 0.75rem !important;
@@ -410,7 +409,7 @@
         .square-submit-btn:hover:not(:disabled) {
             background: var(--light-blue);
             color: var(--dark-blue);
-            box-shadow: 0 0 10px var(--light-blue);
+            box-shadow: var(--button-shadow);
         }
 
         .square-submit-btn:disabled {
@@ -437,10 +436,10 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            /* Added depth element shading to info panel wrapper container */
             box-shadow: var(--soft-shadow);
         }
 
+        /* Standardized layout structural sizing across active conditional text payloads */
         .inline-feedback-container {
             background-color: rgba(5, 12, 28, 0.6);
             border: 1px solid rgba(137, 197, 247, 0.15);
@@ -451,7 +450,9 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            flex: 1; 
+            flex-grow: 1;
+            height: 100%;
+            min-height: 350px; 
             overflow: hidden; 
             position: relative;
         }
@@ -494,7 +495,7 @@
         .help-toggle-btn.active-nav, .ans-toggle-btn.active-nav, .stats-toggle-btn.active-nav {
             background: var(--light-blue);
             color: var(--dark-blue);
-            box-shadow: 0 0 8px var(--light-blue);
+            box-shadow: var(--button-shadow);
         }
 
         .stats-toggle-btn.active-nav .bar-icon {
@@ -682,11 +683,11 @@
             background-color: #9333ea;
         }
 
-        /* Shifted line down to clean alignment anchors pinned bottom right of the info box area bounds */
+        /* Nudged signature element 15px to the left */
         .credits-signature {
             position: absolute;
             bottom: 8px;
-            right: 25px;
+            right: 40px;
             font-size: 0.7rem;
             color: var(--muted-grey);
             font-weight: bold;
@@ -701,9 +702,7 @@
             color: var(--light-blue);
         }
 
-        /* Locked default panel view to none with absolute priority hierarchy rules */
         .dev-sandbox-toolbox {
-            display: none !important;
             margin-top: 20px;
             width: 100%;
             max-width: 900px;
@@ -827,12 +826,12 @@
                 </div>
             </div>
 
-            <!-- Placed the target trigger handler onto the rudyr23 text snippet -->
             <div class="credits-signature">made by <span class="interactive-cred-trigger" onclick="challengeDevAccessGate()">rudyr23</span>, 2026.</div>
         </div>
     </div>
 
-    <div class="dev-sandbox-toolbox" id="secret-dev-panel">
+    <!-- Hardcoded explicit hidden default priority onto tag container node markup -->
+    <div class="dev-sandbox-toolbox" id="secret-dev-panel" style="display: none !important;">
         <div class="dev-title">⚠️ Local Testing Sandbox Tools</div>
         <button class="dev-btn" onclick="devResetTodayLockout()">Reset Today's Lockout Cookie</button>
         <div>
@@ -858,7 +857,6 @@
         let userFinalAnswerLabel = "None";
         let finalStatusOutcome = "lose"; 
 
-        // Evaluates secret password sequence
         function challengeDevAccessGate() {
             const promptEntry = prompt("Enter developer verification password:");
             if (promptEntry === "ivanjerzy1713") {
@@ -962,7 +960,6 @@
             devBuildQuestionDropdownOptions();
             renderStaticBarGraphIcon();
 
-            // Retain open panel view across session refreshes if sandbox override parameter was flagged
             if (localStorage.getItem("dev_force_q_index") !== null) {
                 document.getElementById("secret-dev-panel").style.setProperty("display", "flex", "important");
             }
