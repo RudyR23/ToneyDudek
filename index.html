@@ -682,11 +682,11 @@
             background-color: #9333ea;
         }
 
-        /* Shifted left and tracking nicely against the side of the info panel layout bounds */
+        /* Shifted line down to clean alignment anchors pinned bottom right of the info box area bounds */
         .credits-signature {
             position: absolute;
             bottom: 8px;
-            left: 523px;
+            right: 25px;
             font-size: 0.7rem;
             color: var(--muted-grey);
             font-weight: bold;
@@ -701,9 +701,9 @@
             color: var(--light-blue);
         }
 
-        /* Set to display none natively to hide behind secret entry validation protocol */
+        /* Locked default panel view to none with absolute priority hierarchy rules */
         .dev-sandbox-toolbox {
-            display: none;
+            display: none !important;
             margin-top: 20px;
             width: 100%;
             max-width: 900px;
@@ -862,7 +862,7 @@
         function challengeDevAccessGate() {
             const promptEntry = prompt("Enter developer verification password:");
             if (promptEntry === "ivanjerzy1713") {
-                document.getElementById("secret-dev-panel").style.display = "flex";
+                document.getElementById("secret-dev-panel").style.setProperty("display", "flex", "important");
                 alert("Access granted. Testing sandbox tools unlocked.");
             } else if (promptEntry !== null) {
                 alert("Access denied. Invalid signature configuration.");
@@ -964,7 +964,7 @@
 
             // Retain open panel view across session refreshes if sandbox override parameter was flagged
             if (localStorage.getItem("dev_force_q_index") !== null) {
-                document.getElementById("secret-dev-panel").style.display = "flex";
+                document.getElementById("secret-dev-panel").style.setProperty("display", "flex", "important");
             }
 
             const forcedParam = localStorage.getItem("dev_force_q_index") || "";
