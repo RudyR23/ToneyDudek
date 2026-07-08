@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toney Dudek: Daily Sequences</title>
-    <!-- Favicon link pointing to your custom icon file -->
-    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         :root {
             --dark-blue: #0b1a3a;
-            /* Updated background gradient to bleed smoothly into white */
-            --body-bg: linear-gradient(135deg, #102347 0%, #3b6fb8 50%, #ffffff 100%);
+            --body-bg: radial-gradient(circle at bottom left, #bce3ff 0%, #295ca6 45%, #0a1833 100%);
             --panel-bg: rgba(14, 30, 61, 0.85);
             --light-blue: #89c5f7; 
             --accent-glow: rgba(137, 197, 247, 0.3);
@@ -26,9 +23,6 @@
             --alert-red: #ef4444;
             --purple-alt: #a855f7;
             --seq-badge-blue: #38bdf8;
-            /* Re-engineered ambient shadows so light comes from top-left (offsets down-right) */
-            --soft-shadow: 4px 4px 12px rgba(0, 0, 0, 0.45);
-            --button-shadow: 2px 2px 6px rgba(0, 0, 0, 0.35);
         }
 
         * {
@@ -56,7 +50,7 @@
             background-color: var(--panel-bg);
             border: 2px solid rgba(137, 197, 247, 0.25);
             border-radius: 12px;
-            box-shadow: 8px 8px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             padding: 2px;
             backdrop-filter: blur(10px);
             position: relative;
@@ -73,21 +67,25 @@
         }
 
         .game-header {
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: var(--grey-text);
             padding-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
             border-bottom: 1px solid rgba(137, 197, 247, 0.15);
-            height: 60px;
         }
 
-        .header-logo {
-            height: 100%;       
-            max-height: 48px;   
-            width: auto;        
-            object-fit: contain;
+        .game-title {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.4rem;
         }
+        
+        .game-title .title-tony { font-weight: bold; color: #8cd0ff; }
+        .game-title .title-dudek { font-weight: bold; color: #214ca3; }
+        .game-title .title-sequences { color: var(--pure-white); font-weight: bold; }
 
         .clock-wrapper-container {
             display: none;
@@ -125,12 +123,12 @@
 
         @keyframes redPulse {
             0% { border-color: var(--alert-red); box-shadow: 0 0 14px rgba(239, 68, 68, 0.9); }
-            100% { border-color: var(--points-orange); box-shadow: none; }
+            100% { border-color: rgba(137, 197, 247, 0.4); box-shadow: none; }
         }
 
         @keyframes greenPulse {
             0% { border-color: var(--success-green); box-shadow: 0 0 14px rgba(16, 185, 129, 0.9); }
-            100% { border-color: var(--points-orange); box-shadow: none; }
+            100% { border-color: rgba(137, 197, 247, 0.4); box-shadow: none; }
         }
 
         .orange-score-text { color: var(--points-orange); }
@@ -191,7 +189,7 @@
 
         .header-score-box {
             background-color: rgba(16, 37, 82, 0.85);
-            border: 1px solid var(--points-orange);
+            border: 1px solid rgba(137, 197, 247, 0.4);
             color: var(--pure-white);
             font-weight: bold;
             font-size: 0.75rem;
@@ -216,7 +214,7 @@
         .clues-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 145px 145px; /* Hard-locked grid container row dimensions */
+            grid-template-rows: auto auto;
             row-gap: 18px; 
             column-gap: 15px;
             margin-top: 25px; 
@@ -227,7 +225,6 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            height: 100%;
         }
 
         .clues-container > .clue-wrapper:nth-child(1),
@@ -256,14 +253,12 @@
             color: var(--grey-text);
             position: relative;
             overflow: hidden;
-            box-shadow: var(--soft-shadow); /* Left-top directional drop shadow */
         }
 
-        /* Retained directional top-left cast shadows across state upgrades */
         .clue-card.revealed {
             background-color: var(--steel-blue);
             color: var(--pure-white);
-            box-shadow: var(--soft-shadow);
+            box-shadow: 0 0 15px var(--accent-glow);
             border: 1px solid var(--light-blue);
             font-weight: 700;
         }
@@ -329,13 +324,12 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
-            box-shadow: var(--button-shadow); /* Left-top directional drop shadow */
         }
 
         .reveal-btn:hover:not(:disabled) {
             background: var(--light-blue);
             color: var(--dark-blue);
-            box-shadow: var(--button-shadow);
+            box-shadow: 0 0 10px var(--light-blue);
         }
 
         .reveal-btn:disabled {
@@ -374,7 +368,7 @@
 
         .card-input-element.state-correct {
             border-color: var(--success-green) !important;
-            box-shadow: var(--button-shadow) !important;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6) !important;
             color: var(--success-green) !important;
             background-color: rgba(16, 185, 129, 0.1) !important;
             font-size: 0.75rem !important;
@@ -383,7 +377,7 @@
 
         .card-input-element.state-incorrect {
             border-color: var(--alert-red) !important;
-            box-shadow: var(--button-shadow) !important;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.6) !important;
             color: var(--alert-red) !important;
             background-color: rgba(239, 68, 68, 0.1) !important;
             font-size: 0.75rem !important;
@@ -403,13 +397,12 @@
             justify-content: center;
             transition: all 0.2s;
             flex-shrink: 0;
-            box-shadow: var(--button-shadow);
         }
 
         .square-submit-btn:hover:not(:disabled) {
             background: var(--light-blue);
             color: var(--dark-blue);
-            box-shadow: var(--button-shadow);
+            box-shadow: 0 0 10px var(--light-blue);
         }
 
         .square-submit-btn:disabled {
@@ -436,10 +429,8 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: var(--soft-shadow);
         }
 
-        /* Standardized layout structural sizing across active conditional text payloads */
         .inline-feedback-container {
             background-color: rgba(5, 12, 28, 0.6);
             border: 1px solid rgba(137, 197, 247, 0.15);
@@ -450,9 +441,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            flex-grow: 1;
-            height: 100%;
-            min-height: 350px; 
+            flex: 1; 
             overflow: hidden; 
             position: relative;
         }
@@ -480,7 +469,6 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
-            box-shadow: var(--button-shadow);
         }
 
         .help-toggle-btn:hover:not(:disabled), .ans-toggle-btn:hover:not(:disabled), .stats-toggle-btn:hover:not(:disabled) {
@@ -495,7 +483,7 @@
         .help-toggle-btn.active-nav, .ans-toggle-btn.active-nav, .stats-toggle-btn.active-nav {
             background: var(--light-blue);
             color: var(--dark-blue);
-            box-shadow: var(--button-shadow);
+            box-shadow: 0 0 8px var(--light-blue);
         }
 
         .stats-toggle-btn.active-nav .bar-icon {
@@ -507,7 +495,6 @@
             color: var(--muted-grey);
             background: transparent;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
         .bar-icon-wrapper {
@@ -617,7 +604,6 @@
             align-items: center;
             gap: 8px;
             transition: all 0.2s;
-            box-shadow: var(--button-shadow);
         }
 
         .continue-stats-panel-btn:hover {
@@ -676,30 +662,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--button-shadow);
         }
 
         .share-btn:hover {
             background-color: #9333ea;
         }
 
-        /* Nudged signature element 15px to the left */
         .credits-signature {
             position: absolute;
             bottom: 8px;
-            right: 40px;
+            right: 12px;
             font-size: 0.7rem;
             color: var(--muted-grey);
             font-weight: bold;
-        }
-        
-        .interactive-cred-trigger {
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-        
-        .interactive-cred-trigger:hover {
-            color: var(--light-blue);
         }
 
         .dev-sandbox-toolbox {
@@ -710,6 +685,7 @@
             border: 2px dashed #f59e0b;
             border-radius: 8px;
             padding: 15px;
+            display: flex;
             flex-wrap: wrap;
             gap: 15px;
             align-items: center;
@@ -745,6 +721,103 @@
             border-radius: 4px;
             font-size: 0.8rem;
         }
+
+        /* ==========================================================================
+           MOBILE RESPONSIVENESS OVERRIDES (Screens 768px wide and below)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                min-height: auto;
+            }
+
+            /* Remove rigid height limits so page can scroll naturally */
+            .game-overlay {
+                height: auto;
+                min-height: unset;
+                box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.5);
+            }
+
+            .game-inner-border {
+                height: auto;
+                padding: 15px;
+            }
+
+            /* Push the ALT and Score section lower to avoid overlapping the header */
+            .meta-sub-row {
+                position: static;
+                grid-template-columns: 1fr;
+                height: auto;
+                margin-top: 15px;
+                margin-bottom: 5px;
+            }
+
+            /* Stack the main sections vertically: Clues on top, Info Box underneath */
+            .game-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding-top: 0;
+            }
+
+            /* Restructure the 4 clue cards container */
+            .clues-container {
+                grid-template-columns: 1fr 1fr; /* Retains 2x2 layout */
+                grid-template-rows: auto auto;   /* Unlocks rigid desktop row heights */
+                row-gap: 12px;
+                column-gap: 12px;
+                margin-top: 10px;
+                margin-bottom: 0;
+            }
+
+            /* Clear alignment adjustments used on desktop */
+            .clues-container > .clue-wrapper:nth-child(1),
+            .clues-container > .clue-wrapper:nth-child(2),
+            .clues-container > .clue-wrapper:nth-child(3),
+            .clues-container > .clue-wrapper:nth-child(4) {
+                position: static;
+                top: 0;
+            }
+
+            /* Make cards adapt beautifully to text wrapper layout constraints */
+            .clue-card {
+                height: 115px; 
+                padding: 8px;
+            }
+
+            /* Re-align the Info Box wrapper now that it sits underneath */
+            .control-panel {
+                position: static;
+                top: 0;
+                height: auto;
+            }
+
+            .input-box-wrapper {
+                height: auto;
+                padding: 12px;
+            }
+
+            /* Keep the Info/Feedback box clean and readable on smaller viewports */
+            .inline-feedback-container {
+                min-height: 280px;
+                height: auto;
+                padding: 12px;
+            }
+
+            /* Boost font-size to exactly 16px to completely block mobile browser auto-zoom bugs */
+            .card-input-element {
+                font-size: 16px !important;
+            }
+
+            /* Relocate credits slightly for better thumb padding */
+            .credits-signature {
+                position: relative;
+                bottom: 0;
+                right: 0;
+                text-align: center;
+                margin-top: 20px;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -753,8 +826,9 @@
         <div class="game-inner-border">
             
             <div class="game-header">
-                <img src="logo.png" alt="Toney Dudek Logo" class="header-logo">
-                
+                <div class="game-title">
+                    <span class="title-tony">Toney</span> <span class="title-dudek">Dudek</span><span style="color: #214ca3; font-weight: bold;">:</span> <span class="title-sequences" style="font-size: 1.4rem;">Daily</span>
+                </div>
                 <div class="header-widgets-wrap">
                     <div class="clock-wrapper-container" id="clock-wrapper-element">
                         <span class="clock-prepend-text">New sequence in:</span>
@@ -826,12 +900,11 @@
                 </div>
             </div>
 
-            <div class="credits-signature">made by <span class="interactive-cred-trigger" onclick="challengeDevAccessGate()">rudyr23</span>, 2026.</div>
+            <div class="credits-signature">made by rudyr23, 2026.</div>
         </div>
     </div>
 
-    <!-- Hardcoded explicit hidden default priority onto tag container node markup -->
-    <div class="dev-sandbox-toolbox" id="secret-dev-panel" style="display: none !important;">
+    <div class="dev-sandbox-toolbox">
         <div class="dev-title">⚠️ Local Testing Sandbox Tools</div>
         <button class="dev-btn" onclick="devResetTodayLockout()">Reset Today's Lockout Cookie</button>
         <div>
@@ -842,9 +915,10 @@
     </div>
 
     <script>
+        // CLIENT FRONTEND JAVASCRIPT - DATA IS SECURED ON THE BACKEND
         let currentQIdx = 0;
-        let todaysQuestionData = null; 
-        let resolvedServerAnswerPayload = null; 
+        let todaysQuestionData = null; // Will receive clues/metadata from server
+        let resolvedServerAnswerPayload = null; // Will receive validation metrics upon win/loss
 
         let highestActiveClue = -1; 
         let questionIncorrectAttempts = 0; 
@@ -856,16 +930,6 @@
         let activePanelTab = "help"; 
         let userFinalAnswerLabel = "None";
         let finalStatusOutcome = "lose"; 
-
-        function challengeDevAccessGate() {
-            const promptEntry = prompt("Enter developer verification password:");
-            if (promptEntry === "ivanjerzy1713") {
-                document.getElementById("secret-dev-panel").style.setProperty("display", "flex", "important");
-                alert("Access granted. Testing sandbox tools unlocked.");
-            } else if (promptEntry !== null) {
-                alert("Access denied. Invalid signature configuration.");
-            }
-        }
 
         function getHistoricalUserStats() {
             let stats = localStorage.getItem("td_sequence_daily_stats");
@@ -960,10 +1024,6 @@
             devBuildQuestionDropdownOptions();
             renderStaticBarGraphIcon();
 
-            if (localStorage.getItem("dev_force_q_index") !== null) {
-                document.getElementById("secret-dev-panel").style.setProperty("display", "flex", "important");
-            }
-
             const forcedParam = localStorage.getItem("dev_force_q_index") || "";
             let fetchUrl = `/api/game`;
             if (forcedParam !== "") {
@@ -996,6 +1056,7 @@
                 highestActiveClue = 2;
                 currentEarnedPoints = parseInt(localStorage.getItem("td_today_score_cached") || "0");
                 
+                // Get complete data endpoints to re-render completed layouts
                 await fetchFullFinalAnswersData(forcedParam);
                 let fallbackVal = resolvedServerAnswerPayload?.answers[0] || "Answered";
                 
@@ -1012,6 +1073,7 @@
             let fetchUrl = `/api/game`;
             if (forcedParam) fetchUrl += `?forcedIndex=${forcedParam}`;
             
+            // To get full info on a completed day safely, submit empty payload post
             const res = await fetch(fetchUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1212,6 +1274,7 @@
             }
             if (!userText.trim()) return;
 
+            // Submit securely via POST to the backend API endpoint
             const forcedParam = localStorage.getItem("dev_force_q_index") || "";
             let apiEndpoint = `/api/game`;
             if (forcedParam !== "") apiEndpoint += `?forcedIndex=${forcedParam}`;
@@ -1453,6 +1516,7 @@
             defaultOpt.textContent = "-- Choose Variable Override --";
             select.appendChild(defaultOpt);
 
+            // Hardcoded labels just for local development mapping selection box options
             for (let idx = 0; idx < 10; idx++) {
                 let opt = document.createElement("option");
                 opt.value = idx;
