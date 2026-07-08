@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toney Dudek: Daily Sequences</title>
+    <style>
+        :root {
+            --dark-blue: #0b1a3a;
+            --body-bg: radial-gradient(circle at bottom left, #bce3ff 0%, #295ca6 45%, #0a1833 100%);
+            --panel-bg: rgba(14, 30, 61, 0.85);
+            --light-blue: #89c5f7; 
+            --accent-glow: rgba(137, 197, 247, 0.3);
+            --grey-text: #96b4db;
+            --muted-grey: #3b5680;
+            --off-white: #e2f0fd;
+            --card-inactive: rgba(21, 44, 87, 0.9);
+            --pure-white: #ffffff;
+            --points-orange: #ff8c00; 
+            --steel-blue: #255294; 
+            --answer-highlight: #7dd3fc;
+            --success-green: #10b981;
+            --alert-red: #ef4444;
+            --purple-alt: #a855f7;
+            --seq-badge-blue: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--body-bg);
+            color: var(--pure-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-overlay {
+            width: 100%;
+            max-width: 900px;
+            height: 540px; 
+            background-color: var(--panel-bg);
+            border: 2px solid rgba(137, 197, 247, 0.25);
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            padding: 2px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .game-inner-border {
+            border: 1px solid rgba(137, 197, 247, 0.2);
+            border-radius: 10px;
+            padding: 22px 25px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .game-header {
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: var(--grey-text);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(137, 197, 247, 0.15);
+        }
+
+        .game-title {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.4rem;
+        }
+        
+        .game-title .title-tony { font-weight: bold; color: #8cd0ff; }
+        .game-title .title-dudek { font-weight: bold; color: #214ca3; }
+        .game-title .title-sequences { color: var(--pure-white); font-weight: bold; }
+
+        .clock-wrapper-container {
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .clock-prepend-text {
+            color: var(--pure-white);
+            font-weight: bold;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-clock-box {
+            background-color: var(--dark-blue);
+            border: 1px solid var(--seq-badge-blue);
+            color: var(--seq-badge-blue);
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 1px 10px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 22px;
+            font-family: monospace;
+        }
+
+        .glow-red { animation: redPulse 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glow-green { animation: greenPulse 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        @keyframes redPulse {
+            0% { border-color: var(--alert-red); box-shadow: 0 0 14px rgba(239, 68, 68, 0.9); }
+            100% { border-color: rgba(137, 197, 247, 0.4); box-shadow: none; }
+        }
+
+        @keyframes greenPulse {
+            0% { border-color: var(--success-green); box-shadow: 0 0 14px rgba(16, 185, 129, 0.9); }
+            100% { border-color: rgba(137, 197, 247, 0.4); box-shadow: none; }
+        }
+
+        .orange-score-text { color: var(--points-orange); }
+        .green-rule-text { color: var(--success-green); }
+        .red-rule-text { color: var(--alert-red); }
+
+        .meta-sub-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 30px;
+            height: 22px;
+            position: relative;
+            top: 15px; 
+            z-index: 10;
+        }
+
+        .meta-left-badges {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            width: 100%;
+        }
+
+        .meta-left-inner-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .seq-badge-box {
+            background-color: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--seq-badge-blue);
+            color: var(--seq-badge-blue);
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            height: 22px;
+            display: flex;
+            align-items: center;
+        }
+
+        .alt-badge-box {
+            background-color: rgba(168, 85, 247, 0.15);
+            border: 1px solid var(--purple-alt);
+            color: var(--purple-alt);
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-score-box {
+            background-color: rgba(16, 37, 82, 0.85);
+            border: 1px solid rgba(137, 197, 247, 0.4);
+            color: var(--pure-white);
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 30px;
+            flex-grow: 1;
+            padding-top: 15px;
+        }
+
+        .clues-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            row-gap: 18px; 
+            column-gap: 15px;
+            margin-top: 25px; 
+            margin-bottom: 5px;
+        }
+
+        .clue-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .clues-container > .clue-wrapper:nth-child(1),
+        .clues-container > .clue-wrapper:nth-child(2) {
+            position: relative;
+            top: -3px;
+        }
+
+        .clues-container > .clue-wrapper:nth-child(3),
+        .clues-container > .clue-wrapper:nth-child(4) {
+            position: relative;
+            top: -15px;
+        }
+
+        .clue-card {
+            background-color: var(--card-inactive);
+            border: 1px solid rgba(137, 197, 247, 0.15); 
+            border-radius: 8px;
+            height: 112px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            text-align: center;
+            color: var(--grey-text);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clue-card.revealed {
+            background-color: var(--steel-blue);
+            color: var(--pure-white);
+            box-shadow: 0 0 15px var(--accent-glow);
+            border: 1px solid var(--light-blue);
+            font-weight: 700;
+        }
+
+        .hint-text-wrapper {
+            font-size: 0.95rem;
+            font-weight: 700;
+            width: 100%;
+            word-wrap: break-word;
+            z-index: 5;
+        }
+
+        .club-sub-line {
+            display: block;
+            font-size: 0.8rem;
+            color: #b0d4ff;
+            font-weight: normal;
+            margin-top: 4px;
+        }
+
+        .alt-clue-span {
+            font-weight: normal; 
+            font-size: 0.9rem; 
+            color: var(--grey-text);
+        }
+
+        .clue-placeholder {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-text);
+            letter-spacing: 1.5px;
+            z-index: 5;
+        }
+
+        .card-qm {
+            position: absolute;
+            color: var(--light-blue);
+            font-weight: bold;
+            user-select: none;
+            pointer-events: none;
+            line-height: 1;
+            z-index: 1;
+        }
+
+        .card-inline-metric {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--light-blue); 
+            margin-top: 6px;
+            z-index: 5;
+        }
+
+        .reveal-btn {
+            margin-top: 6px;
+            background: transparent;
+            border: 1px solid var(--light-blue);
+            color: var(--light-blue);
+            padding: 5px 10px;
+            height: 28px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .reveal-btn:hover:not(:disabled) {
+            background: var(--light-blue);
+            color: var(--dark-blue);
+            box-shadow: 0 0 10px var(--light-blue);
+        }
+
+        .reveal-btn:disabled {
+            border-color: var(--muted-grey);
+            color: var(--muted-grey);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .card-input-element {
+            background-color: rgba(5, 12, 28, 0.6);
+            border: 1px solid var(--light-blue);
+            color: var(--pure-white);
+            padding: 5px 10px;
+            height: 28px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            outline: none;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .card-input-element::placeholder {
+            color: var(--light-blue);
+            opacity: 0.8;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .card-input-element:disabled {
+            cursor: not-allowed;
+        }
+
+        .card-input-element.state-correct {
+            border-color: var(--success-green) !important;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6) !important;
+            color: var(--success-green) !important;
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            font-size: 0.75rem !important;
+            text-transform: uppercase;
+        }
+
+        .card-input-element.state-incorrect {
+            border-color: var(--alert-red) !important;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.6) !important;
+            color: var(--alert-red) !important;
+            background-color: rgba(239, 68, 68, 0.1) !important;
+            font-size: 0.75rem !important;
+            text-transform: uppercase;
+        }
+
+        .square-submit-btn {
+            background: transparent;
+            border: 1px solid var(--light-blue);
+            color: var(--light-blue);
+            height: 28px;
+            width: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .square-submit-btn:hover:not(:disabled) {
+            background: var(--light-blue);
+            color: var(--dark-blue);
+            box-shadow: 0 0 10px var(--light-blue);
+        }
+
+        .square-submit-btn:disabled {
+            border-color: var(--muted-grey);
+            color: var(--muted-grey);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            top: -22px; 
+            height: calc(100% + 22px);
+        }
+
+        .input-box-wrapper {
+            background-color: var(--card-inactive);
+            border: 1px solid rgba(137, 197, 247, 0.15);
+            border-radius: 8px;
+            padding: 16px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .inline-feedback-container {
+            background-color: rgba(5, 12, 28, 0.6);
+            border: 1px solid rgba(137, 197, 247, 0.15);
+            border-radius: 6px;
+            padding: 14px;
+            font-size: 0.95rem;
+            color: var(--off-white);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            flex: 1; 
+            overflow: hidden; 
+            position: relative;
+        }
+
+        .top-nav-buttons-group {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            display: flex;
+            gap: 6px;
+            z-index: 100;
+        }
+
+        .help-toggle-btn, .ans-toggle-btn, .stats-toggle-btn {
+            background: rgba(137, 197, 247, 0.2);
+            border: 1px solid var(--light-blue);
+            color: var(--light-blue);
+            border-radius: 4px;
+            width: 26px;
+            height: 26px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .help-toggle-btn:hover:not(:disabled), .ans-toggle-btn:hover:not(:disabled), .stats-toggle-btn:hover:not(:disabled) {
+            background: var(--light-blue);
+            color: var(--dark-blue);
+        }
+        
+        .stats-toggle-btn:hover:not(:disabled) .bar-icon {
+            background: var(--dark-blue);
+        }
+
+        .help-toggle-btn.active-nav, .ans-toggle-btn.active-nav, .stats-toggle-btn.active-nav {
+            background: var(--light-blue);
+            color: var(--dark-blue);
+            box-shadow: 0 0 8px var(--light-blue);
+        }
+
+        .stats-toggle-btn.active-nav .bar-icon {
+            background: var(--dark-blue);
+        }
+
+        .ans-toggle-btn:disabled {
+            border-color: var(--muted-grey);
+            color: var(--muted-grey);
+            background: transparent;
+            cursor: not-allowed;
+        }
+
+        .bar-icon-wrapper {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
+            width: 14px;
+            height: 12px;
+        }
+
+        .bar-icon {
+            width: 2px;
+            background: #ffffff;
+            border-radius: 1px;
+            transition: background 0.2s;
+        }
+
+        .stats-toggle-btn:not(.active-nav) .bar-icon {
+            background: var(--light-blue);
+        }
+
+        .feedback-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding-right: 95px; 
+        }
+        
+        .feedback-title.win { color: #10b981; }
+        .feedback-title.lose { color: #ef4444; }
+        .feedback-title.alert { color: #eab308; }
+        .feedback-title.info { color: #7dd3fc; }
+        .feedback-title.summary { color: #7dd3fc; }
+
+        .feedback-msg {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .rules-bullet-list {
+            list-style-type: disc;
+            margin-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 0px;
+        }
+
+        .section-header-pill {
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #f8fafc;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            background-color: rgba(137, 197, 247, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            align-self: flex-start;
+            width: max-content;
+        }
+
+        .feedback-reveal-text {
+            font-weight: normal;
+            font-size: 1.65rem; 
+            color: var(--answer-highlight);
+            margin-top: 4px;
+            line-height: 1.2;
+            font-family: inherit;
+        }
+
+        .feedback-secondary-reveal {
+            font-size: 0.88rem;
+            font-weight: normal;
+            color: var(--grey-text);
+            margin-top: 2px;
+            margin-bottom: 4px;
+            font-family: inherit;
+        }
+
+        #fb-explanation-text {
+            font-weight: 700;
+            color: var(--pure-white);
+            margin-top: 4px;
+            font-size: 0.92rem;
+            line-height: 1.35;
+        }
+
+        .highlighted-explanation-span {
+            color: var(--answer-highlight);
+        }
+
+        .continue-stats-panel-btn {
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--seq-badge-blue);
+            color: var(--seq-badge-blue);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin: 12px auto 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .continue-stats-panel-btn:hover {
+            background: var(--seq-badge-blue);
+            color: var(--dark-blue);
+        }
+
+        .continue-stats-panel-btn:hover .bar-icon {
+            background: var(--dark-blue);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+
+        .stat-box {
+            background: rgba(16, 37, 82, 0.6);
+            border: 1px solid rgba(137, 197, 247, 0.2);
+            border-radius: 6px;
+            padding: 8px 4px;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--points-orange);
+            line-height: 1.1;
+        }
+
+        .stat-lbl {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            color: var(--grey-text);
+            margin-top: 3px;
+        }
+
+        .share-btn {
+            background-color: var(--purple-alt);
+            color: var(--pure-white);
+            border: none;
+            border-radius: 4px;
+            height: 24px;
+            padding: 0 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 6px;
+            font-size: 0.75rem;
+            width: 100%;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-btn:hover {
+            background-color: #9333ea;
+        }
+
+        .credits-signature {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            font-size: 0.7rem;
+            color: var(--muted-grey);
+            font-weight: bold;
+        }
+
+        .dev-sandbox-toolbox {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 900px;
+            background: rgba(20, 20, 30, 0.9);
+            border: 2px dashed #f59e0b;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .dev-title {
+            color: #f59e0b;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            width: 100%;
+            margin-bottom: -5px;
+        }
+
+        .dev-btn {
+            background: #f59e0b;
+            color: #000;
+            border: none;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .dev-btn:hover { background: #d97706; }
+
+        .dev-select {
+            background: #27272a;
+            color: #fff;
+            border: 1px solid #f59e0b;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-overlay">
+        <div class="game-inner-border">
+            
+            <div class="game-header">
+                <div class="game-title">
+                    <span class="title-tony">Toney</span> <span class="title-dudek">Dudek</span><span style="color: #214ca3; font-weight: bold;">:</span> <span class="title-sequences" style="font-size: 1.4rem;">Daily</span>
+                </div>
+                <div class="header-widgets-wrap">
+                    <div class="clock-wrapper-container" id="clock-wrapper-element">
+                        <span class="clock-prepend-text">New sequence in:</span>
+                        <div class="header-clock-box" id="header-countdown-clock">00:00:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="meta-sub-row">
+                <div class="meta-left-badges">
+                    <div class="meta-left-inner-group">
+                        <div class="seq-badge-box" id="header-q-idx">Sequence #1</div>
+                        <div class="alt-badge-box" id="alt-question-badge">ALT</div>
+                    </div>
+                    <div class="header-score-box" id="header-score-box-element"><span class="orange-score-text" id="total-score-val">0</span>&nbsp;<span class="orange-score-text" id="score-unit-text">POINTS</span></div>
+                </div>
+            </div>
+
+            <div class="game-grid">
+                <div class="clues-container">
+                    <div class="clue-wrapper">
+                        <div class="clue-card" id="card-0"><span class="clue-placeholder">CLUE 1</span></div>
+                        <button class="reveal-btn" id="rev-btn-0" onclick="triggerManualReveal(0)">Reveal</button>
+                    </div>
+
+                    <div class="clue-wrapper">
+                        <div class="clue-card" id="card-1"><span class="clue-placeholder">CLUE 2</span></div>
+                        <button class="reveal-btn" id="rev-btn-1" onclick="triggerManualReveal(1)">Reveal</button>
+                    </div>
+
+                    <div class="clue-wrapper">
+                        <div class="clue-card" id="card-2"><span class="clue-placeholder">CLUE 3</span></div>
+                        <button class="reveal-btn" id="rev-btn-2" onclick="triggerManualReveal(2)">Reveal</button>
+                    </div>
+
+                    <div class="clue-wrapper">
+                        <div class="clue-card" id="card-3"></div>
+                        <div style="display: flex; gap: 6px; margin-top: 6px; width: 100%;">
+                            <input type="text" class="card-input-element" id="game-input" placeholder="enter answer here" autocomplete="off" oninput="clearInputStateGlow()" disabled style="flex-grow: 1;">
+                            <button class="square-submit-btn" id="submit-btn" onclick="processGuess()" disabled>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 10 4 15 9 20"></polyline>
+                                    <path d="M20 4v7a4 4 0 0 1-4 4H4"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="input-box-wrapper">
+                        
+                        <div class="inline-feedback-container" id="feedback-panel">
+                            <div class="top-nav-buttons-group">
+                                <button class="help-toggle-btn" id="help-toggle-action" onclick="switchPanelTab('help')" title="How to Play">?</button>
+                                <button class="ans-toggle-btn" id="ans-toggle-action" onclick="switchPanelTab('answers')" title="View Answer" disabled>A</button>
+                                <button class="stats-toggle-btn" id="stats-toggle-action" onclick="switchPanelTab('stats')" title="View Stats">
+                                    <div class="bar-icon-wrapper" id="bar-icon-container"></div>
+                                </button>
+                            </div>
+
+                            <div id="panel-content-area" style="display: flex; flex-direction: column; height:100%; justify-content: flex-start;">
+                                <div class="feedback-title" id="fb-title">How To Play</div>
+                                <div class="feedback-msg" id="fb-msg"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="credits-signature">made by rudyr23, 2026.</div>
+        </div>
+    </div>
+
+    <div class="dev-sandbox-toolbox">
+        <div class="dev-title">⚠️ Local Testing Sandbox Tools</div>
+        <button class="dev-btn" onclick="devResetTodayLockout()">Reset Today's Lockout Cookie</button>
+        <div>
+            <label style="font-size:0.8rem; color:#f59e0b;" for="dev-q-select">Force Load Sequence:</label>
+            <select class="dev-select" id="dev-q-select" onchange="devForceLoadQuestion(this.value)">
+            </select>
+        </div>
+    </div>
+
+    <script>
+        // CLIENT FRONTEND JAVASCRIPT - DATA IS SECURED ON THE BACKEND
+        let currentQIdx = 0;
+        let todaysQuestionData = null; // Will receive clues/metadata from server
+        let resolvedServerAnswerPayload = null; // Will receive validation metrics upon win/loss
+
+        let highestActiveClue = -1; 
+        let questionIncorrectAttempts = 0; 
+        let currentEarnedPoints = 0;
+        let isQuestionFinalized = false;
+        let countdownTickerInterval = null;
+        let inputRevertTimeout = null;
+
+        let activePanelTab = "help"; 
+        let userFinalAnswerLabel = "None";
+        let finalStatusOutcome = "lose"; 
+
+        function getHistoricalUserStats() {
+            let stats = localStorage.getItem("td_sequence_daily_stats");
+            if (stats) return JSON.parse(stats);
+            return { played: 0, currentStreak: 0, maxStreak: 0, totalPoints: 0, highScore: 0, lastPlayedDayStamp: null, lastDayResult: null, lastUsedClues: 0 };
+        }
+
+        function saveHistoricalUserStats(statsObj) {
+            localStorage.setItem("td_sequence_daily_stats", JSON.stringify(statsObj));
+        }
+
+        function triggerScoreGlow(type) {
+            const element = document.getElementById("header-score-box-element");
+            element.classList.remove("glow-red", "glow-green");
+            void element.offsetWidth; 
+            element.classList.add(type === "red" ? "glow-red" : "glow-green");
+        }
+
+        function calculateCurrentAvailablePoints() {
+            if (highestActiveClue === -1 || questionIncorrectAttempts >= 2) return 0;
+            let available = 3 - highestActiveClue; 
+            return questionIncorrectAttempts === 1 ? available / 2 : available;
+        }
+
+        function updateHeaderScoreDisplay(pointsVal) {
+            let previousScore = parseInt(document.getElementById("total-score-val").textContent) || 0;
+            document.getElementById("total-score-val").textContent = pointsVal;
+            document.getElementById("score-unit-text").textContent = (pointsVal === 1) ? "POINT" : "POINTS";
+            
+            if (highestActiveClue >= 0 && !isQuestionFinalized) {
+                if (pointsVal > previousScore) {
+                    triggerScoreGlow("green");
+                } else if (pointsVal < previousScore) {
+                    triggerScoreGlow("red");
+                }
+            }
+        }
+
+        function getStaticBarGraphHtml(colorStyle) {
+            let color = colorStyle || 'currentColor';
+            return `
+                <div class="bar-icon-wrapper">
+                    <div class="bar-icon" style="height: 5px; background: ${color};"></div>
+                    <div class="bar-icon" style="height: 11px; background: ${color};"></div>
+                    <div class="bar-icon" style="height: 7px; background: ${color};"></div>
+                </div>
+            `;
+        }
+
+        function renderStaticBarGraphIcon() {
+            const container = document.getElementById("bar-icon-container");
+            container.innerHTML = getStaticBarGraphHtml(null);
+        }
+
+        function renderAbstractCardBackground() {
+            const card = document.getElementById("card-3");
+            card.innerHTML = `<span class="clue-placeholder">???</span>`;
+            
+            const qmConfig = [
+                { top: "5%", left: "10%", size: "2.8rem", rot: "-15deg" },
+                { top: "12%", left: "35%", size: "1.4rem", rot: "20deg" },
+                { top: "8%", left: "68%", size: "2.1rem", rot: "-35deg" },
+                { top: "32%", left: "15%", size: "1.9rem", rot: "45deg" },
+                { top: "44%", left: "42%", size: "2.5rem", rot: "12deg" },
+                { top: "28%", left: "80%", size: "1.6rem", rot: "-10deg" },
+                { top: "70%", left: "8%", size: "2.2rem", rot: "30deg" },
+                { top: "68%", left: "55%", size: "1.5rem", rot: "-25deg" },
+                { top: "58%", left: "78%", size: "2.7rem", rot: "18deg" },
+                { top: "48%", left: "22%", size: "1.2rem", rot: "-5deg" }
+            ];
+
+            qmConfig.forEach(cfg => {
+                let qmSpan = document.createElement("div");
+                qmSpan.className = "card-qm";
+                qmSpan.style.top = cfg.top;
+                qmSpan.style.left = cfg.left;
+                qmSpan.style.fontSize = cfg.size;
+                qmSpan.style.opacity = "0.35"; 
+                qmSpan.style.transform = `rotate(${cfg.rot})`;
+                qmSpan.textContent = "?";
+                card.appendChild(qmSpan);
+            });
+        }
+
+        function triggerManualReveal(clueIndex) {
+            if (clueIndex !== highestActiveClue + 1 || isQuestionFinalized) return;
+            highestActiveClue = clueIndex;
+            refreshUiLayout();
+        }
+
+        async function runGameInitializationLifecycle() {
+            devBuildQuestionDropdownOptions();
+            renderStaticBarGraphIcon();
+
+            const forcedParam = localStorage.getItem("dev_force_q_index") || "";
+            let fetchUrl = `/api/game`;
+            if (forcedParam !== "") {
+                fetchUrl += `?forcedIndex=${forcedParam}`;
+            }
+
+            try {
+                const response = await fetch(fetchUrl, {
+                    headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {}
+                });
+                const data = await response.json();
+                
+                currentQIdx = data.questionIndex;
+                todaysQuestionData = data.question;
+            } catch (err) {
+                console.error("Error connecting to serverless function setup:", err);
+                return;
+            }
+
+            highestActiveClue = -1; 
+            questionIncorrectAttempts = 0; 
+            isQuestionFinalized = false;
+            currentEarnedPoints = 0;
+
+            const stats = getHistoricalUserStats();
+            const currentDayStamp = new Date().toDateString();
+            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
+
+            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
+                highestActiveClue = 2;
+                currentEarnedPoints = parseInt(localStorage.getItem("td_today_score_cached") || "0");
+                
+                // Get complete data endpoints to re-render completed layouts
+                await fetchFullFinalAnswersData(forcedParam);
+                let fallbackVal = resolvedServerAnswerPayload?.answers[0] || "Answered";
+                
+                finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose");
+                switchPanelTab('answers');
+                return;
+            }
+
+            refreshUiLayout();
+            switchPanelTab('help');
+        }
+
+        async function fetchFullFinalAnswersData(forcedParam) {
+            let fetchUrl = `/api/game`;
+            if (forcedParam) fetchUrl += `?forcedIndex=${forcedParam}`;
+            
+            // To get full info on a completed day safely, submit empty payload post
+            const res = await fetch(fetchUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ guess: "####REVEAL_FORCE_STATE####" })
+            });
+            const data = await res.json();
+            resolvedServerAnswerPayload = data;
+        }
+
+        function switchPanelTab(tabName) {
+            activePanelTab = tabName;
+            
+            document.getElementById("help-toggle-action").classList.remove("active-nav");
+            document.getElementById("ans-toggle-action").classList.remove("active-nav");
+            document.getElementById("stats-toggle-action").classList.remove("active-nav");
+
+            document.getElementById(tabName === 'help' ? "help-toggle-action" : tabName === 'answers' ? "ans-toggle-action" : "stats-toggle-action").classList.add("active-nav");
+
+            const displayArea = document.getElementById("panel-content-area");
+            displayArea.innerHTML = ""; 
+
+            if (tabName === 'help') {
+                displayArea.innerHTML = `
+                    <div class="feedback-title info">How To Play</div>
+                    <div class="feedback-msg" style="display:block; margin-bottom: 0;">
+                        <ul class="rules-bullet-list">
+                            <li class="rules-bullet-item">Reveal clues to find the 4th in the sequence</li>
+                            <li class="rules-bullet-item">Reveal <span style="font-weight:bold;">CLUE 1</span> to start the game and <span class="green-rule-text" style="font-weight:bold;">gain</span> <span class="orange-score-text" style="font-weight:bold;">3 POINTS</span></li>
+                            <li class="rules-bullet-item"><span class="red-rule-text">Lose</span> <span class="orange-score-text">1 POINT</span> for each subsequent CLUE revealed</li>
+                            <li class="rules-bullet-item">Max 2 attempts per question - An incorrect first attempt will <span class="red-rule-text">halve</span> your score</li>
+                            <li class="rules-bullet-item"><span style="color:var(--purple-alt); font-weight:bold;">ALT</span> questions have multiple correct answers, sometimes alternative clues are shown to help but you only ever need to give one answer</li>
+                            <li class="rules-bullet-item" style="font-weight: bold; color: var(--answer-highlight);">New sequence every 24 hours!</li>
+                        </ul>
+                    </div>
+                `;
+            } 
+            else if (tabName === 'answers') {
+                let secondaryTextReveal = "";
+                const answersArray = resolvedServerAnswerPayload?.answers || [userFinalAnswerLabel];
+                const whyTextVal = resolvedServerAnswerPayload?.whyText || "Explanation securely verified by cloud.";
+
+                if (todaysQuestionData?.hasAlt) {
+                    let alternativesList = answersArray.filter(ans => ans.toLowerCase() !== userFinalAnswerLabel.toLowerCase());
+                    if (currentQIdx === 7 && alternativesList.length === answersArray.length) {
+                        alternativesList = ["Darren Anderton", "Darren Ambrose"];
+                    }
+                    if (alternativesList.length > 0) {
+                        secondaryTextReveal = `Also ${alternativesList.join(', ')}`;
+                    }
+                }
+
+                let statusTitle = (finalStatusOutcome === "win") ? "CONGRATULATIONS" : "UNLUCKY";
+                let statusClass = (finalStatusOutcome === "win") ? "win" : "lose";
+                let msgSummary = (finalStatusOutcome === "win") ? `Fantastic job! You earned ${currentEarnedPoints} points.` : "Better luck next time on the daily puzzle.";
+
+                displayArea.innerHTML = `
+                    <div class="feedback-title ${statusClass}">${statusTitle}</div>
+                    <div class="feedback-msg" style="display:block;">${msgSummary}</div>
+                    <div style="display:flex; flex-direction:column; margin-bottom: 2px;">
+                        <div class="section-header-pill">Answer</div>
+                        <div class="feedback-reveal-text">${userFinalAnswerLabel}</div>
+                        <div class="feedback-secondary-reveal" style="display: ${secondaryTextReveal ? 'block' : 'none'};">${secondaryTextReveal}</div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; margin-bottom: 2px;">
+                        <div class="section-header-pill">Why</div>
+                        <div id="fb-explanation-text">${whyTextVal}</div>
+                    </div>
+                    <button class="continue-stats-panel-btn" onclick="switchPanelTab('stats')">
+                        Continue to Stats ${getStaticBarGraphHtml('currentColor')}
+                    </button>
+                `;
+            } 
+            else if (tabName === 'stats') {
+                const stats = getHistoricalUserStats();
+                let statusTitle = "STATISTICS";
+                let statusClass = "summary";
+
+                let outcomeSymbol = (stats.lastPlayedDayStamp === new Date().toDateString()) ? ((stats.lastDayResult === "win") ? "✅" : "❌") : "-";
+                let todayPointsValue = (stats.lastPlayedDayStamp === new Date().toDateString()) ? (localStorage.getItem("td_today_score_cached") || "0") : "0";
+                let todayCluesValue = (stats.lastPlayedDayStamp === new Date().toDateString()) ? (stats.lastUsedClues || "0") : "0";
+                let average = stats.played > 0 ? (stats.totalPoints / stats.played).toFixed(1) : "0.0";
+
+                displayArea.innerHTML = `
+                    <div class="feedback-title ${statusClass}">${statusTitle}</div>
+                    <div style="display:flex; flex-direction:column; justify-content: space-between; height:100%;">
+                        <div>
+                            <div class="section-header-pill" style="width: max-content;">Today's Summary</div>
+                            <div class="stats-grid" id="today-stats-grid-element">
+                                <div class="stat-box"><div class="stat-val">${outcomeSymbol}</div><div class="stat-lbl">Result</div></div>
+                                <div class="stat-box"><div class="stat-val">${todayPointsValue}</div><div class="stat-lbl">Points Gained</div></div>
+                                <div class="stat-box"><div class="stat-val">${todayCluesValue}</div><div class="stat-lbl">Clues Used</div></div>
+                            </div>
+                            <button class="share-btn" id="share-today-btn" onclick="copySharePayload('today', 'share-today-btn')" style="margin-bottom: 6px;">Share Result</button>
+
+                            <div class="section-header-pill" style="margin-top: 14px; width: max-content;">All-Time Statistics</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"><div class="stat-val">${stats.played}</div><div class="stat-lbl">Played</div></div>
+                                <div class="stat-box"><div class="stat-val">${stats.currentStreak}</div><div class="stat-lbl">Current Streak</div></div>
+                                <div class="stat-box"><div class="stat-val">${stats.maxStreak}</div><div class="stat-lbl">Max Streak</div></div>
+                                <div class="stat-box"><div class="stat-val">${stats.totalPoints}</div><div class="stat-lbl">Total Points</div></div>
+                                <div class="stat-box"><div class="stat-val">${average}</div><div class="stat-lbl">Average Score</div></div>
+                                <div class="stat-box"><div class="stat-val">${stats.highScore}</div><div class="stat-lbl">High Score</div></div>
+                            </div>
+                            <button class="share-btn" id="share-alltime-btn" onclick="copySharePayload('alltime', 'share-alltime-btn')">Share Career Stats</button>
+                        </div>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    const grid = document.getElementById("today-stats-grid-element");
+                    if (grid) {
+                        const targetWidth = grid.offsetWidth;
+                        document.getElementById("share-today-btn").style.width = targetWidth + "px";
+                        document.getElementById("share-alltime-btn").style.width = targetWidth + "px";
+                    }
+                }, 1);
+            }
+        }
+
+        function clearInputStateGlow() {
+            if (inputRevertTimeout) {
+                clearTimeout(inputRevertTimeout);
+                inputRevertTimeout = null;
+            }
+            const inputField = document.getElementById("game-input");
+            if (inputField.classList.contains("state-incorrect") && questionIncorrectAttempts < 2) {
+                inputField.classList.remove("state-incorrect");
+                inputField.disabled = false;
+                inputField.value = "";
+                inputField.placeholder = "enter answer here";
+                document.getElementById("submit-btn").disabled = false;
+                inputField.focus();
+            }
+        }
+
+        function refreshUiLayout() {
+            if (!todaysQuestionData) return;
+            const q = todaysQuestionData;
+            
+            document.getElementById("header-q-idx").textContent = `Sequence #${currentQIdx + 1}`;
+            document.getElementById("alt-question-badge").style.display = q.hasAlt ? "inline-block" : "none";
+            
+            const isClueOneActive = (highestActiveClue >= 0);
+            
+            if (!isQuestionFinalized) {
+                const inputField = document.getElementById("game-input");
+                if (!inputField.classList.contains("state-incorrect")) {
+                    inputField.disabled = !isClueOneActive;
+                    if (!isClueOneActive) inputField.value = "";
+                }
+                document.getElementById("submit-btn").disabled = !isClueOneActive;
+            }
+
+            const hideBracketsUpfront = (currentQIdx === 7 || currentQIdx === 9 || !q.hasAlt);
+
+            for (let i = 0; i < 4; i++) {
+                const card = document.getElementById(`card-${i}`);
+                if (i < 3) {
+                    const btn = document.getElementById(`rev-btn-${i}`);
+                    if (i <= highestActiveClue) {
+                        card.className = "clue-card revealed";
+                        let mainText = q.clues[i];
+                        if (currentQIdx === 8) {
+                            let parts = mainText.split(', ');
+                            mainText = `${parts[0]}<span class="club-sub-line">${parts[1]}</span>`;
+                        }
+                        
+                        if (q.hasAlt && q.alts[i] && !hideBracketsUpfront) {
+                            card.innerHTML = `<div class="hint-text-wrapper">${mainText}<br><span class="alt-clue-span">${q.alts[i]}</span></div>`;
+                        } else {
+                            card.innerHTML = `<div class="hint-text-wrapper">${mainText}</div>`;
+                        }
+                        btn.textContent = "Revealed";
+                        btn.disabled = true;
+                    } else {
+                        card.className = "clue-card";
+                        card.innerHTML = `<span class="clue-placeholder">CLUE ${i + 1}</span>`;
+                        btn.textContent = "Reveal";
+                        btn.disabled = (i !== highestActiveClue + 1) || isQuestionFinalized;
+                    }
+                } else {
+                    card.className = "clue-card";
+                    renderAbstractCardBackground();
+                }
+            }
+            if (!isQuestionFinalized) updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
+        }
+
+        async function processGuess() {
+            if (isQuestionFinalized || highestActiveClue === -1) return;
+            const inputField = document.getElementById("game-input");
+            const submitBtn = document.getElementById("submit-btn");
+            const userText = inputField.value;
+            
+            if (inputField.classList.contains("state-incorrect")) {
+                clearInputStateGlow();
+                return;
+            }
+            if (!userText.trim()) return;
+
+            // Submit securely via POST to the backend API endpoint
+            const forcedParam = localStorage.getItem("dev_force_q_index") || "";
+            let apiEndpoint = `/api/game`;
+            if (forcedParam !== "") apiEndpoint += `?forcedIndex=${forcedParam}`;
+
+            try {
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ guess: userText.trim() })
+                });
+                const serverResult = await response.json();
+
+                if (serverResult.correct) {
+                    resolvedServerAnswerPayload = serverResult;
+                    currentEarnedPoints = calculateCurrentAvailablePoints();
+                    
+                    inputField.className = "card-input-element state-correct";
+                    inputField.value = "CORRECT";
+                    inputField.disabled = true;
+                    if (submitBtn) submitBtn.disabled = true;
+
+                    let runtimeCardSubtext = "";
+                    if (todaysQuestionData?.hasAlt) {
+                        let matchIdx = serverResult.matchIndex;
+                        runtimeCardSubtext = (matchIdx === 0 || matchIdx === 999) ? "(or Salford City)" : "(or Wolverhampton Wanderers)";
+                        if (currentQIdx === 1) runtimeCardSubtext = (matchIdx === 0) ? "(or Italy)" : "(or Germany)";
+                        if (currentQIdx === 6) runtimeCardSubtext = (matchIdx === 0) ? "(or Gianluigi Donnarumma)" : "(or Konstantinos Mavropanos)";
+                        if (currentQIdx === 7) runtimeCardSubtext = "(or alternative D.A. player)";
+                        if (currentQIdx === 8) runtimeCardSubtext = (matchIdx === 0) ? "(or Kostas Manolas, Roma)" : "(or Adnan Januzaj, Manchester United)";
+                        if (currentQIdx === 9) runtimeCardSubtext = "(or alternative Jul- player)";
+                    }
+
+                    commitResultsToPersistentCookies(true, currentEarnedPoints);
+                    finalizeCurrentQuestion(serverResult.primaryAnswer, "win", runtimeCardSubtext);
+                    switchPanelTab('answers');
+                } else {
+                    questionIncorrectAttempts++;
+                    triggerScoreGlow("red");
+
+                    if (questionIncorrectAttempts < 2) {
+                        inputField.className = "card-input-element state-incorrect";
+                        inputField.value = "INCORRECT";
+                        inputField.disabled = true;
+                        if (submitBtn) submitBtn.disabled = true; 
+                        
+                        updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
+                        
+                        document.getElementById("fb-title").textContent = "Incorrect Attempt";
+                        document.getElementById("fb-title").className = "feedback-title alert";
+                        document.getElementById("fb-msg").innerHTML = "Your score has been halved and you have one attempt remaining. Click your answer box or the action button to retry.";
+
+                        inputRevertTimeout = setTimeout(() => {
+                            clearInputStateGlow();
+                        }, 2000);
+                    } else {
+                        currentEarnedPoints = 0;
+                        await fetchFullFinalAnswersData(forcedParam);
+                        
+                        let fallbackLabel = resolvedServerAnswerPayload?.answers[0] || "Unknown";
+                        let defaultFailSubtext = todaysQuestionData?.hasAlt ? todaysQuestionData?.alts[3] || "(or alternative)" : "";
+
+                        inputField.className = "card-input-element state-incorrect";
+                        inputField.value = "INCORRECT";
+                        inputField.disabled = true;
+                        if (submitBtn) submitBtn.disabled = true;
+
+                        commitResultsToPersistentCookies(false, 0);
+                        finalizeCurrentQuestion(fallbackLabel, "lose", defaultFailSubtext);
+                        switchPanelTab('answers');
+                    }
+                }
+            } catch(e) {
+                console.error("Cloud validation error:", e);
+            }
+        }
+
+        function commitResultsToPersistentCookies(isWin, pointsScored) {
+            let stats = getHistoricalUserStats();
+            const todayStamp = new Date().toDateString();
+            const yesterdayStamp = new Date(Date.now() - 86400000).toDateString();
+
+            localStorage.setItem("td_today_score_cached", pointsScored);
+
+            if (stats.lastPlayedDayStamp === todayStamp && localStorage.getItem("dev_force_q_index") === null) return;
+
+            stats.played += 1;
+            stats.totalPoints += pointsScored;
+            stats.lastUsedClues = highestActiveClue + 1;
+            if (pointsScored > stats.highScore) stats.highScore = pointsScored;
+
+            if (isWin) {
+                if (stats.lastPlayedDayStamp === yesterdayStamp) {
+                    stats.currentStreak += 1;
+                } else {
+                    stats.currentStreak = 1;
+                }
+                if (stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak;
+                stats.lastDayResult = "win";
+            } else {
+                stats.currentStreak = 0;
+                stats.lastDayResult = "lose";
+            }
+
+            stats.lastPlayedDayStamp = todayStamp;
+            saveHistoricalUserStats(stats);
+        }
+
+        function finalizeCurrentQuestion(primaryLabelToDisplay, statusOutcome, structuralCardAltText) {
+            isQuestionFinalized = true; 
+            userFinalAnswerLabel = primaryLabelToDisplay;
+            finalStatusOutcome = statusOutcome;
+            
+            document.getElementById("ans-toggle-action").disabled = false;
+            
+            const inputField = document.getElementById("game-input");
+            const submitBtn = document.getElementById("submit-btn");
+            
+            if (statusOutcome === "win") {
+                inputField.className = "card-input-element state-correct";
+                inputField.value = "CORRECT";
+            } else {
+                inputField.className = "card-input-element state-incorrect";
+                inputField.value = "INCORRECT";
+            }
+            inputField.disabled = true;
+            if (submitBtn) submitBtn.disabled = true;
+
+            const countsArray = resolvedServerAnswerPayload?.counts || ["?", "?", "?", "?"];
+
+            for(let i = 0; i < 4; i++) {
+                const card = document.getElementById(`card-${i}`);
+                card.className = "clue-card revealed";
+                let explanationMetric = `${countsArray[i]}`; 
+                let labelText = (i === 3) ? primaryLabelToDisplay : todaysQuestionData.clues[i];
+                
+                if (currentQIdx === 8) {
+                    let parts = labelText.split(', ');
+                    if (parts.length > 1) labelText = `${parts[0]}<span class="club-sub-line">${parts[1]}</span>`;
+                    else if (i === 3) labelText = primaryLabelToDisplay.toLowerCase().includes("januzaj") ? "Adnan Januzaj<span class=\"club-sub-line\">Manchester United</span>" : "Kostas Manolas<span class=\"club-sub-line\">Roma</span>";
+                }
+
+                if (currentQIdx === 7 && i === 3) {
+                    const words = primaryLabelToDisplay.split(' ');
+                    if (words.length >= 2) explanationMetric = `${words[0].charAt(0).toUpperCase()}${words[words.length - 1].charAt(0).toUpperCase()}`;
+                }
+
+                let displayBracketText = `[${explanationMetric}]`;
+
+                if (i === 3 && structuralCardAltText) {
+                    card.innerHTML = `<div class="hint-text-wrapper">${labelText}<br><span class="alt-clue-span">${structuralCardAltText}</span></div><div class="card-inline-metric">${displayBracketText}</div>`;
+                } else {
+                    let altTextHtml = (todaysQuestionData.hasAlt && todaysQuestionData.alts[i]) ? `<br><span class="alt-clue-span">${todaysQuestionData.alts[i]}</span>` : "";
+                    card.innerHTML = `<div class="hint-text-wrapper">${labelText}${altTextHtml}</div><div class="card-inline-metric">${displayBracketText}</div>`;
+                }
+
+                if(i < 3) {
+                    document.getElementById(`rev-btn-${i}`).disabled = true;
+                    document.getElementById(`rev-btn-${i}`).textContent = "Revealed";
+                }
+            }
+
+            updateHeaderScoreDisplay(currentEarnedPoints);
+            runLiveMidnightClockEngine();
+        }
+
+        function runLiveMidnightClockEngine() {
+            if (countdownTickerInterval) clearInterval(countdownTickerInterval);
+            
+            const stats = getHistoricalUserStats();
+            const todayStamp = new Date().toDateString();
+            const isCompleted = (stats.lastPlayedDayStamp === todayStamp);
+
+            const clockWrapper = document.getElementById("clock-wrapper-element");
+            const clockWidget = document.getElementById("header-countdown-clock");
+
+            if (!isCompleted) {
+                clockWrapper.style.display = "none";
+                return;
+            }
+
+            clockWrapper.style.display = "flex";
+
+            function tick() {
+                const now = new Date();
+                const midnight = new Date();
+                midnight.setHours(24, 0, 0, 0);
+                
+                const diff = midnight.getTime() - now.getTime();
+                if (diff <= 0) {
+                    clearInterval(countdownTickerInterval);
+                    location.reload();
+                    return;
+                }
+
+                let hrs = Math.floor(diff / (1000 * 60 * 60));
+                let mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                let secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                clockWidget.textContent = 
+                    `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            tick();
+            countdownTickerInterval = setInterval(tick, 1000);
+        }
+
+        function copySharePayload(mode, buttonId) {
+            const stats = getHistoricalUserStats();
+            let textToCopy = "";
+
+            if (mode === 'today') {
+                const symbol = (stats.lastDayResult === "win") ? "✅" : "❌";
+                const todayPts = localStorage.getItem("td_today_score_cached") || "0";
+                textToCopy = `Tony Dudek Sequences #${currentQIdx + 1}\nToday's Result: ${symbol}\nClues used: ${stats.lastUsedClues || 0} of 3\nPoints Gained: ${todayPts}\n\nPlay: ${window.location.origin}`;
+            } else {
+                let average = stats.played > 0 ? (stats.totalPoints / stats.played).toFixed(1) : "0.0";
+                textToCopy = `Tony Dudek Sequences: Career Stats\nPlayed: ${stats.played}\nActive Streak: ${stats.currentStreak} days\nMax Streak: ${stats.maxStreak} days\nTotal Points: ${stats.totalPoints}\nAvg Points: ${average}\n\nJoin the sequence: ${window.location.origin}`;
+            }
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const targetBtn = document.getElementById(buttonId);
+                if (targetBtn) {
+                    targetBtn.textContent = "COPIED TO CLIPBOARD";
+                    targetBtn.style.backgroundColor = "var(--success-green)";
+                    setTimeout(() => {
+                        targetBtn.textContent = (mode === 'today') ? "SHARE RESULT" : "SHARE CAREER STATS";
+                        targetBtn.style.backgroundColor = "var(--purple-alt)";
+                    }, 2000);
+                }
+            });
+        }
+
+        function devBuildQuestionDropdownOptions() {
+            const select = document.getElementById("dev-q-select");
+            select.innerHTML = "";
+            
+            let defaultOpt = document.createElement("option");
+            defaultOpt.value = "";
+            defaultOpt.textContent = "-- Choose Variable Override --";
+            select.appendChild(defaultOpt);
+
+            // Hardcoded labels just for local development mapping selection box options
+            for (let idx = 0; idx < 10; idx++) {
+                let opt = document.createElement("option");
+                opt.value = idx;
+                opt.textContent = `Sequence ${idx + 1}`;
+                if(localStorage.getItem("dev_force_q_index") == idx) opt.selected = true;
+                select.appendChild(opt);
+            }
+        }
+
+        function devResetTodayLockout() {
+            let stats = getHistoricalUserStats();
+            stats.lastPlayedDayStamp = null;
+            stats.lastDayResult = null;
+            stats.lastUsedClues = 0;
+            saveHistoricalUserStats(stats);
+            localStorage.removeItem("dev_force_q_index");
+            localStorage.removeItem("td_today_score_cached");
+            location.reload();
+        }
+
+        function devForceLoadQuestion(val) {
+            if(val === "") {
+                localStorage.removeItem("dev_force_q_index");
+            } else {
+                localStorage.setItem("dev_force_q_index", val);
+            }
+            location.reload();
+        }
+
+        document.getElementById("game-input").addEventListener("keyup", (e) => {
+            if (e.key === "Enter" && highestActiveClue !== -1) processGuess();
+        });
+
+        window.onload = runGameInitializationLifecycle;
+    </script>
+</body>
+</html>
