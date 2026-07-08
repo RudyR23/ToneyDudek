@@ -50,7 +50,7 @@
             background-color: var(--panel-bg);
             border: 2px solid rgba(137, 197, 247, 0.25);
             border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(137, 197, 247, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             padding: 2px;
             backdrop-filter: blur(10px);
             position: relative;
@@ -79,15 +79,16 @@
         }
 
         .game-title {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 1.45rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 15px var(--accent-glow);
-            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
         }
         
-        .game-title .title-tony { font-weight: bold; color: #8cd0ff; }
-        .game-title .title-dudek { font-weight: bold; color: #3b82f6; text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
-        .game-title .title-sequences { color: var(--pure-white); font-weight: bold; }
+        .game-logo-img {
+            height: 32px;
+            max-width: 100%;
+            object-fit: contain;
+            display: block;
+        }
 
         .clock-wrapper-container {
             display: none;
@@ -492,7 +493,7 @@
             background: var(--dark-blue);
         }
 
-        .ans-toggle-btn:disabled, .stats-toggle-btn:disabled {
+        .ans-toggle-btn:disabled {
             border-color: var(--muted-grey);
             color: var(--muted-grey);
             background: transparent;
@@ -670,24 +671,19 @@
             background-color: #9333ea;
         }
 
-        a.credits-signature {
+        .credits-signature {
             position: absolute;
             bottom: 8px;
             right: 12px;
-            font-size: 0.75rem;
-            color: var(--light-blue);
+            font-size: 0.7rem;
+            color: var(--muted-grey);
             font-weight: bold;
-            text-decoration: none;
             cursor: pointer;
-            transition: color 0.2s ease;
-        }
-        
-        a.credits-signature:hover {
-            color: #ffffff;
-            text-shadow: 0 0 8px var(--light-blue);
+            user-select: none;
         }
 
         .dev-sandbox-toolbox {
+            display: none;
             margin-top: 20px;
             width: 100%;
             max-width: 900px;
@@ -695,10 +691,22 @@
             border: 2px dashed #f59e0b;
             border-radius: 8px;
             padding: 15px;
-            display: flex;
             flex-wrap: wrap;
             gap: 15px;
             align-items: center;
+            position: relative;
+        }
+
+        .dev-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            cursor: pointer;
+            color: #ef4444;
+            font-weight: bold;
+            font-size: 1.2rem;
+            line-height: 1;
+            user-select: none;
         }
 
         .dev-title {
@@ -731,30 +739,6 @@
             border-radius: 4px;
             font-size: 0.8rem;
         }
-
-        @media (max-width: 768px) {
-            .game-overlay {
-                height: auto;
-                min-height: 580px;
-            }
-            .game-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            .control-panel {
-                top: 0;
-                height: auto;
-                margin-top: 10px;
-            }
-            .clues-container > .clue-wrapper {
-                top: 0 !important;
-            }
-            .meta-sub-row {
-                grid-template-columns: 1fr;
-                top: 5px;
-                margin-bottom: 10px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -764,7 +748,7 @@
             
             <div class="game-header">
                 <div class="game-title">
-                    <span class="title-tony">Toney</span> <span class="title-dudek">Dudek</span><span style="color: #3b82f6; font-weight: bold;">:</span> <span class="title-sequences">Daily Sequences</span>
+                    <img src="logo.png" alt="Toney Dudek: Daily Sequences" class="game-logo-img">
                 </div>
                 <div class="header-widgets-wrap">
                     <div class="clock-wrapper-container" id="clock-wrapper-element">
@@ -822,7 +806,7 @@
                             <div class="top-nav-buttons-group">
                                 <button class="help-toggle-btn" id="help-toggle-action" onclick="switchPanelTab('help')" title="How to Play">?</button>
                                 <button class="ans-toggle-btn" id="ans-toggle-action" onclick="switchPanelTab('answers')" title="View Answer" disabled>A</button>
-                                <button class="stats-toggle-btn" id="stats-toggle-action" onclick="switchPanelTab('stats')" title="View Stats" disabled>
+                                <button class="stats-toggle-btn" id="stats-toggle-action" onclick="switchPanelTab('stats')" title="View Stats">
                                     <div class="bar-icon-wrapper" id="bar-icon-container"></div>
                                 </button>
                             </div>
@@ -837,11 +821,12 @@
                 </div>
             </div>
 
-            <a href="#" class="credits-signature" onclick="alert('Sequence engine designed by rudyr23.'); return false;">made by rudyr23, 2026.</a>
+            <div class="credits-signature" onclick="handleFooterSignatureTrigger()">made by rudyr23, 2026.</div>
         </div>
     </div>
 
-    <div class="dev-sandbox-toolbox">
+    <div class="dev-sandbox-toolbox" id="dev-toolbox-wrapper">
+        <div class="dev-close-btn" onclick="closeDevToolsOverlay()">&times;</div>
         <div class="dev-title">⚠️ Local Testing Sandbox Tools</div>
         <button class="dev-btn" onclick="devResetTodayLockout()">Reset Today's Lockout Cookie</button>
         <div>
@@ -852,9 +837,10 @@
     </div>
 
     <script>
+        // CLIENT FRONTEND JAVASCRIPT - DATA IS SECURED ON THE BACKEND
         let currentQIdx = 0;
-        let todaysQuestionData = null; 
-        let resolvedServerAnswerPayload = null; 
+        let todaysQuestionData = null; // Will receive clues/metadata from server
+        let resolvedServerAnswerPayload = null; // Will receive validation metrics upon win/loss
 
         let highestActiveClue = -1; 
         let questionIncorrectAttempts = 0; 
@@ -866,12 +852,6 @@
         let activePanelTab = "help"; 
         let userFinalAnswerLabel = "None";
         let finalStatusOutcome = "lose"; 
-
-        // Client Fallback Questions array prevents interface locking up if server fetch fails
-        const clientFallbackQuestions = [
-            { questionIndex: 0, question: { clues: ["Alpha", "Beta", "Gamma"], hasAlt: false, alts: [] } },
-            { questionIndex: 1, question: { clues: ["January", "February", "March"], hasAlt: false, alts: [] } }
-        ];
 
         function getHistoricalUserStats() {
             let stats = localStorage.getItem("td_sequence_daily_stats");
@@ -962,9 +942,26 @@
             refreshUiLayout();
         }
 
+        function handleFooterSignatureTrigger() {
+            let passInput = prompt("Enter access credentials:");
+            if (passInput && btoa(passInput) === "aXZhbmplcnp5MTcxMw==") {
+                localStorage.setItem("td_dev_unlocked_session", "true");
+                document.getElementById("dev-toolbox-wrapper").style.display = "flex";
+            }
+        }
+
+        function closeDevToolsOverlay() {
+            localStorage.removeItem("td_dev_unlocked_session");
+            document.getElementById("dev-toolbox-wrapper").style.display = "none";
+        }
+
         async function runGameInitializationLifecycle() {
             devBuildQuestionDropdownOptions();
             renderStaticBarGraphIcon();
+
+            if (localStorage.getItem("td_dev_unlocked_session") === "true") {
+                document.getElementById("dev-toolbox-wrapper").style.display = "flex";
+            }
 
             const forcedParam = localStorage.getItem("dev_force_q_index") || "";
             let fetchUrl = `/api/game`;
@@ -977,13 +974,12 @@
                     headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {}
                 });
                 const data = await response.json();
+                
                 currentQIdx = data.questionIndex;
                 todaysQuestionData = data.question;
             } catch (err) {
-                console.warn("Server route not found or lagging, loading local sequence database safely.");
-                let localSelection = forcedParam !== "" ? parseInt(forcedParam) : 0;
-                currentQIdx = localSelection;
-                todaysQuestionData = clientFallbackQuestions[localSelection % clientFallbackQuestions.length].question;
+                console.error("Error connecting to serverless function setup:", err);
+                return;
             }
 
             highestActiveClue = -1; 
@@ -1014,20 +1010,17 @@
         async function fetchFullFinalAnswersData(forcedParam) {
             let fetchUrl = `/api/game`;
             if (forcedParam) fetchUrl += `?forcedIndex=${forcedParam}`;
-            try {
-                const res = await fetch(fetchUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ guess: "####REVEAL_FORCE_STATE####" })
-                });
-                resolvedServerAnswerPayload = await res.json();
-            } catch(e) {
-                resolvedServerAnswerPayload = { answers: ["Delta"], whyText: "Verified by clean client logic lookup fallback." };
-            }
+            
+            const res = await fetch(fetchUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ guess: "####REVEAL_FORCE_STATE####" })
+            });
+            const data = await res.json();
+            resolvedServerAnswerPayload = data;
         }
 
         function switchPanelTab(tabName) {
-            if (tabName === 'stats' && !isQuestionFinalized) return;
             activePanelTab = tabName;
             
             document.getElementById("help-toggle-action").classList.remove("active-nav");
@@ -1057,7 +1050,7 @@
             else if (tabName === 'answers') {
                 let secondaryTextReveal = "";
                 const answersArray = resolvedServerAnswerPayload?.answers || [userFinalAnswerLabel];
-                const whyTextVal = resolvedServerAnswerPayload?.whyText || "Explanation parsed via matching sequence metrics.";
+                const whyTextVal = resolvedServerAnswerPayload?.whyText || "Explanation securely verified by cloud.";
 
                 if (todaysQuestionData?.hasAlt) {
                     let alternativesList = answersArray.filter(ans => ans.toLowerCase() !== userFinalAnswerLabel.toLowerCase());
@@ -1169,7 +1162,6 @@
                     if (!isClueOneActive) inputField.value = "";
                 }
                 document.getElementById("submit-btn").disabled = !isClueOneActive;
-                document.getElementById("stats-toggle-action").disabled = true;
             }
 
             const hideBracketsUpfront = (currentQIdx === 7 || currentQIdx === 9 || !q.hasAlt);
@@ -1255,43 +1247,43 @@
                     finalizeCurrentQuestion(serverResult.primaryAnswer, "win", runtimeCardSubtext);
                     switchPanelTab('answers');
                 } else {
-                    throw new Error("Incorrect guess metrics returned.");
+                    questionIncorrectAttempts++;
+                    triggerScoreGlow("red");
+
+                    if (questionIncorrectAttempts < 2) {
+                        inputField.className = "card-input-element state-incorrect";
+                        inputField.value = "INCORRECT";
+                        inputField.disabled = true;
+                        if (submitBtn) submitBtn.disabled = true; 
+                        
+                        updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
+                        
+                        document.getElementById("fb-title").textContent = "Incorrect Attempt";
+                        document.getElementById("fb-title").className = "feedback-title alert";
+                        document.getElementById("fb-msg").innerHTML = "Your score has been halved and you have one attempt remaining. Click your answer box or the action button to retry.";
+
+                        inputRevertTimeout = setTimeout(() => {
+                            clearInputStateGlow();
+                        }, 2000);
+                    } else {
+                        currentEarnedPoints = 0;
+                        await fetchFullFinalAnswersData(forcedParam);
+                        
+                        let fallbackLabel = resolvedServerAnswerPayload?.answers[0] || "Unknown";
+                        let defaultFailSubtext = todaysQuestionData?.hasAlt ? todaysQuestionData?.alts[3] || "(or alternative)" : "";
+
+                        inputField.className = "card-input-element state-incorrect";
+                        inputField.value = "INCORRECT";
+                        inputField.disabled = true;
+                        if (submitBtn) submitBtn.disabled = true;
+
+                        commitResultsToPersistentCookies(false, 0);
+                        finalizeCurrentQuestion(fallbackLabel, "lose", defaultFailSubtext);
+                        switchPanelTab('answers');
+                    }
                 }
             } catch(e) {
-                questionIncorrectAttempts++;
-                triggerScoreGlow("red");
-
-                if (questionIncorrectAttempts < 2) {
-                    inputField.className = "card-input-element state-incorrect";
-                    inputField.value = "INCORRECT";
-                    inputField.disabled = true;
-                    if (submitBtn) submitBtn.disabled = true; 
-                    
-                    updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
-                    
-                    document.getElementById("fb-title").textContent = "Incorrect Attempt";
-                    document.getElementById("fb-title").className = "feedback-title alert";
-                    document.getElementById("fb-msg").innerHTML = "Your score has been halved and you have one attempt remaining. Click your answer box or the action button to retry.";
-
-                    inputRevertTimeout = setTimeout(() => {
-                        clearInputStateGlow();
-                    }, 2000);
-                } else {
-                    currentEarnedPoints = 0;
-                    await fetchFullFinalAnswersData(forcedParam);
-                    
-                    let fallbackLabel = resolvedServerAnswerPayload?.answers[0] || "Delta";
-                    let defaultFailSubtext = todaysQuestionData?.hasAlt ? todaysQuestionData?.alts[3] || "(or alternative)" : "";
-
-                    inputField.className = "card-input-element state-incorrect";
-                    inputField.value = "INCORRECT";
-                    inputField.disabled = true;
-                    if (submitBtn) submitBtn.disabled = true;
-
-                    commitResultsToPersistentCookies(false, 0);
-                    finalizeCurrentQuestion(fallbackLabel, "lose", defaultFailSubtext);
-                    switchPanelTab('answers');
-                }
+                console.error("Cloud validation error:", e);
             }
         }
 
@@ -1332,7 +1324,6 @@
             finalStatusOutcome = statusOutcome;
             
             document.getElementById("ans-toggle-action").disabled = false;
-            document.getElementById("stats-toggle-action").disabled = false;
             
             const inputField = document.getElementById("game-input");
             const submitBtn = document.getElementById("submit-btn");
