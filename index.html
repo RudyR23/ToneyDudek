@@ -46,7 +46,7 @@
         .game-overlay {
             width: 100%;
             max-width: 900px;
-            height: 540px; 
+            min-height: 540px; 
             background-color: var(--panel-bg);
             border: 2px solid rgba(137, 197, 247, 0.25);
             border-radius: 12px;
@@ -256,12 +256,13 @@
             color: var(--grey-text);
             position: relative;
             overflow: hidden;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .clue-card.revealed {
             background-color: var(--steel-blue);
             color: var(--pure-white);
-            box-shadow: 0 0 15px var(--accent-glow);
+            box-shadow: 4px 4px 15px var(--accent-glow);
             border: 1px solid var(--light-blue);
             font-weight: 700;
         }
@@ -327,6 +328,7 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .reveal-btn:hover:not(:disabled) {
@@ -400,6 +402,7 @@
             justify-content: center;
             transition: all 0.2s;
             flex-shrink: 0;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .square-submit-btn:hover:not(:disabled) {
@@ -432,6 +435,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         .inline-feedback-container {
@@ -493,11 +497,16 @@
             background: var(--dark-blue);
         }
 
-        .ans-toggle-btn:disabled {
+        .ans-toggle-btn:disabled, .stats-toggle-btn:disabled {
             border-color: var(--muted-grey);
             color: var(--muted-grey);
             background: transparent;
             cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        .stats-toggle-btn:disabled .bar-icon {
+            background: var(--muted-grey) !important;
         }
 
         .bar-icon-wrapper {
@@ -607,6 +616,7 @@
             align-items: center;
             gap: 8px;
             transition: all 0.2s;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
         }
 
         .continue-stats-panel-btn:hover {
@@ -665,6 +675,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
         }
 
         .share-btn:hover {
@@ -739,6 +750,41 @@
             border-radius: 4px;
             font-size: 0.8rem;
         }
+
+        /* Responsive Layout Overrides */
+        @media (max-width: 768px) {
+            .game-overlay {
+                height: auto;
+                min-height: auto;
+            }
+            .meta-sub-row {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                top: 0;
+                margin-top: 10px;
+            }
+            .game-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding-top: 10px;
+            }
+            .clues-container {
+                margin-top: 10px;
+            }
+            .clues-container > .clue-wrapper {
+                top: 0 !important;
+            }
+            .control-panel {
+                top: 0;
+                height: auto;
+                min-height: 250px;
+            }
+            .inline-feedback-container {
+                min-height: 220px;
+                overflow: visible;
+            }
+        }
     </style>
 </head>
 <body>
@@ -806,7 +852,7 @@
                             <div class="top-nav-buttons-group">
                                 <button class="help-toggle-btn" id="help-toggle-action" onclick="switchPanelTab('help')" title="How to Play">?</button>
                                 <button class="ans-toggle-btn" id="ans-toggle-action" onclick="switchPanelTab('answers')" title="View Answer" disabled>A</button>
-                                <button class="stats-toggle-btn" id="stats-toggle-action" onclick="switchPanelTab('stats')" title="View Stats">
+                                <button class="stats-toggle-btn" id="stats-toggle-action" onclick="switchPanelTab('stats')" title="View Stats" disabled>
                                     <div class="bar-icon-wrapper" id="bar-icon-container"></div>
                                 </button>
                             </div>
@@ -837,10 +883,9 @@
     </div>
 
     <script>
-        // CLIENT FRONTEND JAVASCRIPT - DATA IS SECURED ON THE BACKEND
         let currentQIdx = 0;
-        let todaysQuestionData = null; // Will receive clues/metadata from server
-        let resolvedServerAnswerPayload = null; // Will receive validation metrics upon win/loss
+        let todaysQuestionData = null; 
+        let resolvedServerAnswerPayload = null; 
 
         let highestActiveClue = -1; 
         let questionIncorrectAttempts = 0; 
@@ -1021,6 +1066,10 @@
         }
 
         function switchPanelTab(tabName) {
+            if ((tabName === 'answers' || tabName === 'stats') && !isQuestionFinalized) {
+                return; 
+            }
+
             activePanelTab = tabName;
             
             document.getElementById("help-toggle-action").classList.remove("active-nav");
@@ -1148,8 +1197,15 @@
 
         function refreshUiLayout() {
             if (!todaysQuestionData) return;
-            const q = todaysQuestionData;
             
+            const stats = getHistoricalUserStats();
+            const currentDayStamp = new Date().toDateString();
+            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
+            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
+                return; 
+            }
+
+            const q = todaysQuestionData;
             document.getElementById("header-q-idx").textContent = `Sequence #${currentQIdx + 1}`;
             document.getElementById("alt-question-badge").style.display = q.hasAlt ? "inline-block" : "none";
             
@@ -1201,6 +1257,14 @@
 
         async function processGuess() {
             if (isQuestionFinalized || highestActiveClue === -1) return;
+            
+            const stats = getHistoricalUserStats();
+            const currentDayStamp = new Date().toDateString();
+            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
+            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
+                return; 
+            }
+
             const inputField = document.getElementById("game-input");
             const submitBtn = document.getElementById("submit-btn");
             const userText = inputField.value;
@@ -1292,9 +1356,9 @@
             const todayStamp = new Date().toDateString();
             const yesterdayStamp = new Date(Date.now() - 86400000).toDateString();
 
-            localStorage.setItem("td_today_score_cached", pointsScored);
-
             if (stats.lastPlayedDayStamp === todayStamp && localStorage.getItem("dev_force_q_index") === null) return;
+
+            localStorage.setItem("td_today_score_cached", pointsScored);
 
             stats.played += 1;
             stats.totalPoints += pointsScored;
@@ -1324,6 +1388,7 @@
             finalStatusOutcome = statusOutcome;
             
             document.getElementById("ans-toggle-action").disabled = false;
+            document.getElementById("stats-toggle-action").disabled = false;
             
             const inputField = document.getElementById("game-input");
             const submitBtn = document.getElementById("submit-btn");
