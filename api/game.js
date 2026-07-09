@@ -145,7 +145,7 @@ function checkSolutionMatching(guess, entry, currentQIdx) {
 
 function determineActiveSequenceDay(overrideIdx) {
     if (overrideIdx !== null && overrideIdx !== undefined && overrideIdx !== "") {
-        return parseInt(overrideIdx) % dailyDataset.length;
+        return parseInt(overrideIdx, 10) % dailyDataset.length;
     }
     const now = Date.now();
     const difference = now - LAUNCH_DATE;
@@ -159,13 +159,24 @@ export default async function handler(req, res) {
     const currentQIdx = determineActiveSequenceDay(clientOverride);
     const entry = dailyDataset[currentQIdx];
 
-    // 2. Handle POST Request (Guess verification)
+    // 2. Handle POST Request (Guess verification & Force reveal payloads)
     if (req.method === 'POST') {
         let body = req.body;
         if (typeof body === 'string') {
             try { body = JSON.parse(body); } catch(e) {}
         }
+        
         const userGuess = body?.guess || '';
+
+        // Circuit breaker reveal string handler for completed games/lockouts
+        if (userGuess === "####REVEAL_FORCE_STATE####") {
+            return res.status(200).json({
+                answers: entry.answers,
+                counts: entry.counts,
+                whyText: entry.whyText
+            });
+        }
+
         const matchIndex = checkSolutionMatching(userGuess, entry, currentQIdx);
 
         if (matchIndex !== -1) {

@@ -498,7 +498,6 @@
             background: var(--dark-blue);
         }
 
-        /* Synced Disabled Styling for both A and Stats tabs */
         .ans-toggle-btn:disabled, .stats-toggle-btn:disabled {
             border-color: var(--muted-grey) !important;
             color: var(--muted-grey) !important;
@@ -753,7 +752,6 @@
             font-size: 0.8rem;
         }
 
-        /* Responsive Layout Overrides */
         @media (max-width: 768px) {
             .game-overlay {
                 height: auto;
@@ -999,7 +997,9 @@
 
         function closeDevToolsOverlay() {
             localStorage.removeItem("td_dev_unlocked_session");
+            localStorage.removeItem("dev_force_q_index"); 
             document.getElementById("dev-toolbox-wrapper").style.display = "none";
+            location.reload(); 
         }
 
         async function runGameInitializationLifecycle() {
@@ -1016,7 +1016,6 @@
                 fetchUrl += `?forcedIndex=${forcedParam}`;
             }
 
-            // --- INSTANT HARD LOCK CIRCUIT BREAKER ---
             const stats = getHistoricalUserStats();
             const currentDayStamp = new Date().toDateString();
             const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
@@ -1026,7 +1025,6 @@
                 highestActiveClue = 2;
                 currentEarnedPoints = parseInt(localStorage.getItem("td_today_score_cached") || "0");
                 
-                // Immediately shut down inputs pre-fetch to secure UI instantly
                 document.getElementById("game-input").disabled = true;
                 document.getElementById("submit-btn").disabled = true;
 
@@ -1044,7 +1042,7 @@
                     finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose");
                     switchPanelTab('answers');
                 } catch(e) {
-                    console.error("Initialization error under circuit-break conditions:", e);
+                    console.error("Initialization error under lockout conditions:", e);
                 }
                 return;
             }
@@ -1058,7 +1056,7 @@
                 currentQIdx = data.questionIndex;
                 todaysQuestionData = data.question;
             } catch (err) {
-                console.error("Error connecting to serverless function setup:", err);
+                console.error("Error connecting to backend sequence module API:", err);
                 return;
             }
 
@@ -1069,6 +1067,7 @@
 
             refreshUiLayout();
             switchPanelTab('help');
+            runLiveMidnightClockEngine(); 
         }
 
         async function fetchFullFinalAnswersData(forcedParam) {
@@ -1366,7 +1365,7 @@
                     }
                 }
             } catch(e) {
-                console.error("Cloud validation error:", e);
+                console.error("Cloud validation connection error:", e);
             }
         }
 
@@ -1479,10 +1478,9 @@
 
             function tick() {
                 const now = new Date();
-                const midnight = new Date();
-                midnight.setHours(24, 0, 0, 0);
+                const midnightUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
+                const diff = midnightUtc - now.getTime();
                 
-                const diff = midnight.getTime() - now.getTime();
                 if (diff <= 0) {
                     clearInterval(countdownTickerInterval);
                     location.reload();
