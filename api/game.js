@@ -94,6 +94,28 @@ const dailyDataset = [
 const LAUNCH_DATE = new Date("July 7, 2026 00:00:00").getTime();
 const validFootballersDA = ["daniel agger", "darren anderton", "darren ambrose", "david alaba", "dani alves", "daniel alves", "danny welbeck", "dele alli"];
 
+// Seeded Pseudo-Random Number Generator (Mulberry32)
+function seededRandom(seed) {
+    return function() {
+        let t = seed += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+}
+
+// Fisher-Yates shuffle driven entirely by our fixed launch seed
+function getShuffledIndices(totalLength, seedValue) {
+    let indices = Array.from({ length: totalLength }, (_, i) => i);
+    let rand = seededRandom(seedValue);
+    
+    for (let i = totalLength - 1; i > 0; i--) {
+        const j = Math.floor(rand() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    return indices;
+}
+
 function getLevenshteinDistance(a, b) {
     const matrix = [];
     for (let i = 0; i <= b.length; i++) matrix[i] = [i];
@@ -110,18 +132,18 @@ function normalizeStr(str) {
     return str.toLowerCase().trim().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ');
 }
 
-function checkSolutionMatching(guess, entry, currentQIdx) {
+function checkSolutionMatching(guess, entry, actualDatasetIndex) {
     const cleanGuess = normalizeStr(guess);
     if (!cleanGuess) return -1;
     
-    if (currentQIdx === 7) {
+    if (actualDatasetIndex === 7) {
         const words = cleanGuess.split(' ');
         if (words.length >= 2 && words[0].charAt(0) === 'd' && words[words.length - 1].charAt(0) === 'a') {
             if (validFootballersDA.some(p => cleanGuess.includes(p) || p.includes(cleanGuess))) return 999;
         }
     }
 
-    if (currentQIdx === 9) {
+    if (actualDatasetIndex === 9) {
         if (cleanGuess.split(' ').some(w => w.startsWith("jul"))) {
             for (let setIdx = 0; setIdx < entry.accepted.length; setIdx++) {
                 if (entry.accepted[setIdx].some(variant => cleanGuess === variant || variant.includes(cleanGuess) || cleanGuess.includes(variant))) return setIdx;
@@ -143,23 +165,30 @@ function checkSolutionMatching(guess, entry, currentQIdx) {
     return -1;
 }
 
-function determineActiveSequenceDay(overrideIdx) {
-    if (overrideIdx !== null && overrideIdx !== undefined && overrideIdx !== "") {
-        return parseInt(overrideIdx, 10) % dailyDataset.length;
-    }
+// Tracks absolute days elapsed since our project launch
+function getDaysSinceLaunch() {
     const now = Date.now();
     const difference = now - LAUNCH_DATE;
-    const absoluteDayIndex = Math.floor(difference / (1000 * 60 * 60 * 24));
-    return Math.max(0, absoluteDayIndex) % dailyDataset.length;
+    return Math.max(0, Math.floor(difference / (1000 * 60 * 60 * 24)));
 }
 
 export default async function handler(req, res) {
-    // 1. Get current question index (allow sandbox overrides if passed via headers or query strings)
     const clientOverride = req.query.forcedIndex || req.headers['x-forced-index'];
-    const currentQIdx = determineActiveSequenceDay(clientOverride);
-    const entry = dailyDataset[currentQIdx];
+    
+    // Determine user UI display index
+    let daysSinceLaunch = getDaysSinceLaunch();
+    if (clientOverride !== null && clientOverride !== undefined && clientOverride !== "") {
+        daysSinceLaunch = parseInt(clientOverride, 10);
+    }
 
-    // 2. Handle POST Request (Guess verification & Force reveal payloads)
+    // Generate our fixed global shuffle order using LAUNCH_DATE as seed
+    const poolSize = dailyDataset.length;
+    const shuffledMap = getShuffledIndices(poolSize, LAUNCH_DATE);
+    
+    // Match the linear progression day to the randomized pool element
+    const mappedDatasetIndex = shuffledMap[daysSinceLaunch % poolSize];
+    const entry = dailyDataset[mappedDatasetIndex];
+
     if (req.method === 'POST') {
         let body = req.body;
         if (typeof body === 'string') {
@@ -168,7 +197,6 @@ export default async function handler(req, res) {
         
         const userGuess = body?.guess || '';
 
-        // Circuit breaker reveal string handler for completed games/lockouts
         if (userGuess === "####REVEAL_FORCE_STATE####") {
             return res.status(200).json({
                 answers: entry.answers,
@@ -177,13 +205,13 @@ export default async function handler(req, res) {
             });
         }
 
-        const matchIndex = checkSolutionMatching(userGuess, entry, currentQIdx);
+        const matchIndex = checkSolutionMatching(userGuess, entry, mappedDatasetIndex);
 
         if (matchIndex !== -1) {
             function titleCase(str) {
                 return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
             }
-            let chosenPrimaryAns = (matchIndex === 999 || currentQIdx === 9) ? titleCase(userGuess.trim()) : entry.answers[matchIndex];
+            let chosenPrimaryAns = (matchIndex === 999 || mappedDatasetIndex === 9) ? titleCase(userGuess.trim()) : entry.answers[matchIndex];
             
             return res.status(200).json({
                 correct: true,
@@ -198,15 +226,14 @@ export default async function handler(req, res) {
         }
     }
 
-    // 3. Handle GET Request (Fetch clues safely without exposing answers)
-    const filteredQuestion = {
-        hasAlt: entry.hasAlt,
-        clues: entry.clues,
-        alts: entry.alts
-    };
-
+    // Return the safe question info along with its custom display counter
     return res.status(200).json({
-        questionIndex: currentQIdx,
-        question: filteredQuestion
+        questionIndex: daysSinceLaunch,         // Used directly by frontend for "Sequence #X" display labels
+        actualDatasetIndex: mappedDatasetIndex,  // Used by frontend logic for question-specific tweaks (e.g. Question 7 logic)
+        question: {
+            hasAlt: entry.hasAlt,
+            clues: entry.clues,
+            alts: entry.alts
+        }
     });
 }
