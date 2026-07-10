@@ -791,6 +791,25 @@
                 max-height: none;
                 overflow: visible;
             }
+			.footer-links-container {
+			display: flex;
+			gap: 15px;               /* Adds clean spacing between the links */
+			margin-top: 10px;        /* Pushes them slightly below your 420px info box */
+			padding-left: 5px;       /* Keeps them aligned nicely along the left edge */
+			}
+
+			.footer-text-link {
+			color: var(--grey-text); /* Uses your existing slate blue/grey theme color */
+			font-size: 0.75rem;      /* Keeps the text small and unintrusive */
+			text-decoration: none;   /* Removes default underline */
+			font-weight: bold;
+			transition: color 0.2s ease;
+			}
+
+			.footer-text-link:hover {
+			color: var(--light-blue); /* Highlights bright blue when hovered */
+			text-decoration: underline;
+			}
         }
     </style>
 </head>
@@ -872,6 +891,10 @@
 
                     </div>
                 </div>
+				<div class="footer-links-container">
+					<a href="https://x.com/ToneyDudek" target="_blank" class="footer-text-link">Twitter/X</a>
+					<a href="https://paypal.me/tgdmrd" target="_blank" class="footer-text-link">Buy me a coffee ♥</a>
+				</div>
             </div>
 
             <div class="credits-signature" onclick="handleFooterSignatureTrigger()">made by rudyr23, 2026.</div>
