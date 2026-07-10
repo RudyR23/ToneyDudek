@@ -103,28 +103,6 @@ const dailyDataset = [
 const LAUNCH_DATE = new Date("July 7, 2026 00:00:00").getTime();
 const validFootballersDA = ["daniel agger", "darren anderton", "darren ambrose", "david alaba", "dani alves", "daniel alves", "dele alli"];
 
-// Seeded Pseudo-Random Number Generator (Mulberry32)
-function seededRandom(seed) {
-    return function() {
-        let t = seed += 0x6D2B79F5;
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    }
-}
-
-// Fisher-Yates shuffle driven entirely by our fixed launch seed
-function getShuffledIndices(totalLength, seedValue) {
-    let indices = Array.from({ length: totalLength }, (_, i) => i);
-    let rand = seededRandom(seedValue);
-    
-    for (let i = totalLength - 1; i > 0; i--) {
-        const j = Math.floor(rand() * (i + 1));
-        [indices[i], indices[j]] = [indices[j], indices[i]];
-    }
-    return indices;
-}
-
 function getLevenshteinDistance(a, b) {
     const matrix = [];
     for (let i = 0; i <= b.length; i++) matrix[i] = [i];
@@ -174,7 +152,6 @@ function checkSolutionMatching(guess, entry, actualDatasetIndex) {
     return -1;
 }
 
-// Tracks absolute days elapsed since our project launch
 function getDaysSinceLaunch() {
     const now = Date.now();
     const difference = now - LAUNCH_DATE;
@@ -184,18 +161,14 @@ function getDaysSinceLaunch() {
 export default async function handler(req, res) {
     const clientOverride = req.query.forcedIndex || req.headers['x-forced-index'];
     
-    // Determine user UI display index
     let daysSinceLaunch = getDaysSinceLaunch();
     if (clientOverride !== null && clientOverride !== undefined && clientOverride !== "") {
         daysSinceLaunch = parseInt(clientOverride, 10);
     }
 
-    // Generate our fixed global shuffle order using LAUNCH_DATE as seed
     const poolSize = dailyDataset.length;
-    const shuffledMap = getShuffledIndices(poolSize, LAUNCH_DATE);
-    
-    // Match the linear progression day to the randomized pool element
-    const mappedDatasetIndex = shuffledMap[daysSinceLaunch % poolSize];
+    // Sequential progression linked directly to timeline days
+    const mappedDatasetIndex = daysSinceLaunch % poolSize;
     const entry = dailyDataset[mappedDatasetIndex];
 
     if (req.method === 'POST') {
@@ -224,7 +197,7 @@ export default async function handler(req, res) {
             
             return res.status(200).json({
                 correct: true,
-                matchIndex: matchIndex,
+                matchIndex: matchIndex === 999 ? 0 : matchIndex,
                 primaryAnswer: chosenPrimaryAns,
                 answers: entry.answers,
                 whyText: entry.whyText,
@@ -235,10 +208,9 @@ export default async function handler(req, res) {
         }
     }
 
-    // Return the safe question info along with its custom display counter
     return res.status(200).json({
-        questionIndex: daysSinceLaunch,         // Used directly by frontend for "Sequence #X" display labels
-        actualDatasetIndex: mappedDatasetIndex,  // Used by frontend logic for question-specific tweaks (e.g. Question 7 logic)
+        questionIndex: daysSinceLaunch,         
+        actualDatasetIndex: mappedDatasetIndex,  
         question: {
             hasAlt: entry.hasAlt,
             clues: entry.clues,

@@ -424,6 +424,8 @@
             position: relative;
             top: -22px; 
             height: calc(100% + 22px);
+            min-height: 310px;
+            max-height: 310px;
         }
 
         .input-box-wrapper {
@@ -450,6 +452,8 @@
             justify-content: flex-start;
             flex: 1; 
             height: 100%;
+            min-height: 100%;
+            max-height: 100%;
             overflow-y: auto; 
             position: relative;
             box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
@@ -779,10 +783,12 @@
             .control-panel {
                 top: 0;
                 height: auto;
-                min-height: 250px;
+                min-height: 310px;
+                max-height: none;
             }
             .inline-feedback-container {
-                min-height: 220px;
+                min-height: 270px;
+                max-height: none;
                 overflow: visible;
             }
         }
@@ -835,7 +841,7 @@
                     <div class="clue-wrapper">
                         <div class="clue-card" id="card-3"></div>
                         <div style="display: flex; gap: 6px; margin-top: 6px; width: 100%;">
-                            <input type="text" class="card-input-element" id="game-input" placeholder="enter answer here" autocomplete="off" oninput="clearInputStateGlow()" disabled style="flex-grow: 1;">
+                            <input type="text" class="card-input-element" id="game-input" placeholder="enter answer here" autocomplete="off" onkeydown="handleInputBoxKeydown(event)" onmousedown="clearInputStateGlow()" disabled style="flex-grow: 1;">
                             <button class="square-submit-btn" id="submit-btn" onclick="processGuess()" disabled>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="9 10 4 15 9 20"></polyline>
@@ -859,7 +865,7 @@
                             </div>
 
                             <div id="panel-content-area" style="display: flex; flex-direction: column; height:100%; justify-content: flex-start;">
-                                <div class="feedback-title" id="fb-title">How To Play</div>
+                                <div class="feedback-title id="fb-title">How To Play</div>
                                 <div class="feedback-msg" id="fb-msg"></div>
                             </div>
                         </div>
@@ -893,7 +899,6 @@
         let currentEarnedPoints = 0;
         let isQuestionFinalized = false;
         let countdownTickerInterval = null;
-        let inputRevertTimeout = null;
 
         let activePanelTab = "help"; 
         let userFinalAnswerLabel = "None";
@@ -985,6 +990,11 @@
         function triggerManualReveal(clueIndex) {
             if (clueIndex !== highestActiveClue + 1 || isQuestionFinalized) return;
             highestActiveClue = clueIndex;
+            
+            if (localStorage.getItem("dev_force_q_index") === null) {
+                localStorage.setItem("td_midgame_active_clue", highestActiveClue);
+            }
+            
             refreshUiLayout();
         }
 
@@ -1000,8 +1010,22 @@
             localStorage.removeItem("td_dev_unlocked_session");
             localStorage.removeItem("dev_force_q_index"); 
             localStorage.removeItem("td_today_match_idx");
+            localStorage.removeItem("td_midgame_active_clue");
+            localStorage.removeItem("td_midgame_attempts");
             document.getElementById("dev-toolbox-wrapper").style.display = "none";
             location.reload(); 
+        }
+
+        function handleInputBoxKeydown(event) {
+            const inputField = document.getElementById("game-input");
+            if (inputField.classList.contains("state-incorrect")) {
+                clearInputStateGlow();
+                event.preventDefault();
+                return;
+            }
+            if (event.key === "Enter" && highestActiveClue !== -1) {
+                processGuess();
+            }
         }
 
         async function runGameInitializationLifecycle() {
@@ -1043,9 +1067,18 @@
                     
                     let savedMatchIdx = parseInt(localStorage.getItem("td_today_match_idx") || "0");
                     if (savedMatchIdx === 999) savedMatchIdx = 0;
+                    
                     let fallbackVal = resolvedServerAnswerPayload?.answers[savedMatchIdx] || resolvedServerAnswerPayload?.answers[0] || "Answered";
                     
-                    finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose");
+                    let targetAltText = todaysQuestionData?.alts[3] || "";
+                    if (todaysQuestionData?.hasAlt && resolvedServerAnswerPayload?.answers) {
+                        if (savedMatchIdx > 0 && todaysQuestionData.alts[0]) {
+                            let cleanPrimary = resolvedServerAnswerPayload.answers[0];
+                            targetAltText = `(or ${cleanPrimary})`;
+                        }
+                    }
+
+                    finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose", targetAltText);
                     switchPanelTab('answers');
                 } catch(e) {
                     console.error("Initialization error under lockout conditions:", e);
@@ -1061,15 +1094,32 @@
                 
                 currentQIdx = data.questionIndex;
                 todaysQuestionData = data.question;
+                
+                if (!sessionForced) {
+                    let cachedClueState = localStorage.getItem("td_midgame_active_clue");
+                    if (cachedClueState !== null) {
+                        highestActiveClue = parseInt(cachedClueState);
+                    } else {
+                        highestActiveClue = -1;
+                    }
+                    
+                    let cachedAttempts = localStorage.getItem("td_midgame_attempts");
+                    if (cachedAttempts !== null) {
+                        questionIncorrectAttempts = parseInt(cachedAttempts);
+                    } else {
+                        questionIncorrectAttempts = 0;
+                    }
+                } else {
+                    highestActiveClue = -1;
+                    questionIncorrectAttempts = 0;
+                }
             } catch (err) {
                 console.error("Error connecting to backend sequence module API:", err);
                 return;
             }
 
-            highestActiveClue = -1; 
-            questionIncorrectAttempts = 0; 
             isQuestionFinalized = false;
-            currentEarnedPoints = 0;
+            currentEarnedPoints = calculateCurrentAvailablePoints();
 
             refreshUiLayout();
             switchPanelTab('help');
@@ -1203,10 +1253,6 @@
         }
 
         function clearInputStateGlow() {
-            if (inputRevertTimeout) {
-                clearTimeout(inputRevertTimeout);
-                inputRevertTimeout = null;
-            }
             const inputField = document.getElementById("game-input");
             if (inputField.classList.contains("state-incorrect") && questionIncorrectAttempts < 2) {
                 inputField.classList.remove("state-incorrect");
@@ -1320,40 +1366,46 @@
                     if (submitBtn) submitBtn.disabled = true;
 
                     localStorage.setItem("td_today_match_idx", serverResult.matchIndex);
+                    
+                    localStorage.removeItem("td_midgame_active_clue");
+                    localStorage.removeItem("td_midgame_attempts");
 
-                    let runtimeCardSubtext = "";
-                    if (todaysQuestionData?.hasAlt) {
-                        let matchIdx = serverResult.matchIndex;
-                        runtimeCardSubtext = todaysQuestionData.alts[3] || "";
+                    let targetAltText = todaysQuestionData.alts[3] || "";
+                    if (todaysQuestionData?.hasAlt && serverResult.matchIndex > 0 && serverResult.answers) {
+                        let cleanPrimary = serverResult.answers[0];
+                        targetAltText = `(or ${cleanPrimary})`;
                     }
 
                     commitResultsToPersistentCookies(true, currentEarnedPoints);
-                    finalizeCurrentQuestion(serverResult.primaryAnswer, "win", runtimeCardSubtext);
+                    finalizeCurrentQuestion(serverResult.primaryAnswer, "win", targetAltText);
                     switchPanelTab('answers');
                 } else {
                     questionIncorrectAttempts++;
+                    
+                    if (localStorage.getItem("dev_force_q_index") === null) {
+                        localStorage.setItem("td_midgame_attempts", questionIncorrectAttempts);
+                    }
+
                     triggerScoreGlow("red");
 
                     if (questionIncorrectAttempts < 2) {
                         inputField.className = "card-input-element state-incorrect";
                         inputField.value = "INCORRECT";
-                        inputField.disabled = true;
-                        if (submitBtn) submitBtn.disabled = true; 
                         
                         updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
                         
                         document.getElementById("fb-title").textContent = "Incorrect Attempt";
                         document.getElementById("fb-title").className = "feedback-title alert";
-                        document.getElementById("fb-msg").innerHTML = "Your score has been halved and you have one attempt remaining. Click your answer box or the action button to retry.";
-
-                        inputRevertTimeout = setTimeout(() => {
-                            clearInputStateGlow();
-                        }, 2000);
+                        document.getElementById("fb-msg").innerHTML = "Your score has been halved and you have one attempt remaining. Click or type anywhere to retry.";
                     } else {
                         currentEarnedPoints = 0;
                         await fetchFullFinalAnswersData(forcedParam);
                         
                         localStorage.setItem("td_today_match_idx", "0");
+                        
+                        localStorage.removeItem("td_midgame_active_clue");
+                        localStorage.removeItem("td_midgame_attempts");
+
                         let fallbackLabel = resolvedServerAnswerPayload?.answers[0] || "Unknown";
                         let defaultFailSubtext = todaysQuestionData?.hasAlt ? todaysQuestionData?.alts[3] || "" : "";
 
@@ -1542,6 +1594,8 @@
             localStorage.removeItem("dev_force_q_index");
             localStorage.removeItem("td_today_score_cached");
             localStorage.removeItem("td_today_match_idx");
+            localStorage.removeItem("td_midgame_active_clue");
+            localStorage.removeItem("td_midgame_attempts");
             location.reload();
         }
 
@@ -1551,12 +1605,10 @@
             } else {
                 localStorage.setItem("dev_force_q_index", val);
             }
+            localStorage.removeItem("td_midgame_active_clue");
+            localStorage.removeItem("td_midgame_attempts");
             location.reload();
         }
-
-        document.getElementById("game-input").addEventListener("keyup", (e) => {
-            if (e.key === "Enter" && highestActiveClue !== -1) processGuess();
-        });
 
         window.onload = runGameInitializationLifecycle;
     </script>
