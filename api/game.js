@@ -3,7 +3,7 @@ const dailyDataset = [
         hasAlt: true,
         clues: ["Dunfermline Athletic", "Borussia Mönchengladbach", "Lille", "Wolverhampton Wanderers"],
         alts: ["(or Debrecen)", "(or Fiorentina)", "(or Columbus Crew)", "(or Salford City)"],
-        counts: [3, 4, 5, 6],
+        counts: ["3 sides", "4 sides", "5 sides", "6 sides"],
         whyText: 'The <span class="highlighted-explanation-span">number of sides of the club\'s crest</span> increases by one each time.',
         answers: ["Wolverhampton Wanderers", "Salford City"],
         accepted: [["wolverhampton wanderers", "wolves", "wolverhampton"], ["salford city", "salford"]]
@@ -40,18 +40,18 @@ const dailyDataset = [
         clues: ["Theo Walcott", "Pierre-Emerick Aubameyang", "Eddie Nketiah", "Viktor Gyokeres"],
         alts: ["", "", "", ""],
         counts: [2008, 2018, 2022, 2025],
-        whyText: 'These are the <span class="highlighted-explanation-span">last four players to be given the number 14 shirt</span> <span class="white-text-span">at Arsenal</span>.',
+        whyText: 'These are the <span class="highlighted-explanation-span">last four players to be given the number 14 shirt</span> <span class="white-text-span">at Arsenal since Thierry Henry left</span>.',
         answers: ["Viktor Gyokeres", "Viktor Gyökeres"],
-        accepted: [["viktor gunnar gyokeres", "viktor gyökeres", "gyokeres", "gyökeres", "viktor"]]
+        accepted: [["viktor gyokeres", "viktor gyökeres", "gyokeres", "gyökeres", "viktor"]]
     },
     {
         hasAlt: false,
-        clues: ["19", "10", "30", "10"],
+        clues: ["19 in Spain", "10 in Spain", "30 in France", "10 in USA"],
         alts: ["", "", "", ""],
         counts: ["Barcelona", "Barcelona", "PSG", "Inter Miami"],
         whyText: 'These are the <span class="highlighted-explanation-span">last 4 shirt numbers worn by Lionel Messi</span> <span class="white-text-span">in club football</span>.',
         answers: ["10"],
-        accepted: [["10"]]
+        accepted: [["10", "10 in usa"]]
     },
     {
         hasAlt: true,
@@ -68,15 +68,15 @@ const dailyDataset = [
         alts: ["", "", "", ""],
         counts: ["AD", "BC", "CB", "DA"],
         whyText: 'The <span class="highlighted-explanation-span">first initial moves up by one</span> (A becomes B, etc.) while the <span class="highlighted-explanation-span">second initial moves down by one</span> (D becomes C, etc.).',
-        answers: ["Daniel Agger", "Darren Anderton", "Darren Ambrose"],
-        accepted: [["daniel agger", "agger"], ["darren anderton", "anderton"], ["darren ambrose", "ambrose"]]
+        answers: ["Daniel Agger", "Dele Alli", "Darren Ambrose"],
+        accepted: [["daniel agger", "agger"], ["dele alli", "alli", "dele"], ["darren ambrose", "ambrose"]]
     },
     {
         hasAlt: true,
         clues: ["Rui Patricio, Wolves", "Hugo Ekitike, Liverpool", "Petr Cech, Arsenal", "Adnan Januzaj, Manchester United"],
         alts: ["", "", "", "(or Kostas Manolas, Roma)"],
         counts: [11, 22, 33, 44],
-        whyText: 'Their <span class="highlighted-explanation-span">double digit shirt number at that club</span> increases by 11 each time.',
+        whyText: 'The players\' <span class="highlighted-explanation-span">double digit shirt number at that club</span> increases by 11 each time.',
         answers: ["Adnan Januzaj", "Kostas Manolas"],
         accepted: [["adnan januzaj", "januzaj", "adnan"], ["kostas manolas", "manolas", "kostas"]]
     },
@@ -88,11 +88,20 @@ const dailyDataset = [
         whyText: 'The sequence tracks players whose names begin with the letters representing odd-numbered calendar months: Month 1 (<span class="highlighted-explanation-span">Jan</span>uary), Month 3 (<span class="highlighted-explanation-span">Mar</span>ch), Month 5 (<span class="highlighted-explanation-span">May</span>), and Month 7 (<span class="highlighted-explanation-span">Jul</span>y).',
         answers: ["Julio Enciso", "Julian Alvarez", "Jules Kounde"],
         accepted: [["julio enciso", "enciso", "julio"], ["julian alvarez", "julián álvarez", "alvarez", "álvarez", "julian", "julián"], ["jules kounde", "jules koundé", "kounde", "koundé", "jules"]]
+    },
+    {
+        hasAlt: true,
+        clues: ["Brooke Norton-Cuffy ↑", "Craig Eastmond →", "Harry Souttar ↓", "Taribo West ←"],
+        alts: ["", "", "", "(or Kieren Westwood, or Weston McKennie)"],
+        counts: ["North", "East", "South", "West"],
+        whyText: 'The players names begin with at least (<span class="highlighted-explanation-span">the first four letters of the cardinal directions</span>, going clockwise',
+        answers: ["Taribo West", "Kieren Westwood", "Weston McKennie"],
+        accepted: [["taribo west", "west", "taribo"], ["kieren westwood", "westwood", "kieran westwood", "ashley westwood"], ["weston mckennie", "weston", "mckennie"]]
     }
 ];
 
 const LAUNCH_DATE = new Date("July 7, 2026 00:00:00").getTime();
-const validFootballersDA = ["daniel agger", "darren anderton", "darren ambrose", "david alaba", "dani alves", "daniel alves", "danny welbeck", "dele alli"];
+const validFootballersDA = ["daniel agger", "darren anderton", "darren ambrose", "david alaba", "dani alves", "daniel alves", "dele alli"];
 
 // Seeded Pseudo-Random Number Generator (Mulberry32)
 function seededRandom(seed) {

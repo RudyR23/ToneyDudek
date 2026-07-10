@@ -91,7 +91,7 @@
         }
 
         .clock-wrapper-container {
-            display: none;
+            display: flex;
             align-items: center;
             gap: 8px;
         }
@@ -449,7 +449,8 @@
             flex-direction: column;
             justify-content: flex-start;
             flex: 1; 
-            overflow: hidden; 
+            height: 100%;
+            overflow-y: auto; 
             position: relative;
             box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
         }
@@ -998,6 +999,7 @@
         function closeDevToolsOverlay() {
             localStorage.removeItem("td_dev_unlocked_session");
             localStorage.removeItem("dev_force_q_index"); 
+            localStorage.removeItem("td_today_match_idx");
             document.getElementById("dev-toolbox-wrapper").style.display = "none";
             location.reload(); 
         }
@@ -1005,6 +1007,7 @@
         async function runGameInitializationLifecycle() {
             devBuildQuestionDropdownOptions();
             renderStaticBarGraphIcon();
+            runLiveMidnightClockEngine();
 
             if (localStorage.getItem("td_dev_unlocked_session") === "true") {
                 document.getElementById("dev-toolbox-wrapper").style.display = "flex";
@@ -1037,7 +1040,10 @@
                     todaysQuestionData = data.question;
 
                     await fetchFullFinalAnswersData(forcedParam);
-                    let fallbackVal = resolvedServerAnswerPayload?.answers[0] || "Answered";
+                    
+                    let savedMatchIdx = parseInt(localStorage.getItem("td_today_match_idx") || "0");
+                    if (savedMatchIdx === 999) savedMatchIdx = 0;
+                    let fallbackVal = resolvedServerAnswerPayload?.answers[savedMatchIdx] || resolvedServerAnswerPayload?.answers[0] || "Answered";
                     
                     finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose");
                     switchPanelTab('answers');
@@ -1067,7 +1073,6 @@
 
             refreshUiLayout();
             switchPanelTab('help');
-            runLiveMidnightClockEngine(); 
         }
 
         async function fetchFullFinalAnswersData(forcedParam) {
@@ -1314,15 +1319,12 @@
                     inputField.disabled = true;
                     if (submitBtn) submitBtn.disabled = true;
 
+                    localStorage.setItem("td_today_match_idx", serverResult.matchIndex);
+
                     let runtimeCardSubtext = "";
                     if (todaysQuestionData?.hasAlt) {
                         let matchIdx = serverResult.matchIndex;
-                        runtimeCardSubtext = (matchIdx === 0 || matchIdx === 999) ? "(or Salford City)" : "(or Wolverhampton Wanderers)";
-                        if (currentQIdx === 1) runtimeCardSubtext = (matchIdx === 0) ? "(or Italy)" : "(or Germany)";
-                        if (currentQIdx === 6) runtimeCardSubtext = (matchIdx === 0) ? "(or Gianluigi Donnarumma)" : "(or Konstantinos Mavropanos)";
-                        if (currentQIdx === 7) runtimeCardSubtext = "(or alternative D.A. player)";
-                        if (currentQIdx === 8) runtimeCardSubtext = (matchIdx === 0) ? "(or Kostas Manolas, Roma)" : "(or Adnan Januzaj, Manchester United)";
-                        if (currentQIdx === 9) runtimeCardSubtext = "(or alternative Jul- player)";
+                        runtimeCardSubtext = todaysQuestionData.alts[3] || "";
                     }
 
                     commitResultsToPersistentCookies(true, currentEarnedPoints);
@@ -1351,8 +1353,9 @@
                         currentEarnedPoints = 0;
                         await fetchFullFinalAnswersData(forcedParam);
                         
+                        localStorage.setItem("td_today_match_idx", "0");
                         let fallbackLabel = resolvedServerAnswerPayload?.answers[0] || "Unknown";
-                        let defaultFailSubtext = todaysQuestionData?.hasAlt ? todaysQuestionData?.alts[3] || "(or alternative)" : "";
+                        let defaultFailSubtext = todaysQuestionData?.hasAlt ? todaysQuestionData?.alts[3] || "" : "";
 
                         inputField.className = "card-input-element state-incorrect";
                         inputField.value = "INCORRECT";
@@ -1456,25 +1459,12 @@
             }
 
             updateHeaderScoreDisplay(currentEarnedPoints);
-            runLiveMidnightClockEngine();
         }
 
         function runLiveMidnightClockEngine() {
             if (countdownTickerInterval) clearInterval(countdownTickerInterval);
             
-            const stats = getHistoricalUserStats();
-            const todayStamp = new Date().toDateString();
-            const isCompleted = (stats.lastPlayedDayStamp === todayStamp);
-
-            const clockWrapper = document.getElementById("clock-wrapper-element");
             const clockWidget = document.getElementById("header-countdown-clock");
-
-            if (!isCompleted) {
-                clockWrapper.style.display = "none";
-                return;
-            }
-
-            clockWrapper.style.display = "flex";
 
             function tick() {
                 const now = new Date();
@@ -1534,7 +1524,7 @@
             defaultOpt.textContent = "-- Choose Variable Override --";
             select.appendChild(defaultOpt);
 
-            for (let idx = 0; idx < 10; idx++) {
+            for (let idx = 0; idx < 11; idx++) {
                 let opt = document.createElement("option");
                 opt.value = idx;
                 opt.textContent = `Sequence ${idx + 1}`;
@@ -1551,6 +1541,7 @@
             saveHistoricalUserStats(stats);
             localStorage.removeItem("dev_force_q_index");
             localStorage.removeItem("td_today_score_cached");
+            localStorage.removeItem("td_today_match_idx");
             location.reload();
         }
 
