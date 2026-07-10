@@ -690,7 +690,7 @@
 
         .credits-signature {
             position: absolute;
-            bottom: 8px;
+            bottom: 0px;
             right: 12px;
             font-size: 0.7rem;
             color: var(--muted-grey);
@@ -698,6 +698,27 @@
             cursor: pointer;
             user-select: none;
         }
+		.footer-links-container {
+			display: flex;
+			gap: 15px;               /* Adds clean spacing between the links */
+			margin-top: 0px;        /* Pushes them slightly below your 420px info box */
+			padding-left: 150px;       /* Keeps them aligned nicely along the left edge */
+			padding-bottom: 15px
+			}
+
+			.footer-text-link {
+			font-family: inherit;
+			color: var(--grey-text); /* Uses your existing slate blue/grey theme color */
+			font-size: 0.7rem;       /* Keeps the text small and unintrusive */
+			text-decoration: none;   /* Removes default underline */
+			font-weight: bold;
+			transition: color 0.2s ease;
+			}
+
+			.footer-text-link:hover {
+			color: var(--light-blue); /* Highlights bright blue when hovered */
+			text-decoration: underline;
+			}
 
         .dev-sandbox-toolbox {
             display: none;
@@ -791,27 +812,7 @@
                 max-height: none;
                 overflow: visible;
             }
-			.footer-links-container {
-			display: flex;
-			gap: 15px;               /* Adds clean spacing between the links */
-			margin-top: 0px;        /* Pushes them slightly below your 420px info box */
-			padding-left: 150px;       /* Keeps them aligned nicely along the left edge */
-			padding-bottom: 15px
-			}
-
-			.footer-text-link {
-			font-family: inherit;
-			color: var(--grey-text); /* Uses your existing slate blue/grey theme color */
-			font-size: 0.7rem;       /* Keeps the text small and unintrusive */
-			text-decoration: none;   /* Removes default underline */
-			font-weight: bold;
-			transition: color 0.2s ease;
-			}
-
-			.footer-text-link:hover {
-			color: var(--light-blue); /* Highlights bright blue when hovered */
-			text-decoration: underline;
-			}
+			
         }
     </style>
 </head>
@@ -899,8 +900,8 @@
 				</div>
             </div>
 
-            <div class="credits-signature" onclick="handleFooterSignatureTrigger()">made by rudyr23, 2026.</div>
-        </div>
+				<div class="credits-signature" onclick="handleFooterSignatureTrigger()">made by rudyr23, 2026.</div>
+				</div>
     </div>
 
     <div class="dev-sandbox-toolbox" id="dev-toolbox-wrapper">
