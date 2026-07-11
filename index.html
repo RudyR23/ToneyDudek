@@ -690,7 +690,7 @@
 
         .credits-signature {
             position: absolute;
-            bottom: 0px;
+            bottom: 12px;
             right: 12px;
             font-size: 0.7rem;
             color: var(--muted-grey);
@@ -698,27 +698,28 @@
             cursor: pointer;
             user-select: none;
         }
-		.footer-links-container {
-			display: flex;
-			gap: 15px;               /* Adds clean spacing between the links */
-			margin-top: 0px;        /* Pushes them slightly below your 420px info box */
-			padding-left: 150px;       /* Keeps them aligned nicely along the left edge */
-			padding-bottom: 15px
-			}
 
-			.footer-text-link {
-			font-family: inherit;
-			color: var(--grey-text); /* Uses your existing slate blue/grey theme color */
-			font-size: 0.7rem;       /* Keeps the text small and unintrusive */
-			text-decoration: none;   /* Removes default underline */
-			font-weight: bold;
-			transition: color 0.2s ease;
-			}
+        .footer-links-container {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            display: flex;
+            gap: 15px;
+        }
 
-			.footer-text-link:hover {
-			color: var(--light-blue); /* Highlights bright blue when hovered */
-			text-decoration: underline;
-			}
+        .footer-text-link {
+            font-family: inherit !important;
+            text-decoration: none !important;
+            color: var(--grey-text); 
+            font-size: 0.7rem;        
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+
+        .footer-text-link:hover {
+            color: var(--light-blue); 
+            text-decoration: underline !important;
+        }
 
         .dev-sandbox-toolbox {
             display: none;
