@@ -1488,6 +1488,7 @@
             userFinalAnswerLabel = primaryLabelToDisplay;
             finalStatusOutcome = statusOutcome;
             
+			document.getElementById("alt-question-badge").style.display = (todaysQuestionData && todaysQuestionData.hasAlt) ? "inline-block" : "none";
             document.getElementById("ans-toggle-action").disabled = false;
             document.getElementById("stats-toggle-action").disabled = false;
             
