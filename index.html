@@ -710,14 +710,14 @@
         .footer-text-link {
             font-family: inherit !important;
             text-decoration: none !important;
-            color: var(--grey-text); 
-            font-size: 0.7rem;        
+            color: var(--grey-text);
+            font-size: 0.7rem;
             font-weight: bold;
             transition: color 0.2s ease;
         }
 
         .footer-text-link:hover {
-            color: var(--light-blue); 
+            color: var(--light-blue);
             text-decoration: underline !important;
         }
 
@@ -799,68 +799,88 @@
             .clues-container {
                 margin-top: 10px;
             }
-            .clues-container > .clue-wrapper {
+            .clues-container > .clue-wrapper:nth-child(1),
+            .clues-container > .clue-wrapper:nth-child(2),
+            .clues-container > .clue-wrapper:nth-child(3),
+            .clues-container > .clue-wrapper:nth-child(4) {
                 top: 0 !important;
             }
             .control-panel {
                 top: 0;
                 height: auto;
-                min-height: 310px;
+                min-height: auto;
                 max-height: none;
+                margin-bottom: 25px;
+            }
+            .input-box-wrapper {
+                min-height: 240px;
+                height: auto;
             }
             .inline-feedback-container {
-                min-height: 270px;
+                min-height: 200px;
+                height: auto;
                 max-height: none;
-                overflow: visible;
+                overflow-y: visible;
             }
-			
+            .credits-signature {
+                position: static;
+                text-align: center;
+                margin-top: 15px;
+                margin-bottom: 5px;
+            }
+            .footer-links-container {
+                position: static;
+                justify-content: center;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="game-overlay">
+    <div class="game-overlay" id="game-border-element">
         <div class="game-inner-border">
             
             <div class="game-header">
                 <div class="game-title">
-                    <img src="logo.png" alt="Toney Dudek: Daily Sequences" class="game-logo-img">
+                    <img src="/logo.png" alt="Toney Dudek Logo" class="game-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none; font-weight:bold; color:var(--pure-white); font-size:1.1rem; letter-spacing:0.5px;">TONEY DUDEK</span>
                 </div>
-                <div class="header-widgets-wrap">
-                    <div class="clock-wrapper-container" id="clock-wrapper-element">
-                        <span class="clock-prepend-text">New sequence in:</span>
-                        <div class="header-clock-box" id="header-countdown-clock">00:00:00</div>
-                    </div>
+                <div class="clock-wrapper-container">
+                    <span class="clock-prepend-text" id="clock-label-text">Next Sequence</span>
+                    <div class="header-clock-box" id="game-timer-display">00:00:00</div>
                 </div>
             </div>
 
             <div class="meta-sub-row">
                 <div class="meta-left-badges">
                     <div class="meta-left-inner-group">
-                        <div class="seq-badge-box" id="header-q-idx">Sequence #1</div>
-                        <div class="alt-badge-box" id="alt-question-badge">ALT</div>
+                        <div class="seq-badge-box" id="header-q-idx">Sequence #--</div>
+                        <div class="alt-badge-box" id="alt-question-badge" style="display: none;">ALT</div>
                     </div>
-                    <div class="header-score-box" id="header-score-box-element"><span class="orange-score-text" id="total-score-val">0</span>&nbsp;<span class="orange-score-text" id="score-unit-text">POINTS</span></div>
+                    <div class="header-score-box">
+                        Score:&nbsp;<span class="orange-score-text" id="header-score-value">100</span>
+                    </div>
                 </div>
+                <div></div>
             </div>
 
             <div class="game-grid">
+                
                 <div class="clues-container">
                     <div class="clue-wrapper">
                         <div class="clue-card" id="card-0"><span class="clue-placeholder">CLUE 1</span></div>
                         <button class="reveal-btn" id="rev-btn-0" onclick="triggerManualReveal(0)">Reveal</button>
                     </div>
-
                     <div class="clue-wrapper">
                         <div class="clue-card" id="card-1"><span class="clue-placeholder">CLUE 2</span></div>
                         <button class="reveal-btn" id="rev-btn-1" onclick="triggerManualReveal(1)">Reveal</button>
                     </div>
-
                     <div class="clue-wrapper">
                         <div class="clue-card" id="card-2"><span class="clue-placeholder">CLUE 3</span></div>
                         <button class="reveal-btn" id="rev-btn-2" onclick="triggerManualReveal(2)">Reveal</button>
                     </div>
-
                     <div class="clue-wrapper">
                         <div class="clue-card" id="card-3"></div>
                         <div style="display: flex; gap: 6px; margin-top: 6px; width: 100%;">
@@ -877,8 +897,8 @@
 
                 <div class="control-panel">
                     <div class="input-box-wrapper">
-                        
                         <div class="inline-feedback-container" id="feedback-panel">
+                            
                             <div class="top-nav-buttons-group">
                                 <button class="help-toggle-btn" id="help-toggle-action" onclick="switchPanelTab('help')" title="How to Play">?</button>
                                 <button class="ans-toggle-btn" id="ans-toggle-action" onclick="switchPanelTab('answers')" title="View Answer" disabled>A</button>
@@ -888,84 +908,169 @@
                             </div>
 
                             <div id="panel-content-area" style="display: flex; flex-direction: column; height:100%; justify-content: flex-start;">
-                                <div class="feedback-title id="fb-title">How To Play</div>
+                                <div class="feedback-title" id="fb-title">How To Play</div>
                                 <div class="feedback-msg" id="fb-msg"></div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
-				<div class="footer-links-container">
-					<a href="https://x.com/ToneyDudek" target="_blank" class="footer-text-link">Twitter/X</a>
-					<a href="https://paypal.me/tgdmrd" target="_blank" class="footer-text-link">Buy me a coffee ♥</a>
-				</div>
+
             </div>
 
-				<div class="credits-signature" onclick="handleFooterSignatureTrigger()">made by rudyr23, 2026.</div>
-				</div>
-    </div>
+            <div class="footer-links-container">
+                <a href="https://x.com/ToneyDudek" target="_blank" class="footer-text-link">Twitter/X</a>
+                <a href="https://paypal.me/tgdmrd" target="_blank" class="footer-text-link">Buy me a coffee</a>
+            </div>
+            
+            <div class="credits-signature" onclick="toggleSandboxDevToolboxMenu()">rudyr23</div>
 
-    <div class="dev-sandbox-toolbox" id="dev-toolbox-wrapper">
-        <div class="dev-close-btn" onclick="closeDevToolsOverlay()">&times;</div>
-        <div class="dev-title">⚠️ Local Testing Sandbox Tools</div>
-        <button class="dev-btn" onclick="devResetTodayLockout()">Reset Today's Lockout Cookie</button>
-        <div>
-            <label style="font-size:0.8rem; color:#f59e0b;" for="dev-q-select">Force Load Sequence:</label>
-            <select class="dev-select" id="dev-q-select" onchange="devForceLoadQuestion(this.value)">
-            </select>
         </div>
     </div>
 
+    <div class="dev-sandbox-toolbox" id="dev-sandbox-element">
+        <div class="dev-close-btn" onclick="toggleSandboxDevToolboxMenu()">×</div>
+        <div class="dev-title">Developer Sandbox Tool Environment</div>
+        <button class="dev-btn" onclick="devResetTodayLockout()">Reset Completion Locks</button>
+        <select class="dev-select" id="dev-sequence-dropdown-element" onchange="devForceLoadQuestion(this.value)"></select>
+    </div>
+
     <script>
+        let todaysQuestionData = null;
         let currentQIdx = 0;
-        let todaysQuestionData = null; 
-        let resolvedServerAnswerPayload = null; 
-
         let highestActiveClue = -1; 
-        let questionIncorrectAttempts = 0; 
-        let currentEarnedPoints = 0;
+        let questionIncorrectAttempts = 0;
+        let activePanelTab = 'help'; 
         let isQuestionFinalized = false;
-        let countdownTickerInterval = null;
-
-        let activePanelTab = "help"; 
-        let userFinalAnswerLabel = "None";
-        let finalStatusOutcome = "lose"; 
+        let userFinalAnswerLabel = "";
+        let finalStatusOutcome = ""; 
+        let currentEarnedPoints = 100;
+        let resolvedServerAnswerPayload = null;
 
         function getHistoricalUserStats() {
-            let stats = localStorage.getItem("td_sequence_daily_stats");
-            if (stats) return JSON.parse(stats);
-            return { played: 0, currentStreak: 0, maxStreak: 0, totalPoints: 0, highScore: 0, lastPlayedDayStamp: null, lastDayResult: null, lastUsedClues: 0 };
+            let data = localStorage.getItem("td_user_stats_v1");
+            if (!data) {
+                return {
+                    winStreak: 0,
+                    maxStreak: 0,
+                    totalGames: 0,
+                    totalWins: 0,
+                    distribution: [0, 0, 0, 0],
+                    lastPlayedDayStamp: null,
+                    lastDayResult: null,
+                    lastUsedClues: 0
+                };
+            }
+            try {
+                return JSON.parse(data);
+            } catch(e) {
+                return {
+                    winStreak: 0,
+                    maxStreak: 0,
+                    totalGames: 0,
+                    totalWins: 0,
+                    distribution: [0, 0, 0, 0],
+                    lastPlayedDayStamp: null,
+                    lastDayResult: null,
+                    lastUsedClues: 0
+                };
+            }
         }
 
-        function saveHistoricalUserStats(statsObj) {
-            localStorage.setItem("td_sequence_daily_stats", JSON.stringify(statsObj));
-        }
-
-        function triggerScoreGlow(type) {
-            const element = document.getElementById("header-score-box-element");
-            element.classList.remove("glow-red", "glow-green");
-            void element.offsetWidth; 
-            element.classList.add(type === "red" ? "glow-red" : "glow-green");
+        function saveHistoricalUserStats(s) {
+            localStorage.setItem("td_user_stats_v1", JSON.stringify(s));
         }
 
         function calculateCurrentAvailablePoints() {
-            if (highestActiveClue === -1 || questionIncorrectAttempts >= 2) return 0;
-            let available = 3 - highestActiveClue; 
-            return questionIncorrectAttempts === 1 ? available / 2 : available;
+            if (highestActiveClue === -1) return 100;
+            let base = 100;
+            if (highestActiveClue === 0) base = 60;
+            if (highestActiveClue === 1) base = 40;
+            if (highestActiveClue === 2) base = 20;
+            if (questionIncorrectAttempts === 1) {
+                base = Math.floor(base / 2);
+            }
+            return base;
         }
 
-        function updateHeaderScoreDisplay(pointsVal) {
-            let previousScore = parseInt(document.getElementById("total-score-val").textContent) || 0;
-            document.getElementById("total-score-val").textContent = pointsVal;
-            document.getElementById("score-unit-text").textContent = (pointsVal === 1) ? "POINT" : "POINTS";
-            
-            if (highestActiveClue >= 0 && !isQuestionFinalized) {
-                if (pointsVal > previousScore) {
-                    triggerScoreGlow("green");
-                } else if (pointsVal < previousScore) {
-                    triggerScoreGlow("red");
-                }
+        function updateHeaderScoreDisplay(val) {
+            document.getElementById("header-score-value").textContent = val;
+        }
+
+        function triggerScoreGlow(colorStyle) {
+            const container = document.getElementById("game-border-element");
+            const cls = (colorStyle === "green") ? "glow-green" : "glow-red";
+            container.classList.remove("glow-green", "glow-red");
+            void container.offsetWidth; 
+            container.classList.add(cls);
+            setTimeout(() => { container.classList.remove(cls); }, 1200);
+        }
+
+        function updateCountdownClockTimer() {
+            const now = new Date();
+            const tomorrow = new Date();
+            tomorrow.setHours(24, 0, 0, 0);
+            const diff = tomorrow - now;
+            if (diff <= 0) {
+                document.getElementById("game-timer-display").textContent = "00:00:00";
+                return;
             }
+            const hrs = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+            const mins = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            const secs = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+            document.getElementById("game-timer-display").textContent = `${hrs}:${mins}:${secs}`;
+        }
+
+        function toggleSandboxDevToolboxMenu() {
+            const box = document.getElementById("dev-sandbox-element");
+            if (box.style.display === "flex") {
+                box.style.display = "none";
+            } else {
+                box.style.display = "flex";
+                populateDevSandboxDropdownOptions();
+            }
+        }
+
+        function populateDevSandboxDropdownOptions() {
+            const select = document.getElementById("dev-sequence-dropdown-element");
+            select.innerHTML = "";
+            let defaultOpt = document.createElement("option");
+            defaultOpt.value = "";
+            defaultOpt.textContent = "-- Choose Variable Override --";
+            select.appendChild(defaultOpt);
+
+            for (let idx = 0; idx < 11; idx++) {
+                let opt = document.createElement("option");
+                opt.value = idx;
+                opt.textContent = `Sequence ${idx + 1}`;
+                if(localStorage.getItem("dev_force_q_index") == idx) opt.selected = true;
+                select.appendChild(opt);
+            }
+        }
+
+        function devResetTodayLockout() {
+            let stats = getHistoricalUserStats();
+            stats.lastPlayedDayStamp = null;
+            stats.lastDayResult = null;
+            stats.lastUsedClues = 0;
+            saveHistoricalUserStats(stats);
+            localStorage.removeItem("dev_force_q_index");
+            localStorage.removeItem("td_today_score_cached");
+            localStorage.removeItem("td_today_match_idx");
+            localStorage.removeItem("td_midgame_active_clue");
+            localStorage.removeItem("td_midgame_attempts");
+            location.reload();
+        }
+
+        function devForceLoadQuestion(val) {
+            if(val === \"\") {
+                localStorage.removeItem("dev_force_q_index");
+            } else {
+                localStorage.setItem("dev_force_q_index", val);
+            }
+            localStorage.removeItem("td_midgame_active_clue");
+            localStorage.removeItem("td_midgame_attempts");
+            location.reload();
         }
 
         function getStaticBarGraphHtml(colorStyle) {
@@ -987,7 +1092,6 @@
         function renderAbstractCardBackground() {
             const card = document.getElementById("card-3");
             card.innerHTML = `<span class="clue-placeholder">???</span>`;
-            
             const qmConfig = [
                 { top: "5%", left: "10%", size: "2.8rem", rot: "-15deg" },
                 { top: "12%", left: "35%", size: "1.4rem", rot: "20deg" },
@@ -1000,14 +1104,13 @@
                 { top: "58%", left: "78%", size: "2.7rem", rot: "18deg" },
                 { top: "48%", left: "22%", size: "1.2rem", rot: "-5deg" }
             ];
-
             qmConfig.forEach(cfg => {
                 let qmSpan = document.createElement("div");
                 qmSpan.className = "card-qm";
                 qmSpan.style.top = cfg.top;
                 qmSpan.style.left = cfg.left;
                 qmSpan.style.fontSize = cfg.size;
-                qmSpan.style.opacity = "0.35"; 
+                qmSpan.style.opacity = "0.35";
                 qmSpan.style.transform = `rotate(${cfg.rot})`;
                 qmSpan.textContent = "?";
                 card.appendChild(qmSpan);
@@ -1015,88 +1118,56 @@
         }
 
         function triggerManualReveal(clueIndex) {
-            if (clueIndex !== highestActiveClue + 1 || isQuestionFinalized) return;
+            if (isQuestionFinalized) return;
+            if (clueIndex !== highestActiveClue + 1) return;
             highestActiveClue = clueIndex;
-            
             if (localStorage.getItem("dev_force_q_index") === null) {
                 localStorage.setItem("td_midgame_active_clue", highestActiveClue);
             }
-            
+            currentEarnedPoints = calculateCurrentAvailablePoints();
+            updateHeaderScoreDisplay(currentEarnedPoints);
             refreshUiLayout();
         }
 
-        function handleFooterSignatureTrigger() {
-            let passInput = prompt("Enter access credentials:");
-            if (passInput && btoa(passInput) === "aXZhbmplcnp5MTcxMw==") {
-                localStorage.setItem("td_dev_unlocked_session", "true");
-                document.getElementById("dev-toolbox-wrapper").style.display = "flex";
-            }
+        function handleInputBoxKeydown(e) {
+            if (e.key === "Enter" && highestActiveClue !== -1) processGuess();
         }
 
-        function closeDevToolsOverlay() {
-            localStorage.removeItem("td_dev_unlocked_session");
-            localStorage.removeItem("dev_force_q_index"); 
-            localStorage.removeItem("td_today_match_idx");
-            localStorage.removeItem("td_midgame_active_clue");
-            localStorage.removeItem("td_midgame_attempts");
-            document.getElementById("dev-toolbox-wrapper").style.display = "none";
-            location.reload(); 
-        }
-
-        function handleInputBoxKeydown(event) {
-            const inputField = document.getElementById("game-input");
-            if (inputField.classList.contains("state-incorrect")) {
-                clearInputStateGlow();
-                event.preventDefault();
-                return;
-            }
-            if (event.key === "Enter" && highestActiveClue !== -1) {
-                processGuess();
-            }
-        }
-
-        async function runGameInitializationLifecycle() {
-            devBuildQuestionDropdownOptions();
+        async function runGameInitialization() {
             renderStaticBarGraphIcon();
-            runLiveMidnightClockEngine();
-
-            if (localStorage.getItem("td_dev_unlocked_session") === "true") {
-                document.getElementById("dev-toolbox-wrapper").style.display = "flex";
-            }
-
-            const forcedParam = localStorage.getItem("dev_force_q_index") || "";
-            let fetchUrl = `/api/game`;
-            if (forcedParam !== "") {
-                fetchUrl += `?forcedIndex=${forcedParam}`;
-            }
+            renderAbstractCardBackground();
+            updateCountdownClockTimer();
+            setInterval(updateCountdownClockTimer, 1000);
 
             const stats = getHistoricalUserStats();
             const currentDayStamp = new Date().toDateString();
-            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
+            const forcedParam = localStorage.getItem("dev_force_q_index") || "";
+            const sessionForced = forcedParam !== "";
+
+            let fetchUrl = `/api/game`;
+            if (sessionForced) {
+                fetchUrl += `?forcedIndex=${forcedParam}`;
+            }
 
             if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
                 isQuestionFinalized = true;
-                highestActiveClue = 2;
-                currentEarnedPoints = parseInt(localStorage.getItem("td_today_score_cached") || "0");
+                updateHeaderScoreDisplay(parseInt(localStorage.getItem("td_today_score_cached") || "0"));
                 
-                document.getElementById("game-input").disabled = true;
-                document.getElementById("submit-btn").disabled = true;
-
                 try {
-                    const response = await fetch(fetchUrl, {
-                        headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {}
-                    });
+                    // Fix 1: Append forcedParam if present under completion loading
+                    let initUrl = `/api/game`;
+                    if (forcedParam) initUrl += `?forcedIndex=${forcedParam}`;
+
+                    const response = await fetch(initUrl, { headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {} });
                     const data = await response.json();
                     currentQIdx = data.questionIndex;
                     todaysQuestionData = data.question;
-
-                    await fetchFullFinalAnswersData(forcedParam);
                     
+                    await fetchFullFinalAnswersData(forcedParam);
+
                     let savedMatchIdx = parseInt(localStorage.getItem("td_today_match_idx") || "0");
                     if (savedMatchIdx === 999) savedMatchIdx = 0;
-                    
                     let fallbackVal = resolvedServerAnswerPayload?.answers[savedMatchIdx] || resolvedServerAnswerPayload?.answers[0] || "Answered";
-                    
                     let targetAltText = todaysQuestionData?.alts[3] || "";
                     if (todaysQuestionData?.hasAlt && resolvedServerAnswerPayload?.answers) {
                         if (savedMatchIdx > 0 && todaysQuestionData.alts[0]) {
@@ -1104,7 +1175,6 @@
                             targetAltText = `(or ${cleanPrimary})`;
                         }
                     }
-
                     finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose", targetAltText);
                     switchPanelTab('answers');
                 } catch(e) {
@@ -1114,14 +1184,11 @@
             }
 
             try {
-                const response = await fetch(fetchUrl, {
-                    headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {}
-                });
+                const response = await fetch(fetchUrl, { headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {} });
                 const data = await response.json();
-                
                 currentQIdx = data.questionIndex;
                 todaysQuestionData = data.question;
-                
+
                 if (!sessionForced) {
                     let cachedClueState = localStorage.getItem("td_midgame_active_clue");
                     if (cachedClueState !== null) {
@@ -1129,7 +1196,6 @@
                     } else {
                         highestActiveClue = -1;
                     }
-                    
                     let cachedAttempts = localStorage.getItem("td_midgame_attempts");
                     if (cachedAttempts !== null) {
                         questionIncorrectAttempts = parseInt(cachedAttempts);
@@ -1147,19 +1213,19 @@
 
             isQuestionFinalized = false;
             currentEarnedPoints = calculateCurrentAvailablePoints();
-
             refreshUiLayout();
             switchPanelTab('help');
         }
 
+        // Fix 3: Accept forcedParam argument in full answers lookup definition
         async function fetchFullFinalAnswersData(forcedParam) {
             let fetchUrl = `/api/game`;
             if (forcedParam) fetchUrl += `?forcedIndex=${forcedParam}`;
             
-            const res = await fetch(fetchUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ guess: "####REVEAL_FORCE_STATE####" })
+            const res = await fetch(fetchUrl, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ guess: "####REVEAL_FORCE_STATE####" }) 
             });
             const data = await res.json();
             resolvedServerAnswerPayload = data;
@@ -1167,36 +1233,31 @@
 
         function switchPanelTab(tabName) {
             if ((tabName === 'answers' || tabName === 'stats') && !isQuestionFinalized) {
-                return; 
+                return;
             }
-
             activePanelTab = tabName;
-            
-            document.getElementById("help-toggle-action").classList.remove("active-nav");
-            document.getElementById("ans-toggle-action").classList.remove("active-nav");
-            document.getElementById("stats-toggle-action").classList.remove("active-nav");
 
-            document.getElementById(tabName === 'help' ? "help-toggle-action" : tabName === 'answers' ? "ans-toggle-action" : "stats-toggle-action").classList.add("active-nav");
+            document.getElementById("help-toggle-action").classList.toggle("active-nav", tabName === 'help');
+            document.getElementById("ans-toggle-action").classList.toggle("active-nav", tabName === 'answers');
+            document.getElementById("stats-toggle-action").classList.toggle("active-nav", tabName === 'stats');
 
             const displayArea = document.getElementById("panel-content-area");
-            displayArea.innerHTML = ""; 
 
             if (tabName === 'help') {
                 displayArea.innerHTML = `
-                    <div class="feedback-title info">How To Play</div>
-                    <div class="feedback-msg" style="display:block; margin-bottom: 0;">
+                    <div class="feedback-title" id="fb-title">How To Play</div>
+                    <div class="feedback-msg" id="fb-msg">Find the connection that joins the sequence and guess what comes 4th!</div>
+                    <div style="display:flex; flex-direction:column; flex:1; justify-content:flex-start;">
+                        <div class="section-header-pill">Rules</div>
                         <ul class="rules-bullet-list">
-                            <li class="rules-bullet-item">Reveal clues to find the 4th in the sequence</li>
-                            <li class="rules-bullet-item">Reveal <span style="font-weight:bold;">CLUE 1</span> to start the game and <span class="green-rule-text" style="font-weight:bold;">gain</span> <span class="orange-score-text" style="font-weight:bold;">3 POINTS</span></li>
-                            <li class="rules-bullet-item"><span class="red-rule-text">Lose</span> <span class="orange-score-text">1 POINT</span> for each subsequent CLUE revealed</li>
-                            <li class="rules-bullet-item">Max 2 attempts per question - An incorrect first attempt will <span class="red-rule-text">halve</span> your score</li>
+                            <li class="rules-bullet-item">Reveal clues sequentially to build the connection thread</li>
+                            <li class="rules-bullet-item">Fewer clues revealed before a correct answer gives a higher final score</li>
                             <li class="rules-bullet-item"><span style="color:var(--purple-alt); font-weight:bold;">ALT</span> questions have multiple correct answers, sometimes alternative clues are shown to help but you only ever need to give one answer</li>
                             <li class="rules-bullet-item" style="font-weight: bold; color: var(--answer-highlight);">New sequence every 24 hours!</li>
                         </ul>
                     </div>
                 `;
-            } 
-            else if (tabName === 'answers') {
+            } else if (tabName === 'answers') {
                 let secondaryTextReveal = "";
                 const answersArray = resolvedServerAnswerPayload?.answers || [userFinalAnswerLabel];
                 const whyTextVal = resolvedServerAnswerPayload?.whyText || "Explanation securely verified by cloud.";
@@ -1228,46 +1289,34 @@
                         <div id="fb-explanation-text">${whyTextVal}</div>
                     </div>
                     <button class="continue-stats-panel-btn" onclick="switchPanelTab('stats')">
-                        Continue to Stats ${getStaticBarGraphHtml('currentColor')}
+                        Continue to Stats
+                        ${getStaticBarGraphHtml('currentColor')}
                     </button>
                 `;
-            } 
-            else if (tabName === 'stats') {
+            } else if (tabName === 'stats') {
                 const stats = getHistoricalUserStats();
                 let statusTitle = "STATISTICS";
                 let statusClass = "summary";
-
+                
                 let outcomeSymbol = (stats.lastPlayedDayStamp === new Date().toDateString()) ? ((stats.lastDayResult === "win") ? "✅" : "❌") : "-";
                 let todayPointsValue = (stats.lastPlayedDayStamp === new Date().toDateString()) ? (localStorage.getItem("td_today_score_cached") || "0") : "0";
-                let todayCluesValue = (stats.lastPlayedDayStamp === new Date().toDateString()) ? (stats.lastUsedClues || "0") : "0";
-                let average = stats.played > 0 ? (stats.totalPoints / stats.played).toFixed(1) : "0.0";
 
                 displayArea.innerHTML = `
                     <div class="feedback-title ${statusClass}">${statusTitle}</div>
-                    <div style="display:flex; flex-direction:column; justify-content: space-between; height:100%;">
-                        <div>
-                            <div class="section-header-pill" style="width: max-content;">Today's Summary</div>
-                            <div class="stats-grid" id="today-stats-grid-element">
-                                <div class="stat-box"><div class="stat-val">${outcomeSymbol}</div><div class="stat-lbl">Result</div></div>
-                                <div class="stat-box"><div class="stat-val">${todayPointsValue}</div><div class="stat-lbl">Points Gained</div></div>
-                                <div class="stat-box"><div class="stat-val">${todayCluesValue}</div><div class="stat-lbl">Clues Used</div></div>
-                            </div>
-                            <button class="share-btn" id="share-today-btn" onclick="copySharePayload('today', 'share-today-btn')" style="margin-bottom: 6px;">Share Result</button>
-
-                            <div class="section-header-pill" style="margin-top: 14px; width: max-content;">All-Time Statistics</div>
-                            <div class="stats-grid">
-                                <div class="stat-box"><div class="stat-val">${stats.played}</div><div class="stat-lbl">Played</div></div>
-                                <div class="stat-box"><div class="stat-val">${stats.currentStreak}</div><div class="stat-lbl">Current Streak</div></div>
-                                <div class="stat-box"><div class="stat-val">${stats.maxStreak}</div><div class="stat-lbl">Max Streak</div></div>
-                                <div class="stat-box"><div class="stat-val">${stats.totalPoints}</div><div class="stat-lbl">Total Points</div></div>
-                                <div class="stat-box"><div class="stat-val">${average}</div><div class="stat-lbl">Average Score</div></div>
-                                <div class="stat-box"><div class="stat-val">${stats.highScore}</div><div class="stat-lbl">High Score</div></div>
-                            </div>
-                            <button class="share-btn" id="share-alltime-btn" onclick="copySharePayload('alltime', 'share-alltime-btn')">Share Career Stats</button>
-                        </div>
+                    <div class="stats-grid" id="today-stats-grid-element">
+                        <div class="stat-box"><div class="stat-val">${outcomeSymbol}</div><div class="stat-lbl">Today</div></div>
+                        <div class="stat-box"><div class="stat-val">${todayPointsValue}</div><div class="stat-lbl">Points</div></div>
+                        <div class="stat-box"><div class="stat-val">${stats.winStreak}</div><div class="stat-lbl">Streak</div></div>
+                        <div class="stat-box"><div class="stat-val">${stats.totalGames}</div><div class="stat-lbl">Played</div></div>
+                        <div class="stat-box"><div class="stat-val">${stats.totalWins}</div><div class="stat-lbl">Wins</div></div>
+                        <div class="stat-box"><div class="stat-val">${stats.maxStreak}</div><div class="stat-lbl">Max Strk</div></div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap: 4px; width:100%;">
+                        <button class="share-btn" id="share-today-btn" onclick="generateShareClipboardString('today')">Copy Today's Result</button>
+                        <button class="share-btn" id="share-alltime-btn" onclick="generateShareClipboardString('alltime')" style="background-color: var(--steel-blue);">Copy All-Time Stats</button>
                     </div>
                 `;
-                
+
                 setTimeout(() => {
                     const grid = document.getElementById("today-stats-grid-element");
                     if (grid) {
@@ -1293,20 +1342,20 @@
 
         function refreshUiLayout() {
             if (!todaysQuestionData) return;
-            
             const stats = getHistoricalUserStats();
             const currentDayStamp = new Date().toDateString();
             const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
+
             if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
-                return; 
+                return;
             }
 
             const q = todaysQuestionData;
             document.getElementById("header-q-idx").textContent = `Sequence #${currentQIdx + 1}`;
             document.getElementById("alt-question-badge").style.display = q.hasAlt ? "inline-block" : "none";
-            
+
             const isClueOneActive = (highestActiveClue >= 0);
-            
+
             if (!isQuestionFinalized) {
                 const inputField = document.getElementById("game-input");
                 if (!inputField.classList.contains("state-incorrect")) {
@@ -1329,71 +1378,61 @@
                             let parts = mainText.split(', ');
                             mainText = `${parts[0]}<span class="club-sub-line">${parts[1]}</span>`;
                         }
-                        
                         if (q.hasAlt && q.alts[i] && !hideBracketsUpfront) {
                             card.innerHTML = `<div class="hint-text-wrapper">${mainText}<br><span class="alt-clue-span">${q.alts[i]}</span></div>`;
                         } else {
                             card.innerHTML = `<div class="hint-text-wrapper">${mainText}</div>`;
                         }
-                        btn.textContent = "Revealed";
-                        btn.disabled = true;
+                        if (btn) btn.disabled = true;
                     } else {
                         card.className = "clue-card";
                         card.innerHTML = `<span class="clue-placeholder">CLUE ${i + 1}</span>`;
-                        btn.textContent = "Reveal";
-                        btn.disabled = (i !== highestActiveClue + 1) || isQuestionFinalized;
+                        if (btn) btn.disabled = (i !== highestActiveClue + 1);
                     }
                 } else {
-                    card.className = "clue-card";
-                    renderAbstractCardBackground();
+                    if (!isQuestionFinalized) {
+                        card.className = "clue-card";
+                        renderAbstractCardBackground();
+                    }
                 }
             }
-            if (!isQuestionFinalized) updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
         }
 
         async function processGuess() {
-            if (isQuestionFinalized || highestActiveClue === -1) return;
-            
-            const stats = getHistoricalUserStats();
-            const currentDayStamp = new Date().toDateString();
-            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
-            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
-                return; 
-            }
-
+            if (isQuestionFinalized) return;
             const inputField = document.getElementById("game-input");
             const submitBtn = document.getElementById("submit-btn");
-            const userText = inputField.value;
-            
-            if (inputField.classList.contains("state-incorrect")) {
-                clearInputStateGlow();
-                return;
-            }
-            if (!userText.trim()) return;
+            const userGuess = inputField.value.trim();
+            if (!userGuess) return;
+
+            inputField.disabled = true;
+            submitBtn.disabled = true;
 
             const forcedParam = localStorage.getItem("dev_force_q_index") || "";
-            let apiEndpoint = `/api/game`;
-            if (forcedParam !== "") apiEndpoint += `?forcedIndex=${forcedParam}`;
+            let apiEndpoint = "/api/game";
+            if (forcedParam !== "") {
+                apiEndpoint += `?forcedIndex=${forcedParam}`;
+            }
 
             try {
                 const response = await fetch(apiEndpoint, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ guess: userText.trim() })
+                    headers: { 'Content-Type': 'application/json', 'x-forced-index': forcedParam },
+                    body: JSON.stringify({ guess: userGuess })
                 });
-                const serverResult = await response.json();
+
+                let serverResult;
+                serverResult = await response.json();
 
                 if (serverResult.correct) {
                     resolvedServerAnswerPayload = serverResult;
                     currentEarnedPoints = calculateCurrentAvailablePoints();
-                    
                     inputField.className = "card-input-element state-correct";
                     inputField.value = "CORRECT";
                     inputField.disabled = true;
                     if (submitBtn) submitBtn.disabled = true;
 
                     localStorage.setItem("td_today_match_idx", serverResult.matchIndex);
-                    
                     localStorage.removeItem("td_midgame_active_clue");
                     localStorage.removeItem("td_midgame_attempts");
 
@@ -1408,28 +1447,26 @@
                     switchPanelTab('answers');
                 } else {
                     questionIncorrectAttempts++;
-                    
                     if (localStorage.getItem("dev_force_q_index") === null) {
                         localStorage.setItem("td_midgame_attempts", questionIncorrectAttempts);
                     }
-
                     triggerScoreGlow("red");
 
                     if (questionIncorrectAttempts < 2) {
                         inputField.className = "card-input-element state-incorrect";
                         inputField.value = "INCORRECT";
-                        
                         updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
-                        
+
                         document.getElementById("fb-title").textContent = "Incorrect Attempt";
                         document.getElementById("fb-title").className = "feedback-title alert";
                         document.getElementById("fb-msg").innerHTML = "Your score has been halved and you have one attempt remaining. Click or type anywhere to retry.";
                     } else {
                         currentEarnedPoints = 0;
+                        
+                        // Fix 2: Pass forcedParam here to keep developer state safe on termination fail loops
                         await fetchFullFinalAnswersData(forcedParam);
-                        
+
                         localStorage.setItem("td_today_match_idx", "0");
-                        
                         localStorage.removeItem("td_midgame_active_clue");
                         localStorage.removeItem("td_midgame_attempts");
 
@@ -1456,44 +1493,88 @@
             const todayStamp = new Date().toDateString();
             const yesterdayStamp = new Date(Date.now() - 86400000).toDateString();
 
-            if (stats.lastPlayedDayStamp === todayStamp && localStorage.getItem("dev_force_q_index") === null) return;
+            if (stats.lastPlayedDayStamp === todayStamp) return;
 
             localStorage.setItem("td_today_score_cached", pointsScored);
-
-            stats.played += 1;
-            stats.totalPoints += pointsScored;
+            stats.lastPlayedDayStamp = todayStamp;
+            stats.lastDayResult = isWin ? "win" : "lose";
             stats.lastUsedClues = highestActiveClue + 1;
-            if (pointsScored > stats.highScore) stats.highScore = pointsScored;
+            stats.totalGames++;
 
             if (isWin) {
-                if (stats.lastPlayedDayStamp === yesterdayStamp) {
-                    stats.currentStreak += 1;
+                stats.totalWins++;
+                if (stats.lastPlayedDayStamp === yesterdayStamp || stats.lastPlayedDayStamp === null || stats.winStreak === 0) {
+                    stats.winStreak++;
                 } else {
-                    stats.currentStreak = 1;
+                    stats.winStreak = 1;
                 }
-                if (stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak;
-                stats.lastDayResult = "win";
+                if (stats.winStreak > stats.maxStreak) {
+                    stats.maxStreak = stats.winStreak;
+                }
+                let distIndex = highestActiveClue + 1; 
+                if (distIndex >= 0 && distIndex <= 3) {
+                    stats.distribution[distIndex]++;
+                }
             } else {
-                stats.currentStreak = 0;
-                stats.lastDayResult = "lose";
+                stats.winStreak = 0;
             }
 
-            stats.lastPlayedDayStamp = todayStamp;
             saveHistoricalUserStats(stats);
         }
 
-        function finalizeCurrentQuestion(primaryLabelToDisplay, statusOutcome, structuralCardAltText) {
-            isQuestionFinalized = true; 
+        function finalizeCurrentQuestion(primaryLabelToDisplay, winLoseStatus, structuralCardAltText) {
+            isQuestionFinalized = true;
             userFinalAnswerLabel = primaryLabelToDisplay;
-            finalStatusOutcome = statusOutcome;
-            
+            finalStatusOutcome = winLoseStatus;
+
             document.getElementById("ans-toggle-action").disabled = false;
             document.getElementById("stats-toggle-action").disabled = false;
-            
+
+            updateHeaderScoreDisplay(parseInt(localStorage.getItem("td_today_score_cached") || "0"));
+
+            const card = document.getElementById("card-3");
+            card.className = "clue-card revealed";
+            if (winLoseStatus === "win") {
+                card.style.borderColor = "var(--success-green)";
+                card.style.boxShadow = "0 0 15px rgba(16, 185, 129, 0.4)";
+            } else {
+                card.style.borderColor = "var(--alert-red)";
+                card.style.boxShadow = "0 0 15px rgba(239, 68, 68, 0.4)";
+            }
+
+            let labelText = primaryLabelToDisplay;
+            let explanationMetric = "?";
+
+            for (let i = 0; i < 4; i++) {
+                const targetCard = document.getElementById(`card-${i}`);
+                targetCard.className = "clue-card revealed";
+                const btn = document.getElementById(`rev-btn-${i}`);
+                if (btn) btn.disabled = true;
+
+                let cardText = (i === 3) ? primaryLabelToDisplay : todaysQuestionData.clues[i];
+                if (currentQIdx === 8) {
+                    let parts = cardText.split(', ');
+                    if (parts.length > 1) cardText = `${parts[0]}<span class="club-sub-line">${parts[1]}</span>`;
+                    else if (i === 3) cardText = primaryLabelToDisplay.toLowerCase().includes("januzaj") ? "Adnan Januzaj<span class=\"club-sub-line\">Manchester United</span>" : "Kostas Manolas<span class=\"club-sub-line\">Roma</span>";
+                }
+                if (currentQIdx === 7 && i === 3) {
+                    const words = primaryLabelToDisplay.split(' ');
+                    if (words.length >= 2) explanationMetric = `${words[0].charAt(0).toUpperCase()}${words[words.length - 1].charAt(0).toUpperCase()}`;
+                } else if (todaysQuestionData.counts && todaysQuestionData.counts[i]) {
+                    explanationMetric = todaysQuestionData.counts[i];
+                }
+
+                let displayBracketText = `[${explanationMetric}]`;
+                if (i === 3 && structuralCardAltText) {
+                    card.innerHTML = `<div class="hint-text-wrapper">${cardText}<br><span class="alt-clue-span">${structuralCardAltText}</span></div><div class="card-inline-metric">${displayBracketText}</div>`;
+                } else {
+                    let altTextHtml = (todaysQuestionData.hasAlt && todaysQuestionData.alts[i]) ? `<br><span class="alt-clue-span">${todaysQuestionData.alts[i]}</span>` : "";
+                    targetCard.innerHTML = `<div class="hint-text-wrapper">${cardText}${altTextHtml}</div><div class="card-inline-metric">${displayBracketText}</div>`;
+                }
+            }
+
             const inputField = document.getElementById("game-input");
-            const submitBtn = document.getElementById("submit-btn");
-            
-            if (statusOutcome === "win") {
+            if (winLoseStatus === "win") {
                 inputField.className = "card-input-element state-correct";
                 inputField.value = "CORRECT";
             } else {
@@ -1501,143 +1582,30 @@
                 inputField.value = "INCORRECT";
             }
             inputField.disabled = true;
+            const submitBtn = document.getElementById("submit-btn");
             if (submitBtn) submitBtn.disabled = true;
-
-            const countsArray = resolvedServerAnswerPayload?.counts || ["?", "?", "?", "?"];
-
-            for(let i = 0; i < 4; i++) {
-                const card = document.getElementById(`card-${i}`);
-                card.className = "clue-card revealed";
-                let explanationMetric = `${countsArray[i]}`; 
-                let labelText = (i === 3) ? primaryLabelToDisplay : todaysQuestionData.clues[i];
-                
-                if (currentQIdx === 8) {
-                    let parts = labelText.split(', ');
-                    if (parts.length > 1) labelText = `${parts[0]}<span class="club-sub-line">${parts[1]}</span>`;
-                    else if (i === 3) labelText = primaryLabelToDisplay.toLowerCase().includes("januzaj") ? "Adnan Januzaj<span class=\"club-sub-line\">Manchester United</span>" : "Kostas Manolas<span class=\"club-sub-line\">Roma</span>";
-                }
-
-                if (currentQIdx === 7 && i === 3) {
-                    const words = primaryLabelToDisplay.split(' ');
-                    if (words.length >= 2) explanationMetric = `${words[0].charAt(0).toUpperCase()}${words[words.length - 1].charAt(0).toUpperCase()}`;
-                }
-
-                let displayBracketText = `[${explanationMetric}]`;
-
-                if (i === 3 && structuralCardAltText) {
-                    card.innerHTML = `<div class="hint-text-wrapper">${labelText}<br><span class="alt-clue-span">${structuralCardAltText}</span></div><div class="card-inline-metric">${displayBracketText}</div>`;
-                } else {
-                    let altTextHtml = (todaysQuestionData.hasAlt && todaysQuestionData.alts[i]) ? `<br><span class="alt-clue-span">${todaysQuestionData.alts[i]}</span>` : "";
-                    card.innerHTML = `<div class="hint-text-wrapper">${labelText}${altTextHtml}</div><div class="card-inline-metric">${displayBracketText}</div>`;
-                }
-
-                if(i < 3) {
-                    document.getElementById(`rev-btn-${i}`).disabled = true;
-                    document.getElementById(`rev-btn-${i}`).textContent = "Revealed";
-                }
-            }
-
-            updateHeaderScoreDisplay(currentEarnedPoints);
         }
 
-        function runLiveMidnightClockEngine() {
-            if (countdownTickerInterval) clearInterval(countdownTickerInterval);
-            
-            const clockWidget = document.getElementById("header-countdown-clock");
-
-            function tick() {
-                const now = new Date();
-                const midnightUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
-                const diff = midnightUtc - now.getTime();
-                
-                if (diff <= 0) {
-                    clearInterval(countdownTickerInterval);
-                    location.reload();
-                    return;
-                }
-
-                let hrs = Math.floor(diff / (1000 * 60 * 60));
-                let mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                let secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-                clockWidget.textContent = 
-                    `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            }
-
-            tick();
-            countdownTickerInterval = setInterval(tick, 1000);
-        }
-
-        function copySharePayload(mode, buttonId) {
+        function generateShareClipboardString(type) {
             const stats = getHistoricalUserStats();
-            let textToCopy = "";
-
-            if (mode === 'today') {
-                const symbol = (stats.lastDayResult === "win") ? "✅" : "❌";
-                const todayPts = localStorage.getItem("td_today_score_cached") || "0";
-                textToCopy = `Tony Dudek Sequences #${currentQIdx + 1}\nToday's Result: ${symbol}\nClues used: ${stats.lastUsedClues || 0} of 3\nPoints Gained: ${todayPts}\n\nPlay: ${window.location.origin}`;
+            let text = "";
+            if (type === 'today') {
+                let puzzleNum = currentQIdx + 1;
+                let score = localStorage.getItem("td_today_score_cached") || "0";
+                let resultSym = (stats.lastDayResult === "win") ? "🎉" : "❌";
+                let cluesCount = stats.lastUsedClues;
+                text = `Toney Dudek Sequences - Puzzle #${puzzleNum}\nResult: ${resultSym}\nClues Revealed: ${cluesCount}/4\nPoints: ${score}\nPlay here: ${window.location.origin}`;
             } else {
-                let average = stats.played > 0 ? (stats.totalPoints / stats.played).toFixed(1) : "0.0";
-                textToCopy = `Tony Dudek Sequences: Career Stats\nPlayed: ${stats.played}\nActive Streak: ${stats.currentStreak} days\nMax Streak: ${stats.maxStreak} days\nTotal Points: ${stats.totalPoints}\nAvg Points: ${average}\n\nJoin the sequence: ${window.location.origin}`;
+                text = `Toney Dudek Sequences - All-Time Stats\nGames Played: ${stats.totalGames}\nTotal Wins: ${stats.totalWins}\nCurrent Streak: ${stats.winStreak}\nMax Streak: ${stats.maxStreak}\nPlay here: ${window.location.origin}`;
             }
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const targetBtn = document.getElementById(buttonId);
-                if (targetBtn) {
-                    targetBtn.textContent = "COPIED TO CLIPBOARD";
-                    targetBtn.style.backgroundColor = "var(--success-green)";
-                    setTimeout(() => {
-                        targetBtn.textContent = (mode === 'today') ? "SHARE RESULT" : "SHARE CAREER STATS";
-                        targetBtn.style.backgroundColor = "var(--purple-alt)";
-                    }, 2000);
-                }
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Stats copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
             });
         }
 
-        function devBuildQuestionDropdownOptions() {
-            const select = document.getElementById("dev-q-select");
-            select.innerHTML = "";
-            
-            let defaultOpt = document.createElement("option");
-            defaultOpt.value = "";
-            defaultOpt.textContent = "-- Choose Variable Override --";
-            select.appendChild(defaultOpt);
-
-            for (let idx = 0; idx < 11; idx++) {
-                let opt = document.createElement("option");
-                opt.value = idx;
-                opt.textContent = `Sequence ${idx + 1}`;
-                if(localStorage.getItem("dev_force_q_index") == idx) opt.selected = true;
-                select.appendChild(opt);
-            }
-        }
-
-        function devResetTodayLockout() {
-            let stats = getHistoricalUserStats();
-            stats.lastPlayedDayStamp = null;
-            stats.lastDayResult = null;
-            stats.lastUsedClues = 0;
-            saveHistoricalUserStats(stats);
-            localStorage.removeItem("dev_force_q_index");
-            localStorage.removeItem("td_today_score_cached");
-            localStorage.removeItem("td_today_match_idx");
-            localStorage.removeItem("td_midgame_active_clue");
-            localStorage.removeItem("td_midgame_attempts");
-            location.reload();
-        }
-
-        function devForceLoadQuestion(val) {
-            if(val === "") {
-                localStorage.removeItem("dev_force_q_index");
-            } else {
-                localStorage.setItem("dev_force_q_index", val);
-            }
-            localStorage.removeItem("td_midgame_active_clue");
-            localStorage.removeItem("td_midgame_attempts");
-            location.reload();
-        }
-
-        window.onload = runGameInitializationLifecycle;
+        window.onload = runGameInitialization;
     </script>
 </body>
 </html>
