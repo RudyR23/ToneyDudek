@@ -37,11 +37,11 @@ const dailyDataset = [
     },
     {
         hasAlt: false,
-        clues: ["Theo Walcott", "Pierre-Emerick Aubameyang", "Eddie Nketiah", "Viktor Gyokeres"],
+        clues: ["Theo Walcott", "Pierre-Emerick Aubameyang", "Eddie Nketiah", "Viktor Gyökeres"],
         alts: ["", "", "", ""],
         counts: [2008, 2018, 2022, 2025],
         whyText: 'These are the <span class="highlighted-explanation-span">last four players to be given the number 14 shirt</span> <span class="white-text-span">at Arsenal since Thierry Henry left</span>.',
-        answers: ["Viktor Gyokeres", "Viktor Gyökeres"],
+        answers: ["Viktor Gyökeres", "Viktor Gyokeres"],
         accepted: [["viktor gyokeres", "viktor gyökeres", "gyokeres", "gyökeres", "viktor"]]
     },
     {
