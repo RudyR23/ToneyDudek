@@ -50,7 +50,7 @@ const dailyDataset = [
         alts: ["", "", "", ""],
         counts: ["Barcelona", "Barcelona", "PSG", "Inter Miami"],
         whyText: 'These are the <span class="highlighted-explanation-span">last 4 shirt numbers worn by Lionel Messi</span> <span class="white-text-span">in club football</span>.',
-        answers: ["10"],
+        answers: ["10", "10 in USA"],
         accepted: [["10", "10 in usa"]]
     },
     {

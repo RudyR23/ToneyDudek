@@ -780,6 +780,166 @@
             font-size: 0.8rem;
         }
 
+        /* --- EXAMPLES OVERLAY POPUP STYLES --- */
+        .examples-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(5, 12, 28, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .examples-popup-container {
+            width: 100%;
+            max-width: 860px;
+            background-color: var(--panel-bg);
+            border: 2px solid rgba(137, 197, 247, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            padding: 2px;
+            max-height: 95vh;
+        }
+
+        .examples-inner-border {
+            border: 1px solid rgba(137, 197, 247, 0.15);
+            border-radius: 10px;
+            padding: 18px 22px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .examples-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(137, 197, 247, 0.15);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .examples-popup-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--answer-highlight);
+        }
+
+        .examples-close-x-btn {
+            background: transparent;
+            border: none;
+            color: var(--grey-text);
+            font-size: 1.6rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .examples-close-x-btn:hover {
+            color: var(--alert-red);
+        }
+
+        .examples-grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .example-row-item {
+            background-color: rgba(16, 37, 82, 0.4);
+            border: 1px solid rgba(137, 197, 247, 0.1);
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .example-desc-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--off-white);
+            margin-bottom: 6px;
+        }
+
+        .example-cards-flexbox {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .example-mini-card {
+            background-color: var(--card-inactive);
+            border: 1px solid rgba(137, 197, 247, 0.15);
+            border-radius: 5px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 4px;
+            text-align: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--grey-text);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .example-mini-card.revealed {
+            background-color: var(--steel-blue);
+            color: var(--pure-white);
+            border-color: var(--light-blue);
+        }
+
+        .example-mini-card .mini-card-qm {
+            position: absolute;
+            font-size: 0.9rem;
+            opacity: 0.18;
+            color: var(--light-blue);
+            font-weight: bold;
+        }
+
+        .example-buttons-flexbox {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .example-mini-btn {
+            background: transparent;
+            border: 1px solid var(--light-blue);
+            color: var(--light-blue);
+            height: 20px;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .example-mini-btn:hover:not(:disabled) {
+            background: var(--light-blue);
+            color: var(--dark-blue);
+        }
+
+        .example-mini-btn:disabled {
+            border-color: var(--muted-grey);
+            color: var(--muted-grey);
+            cursor: not-allowed;
+        }
+
         @media (max-width: 768px) {
             .game-overlay {
                 height: auto;
@@ -815,6 +975,21 @@
                 overflow: visible;
             }
 			
+            /* Popup Mobile Changes */
+            .examples-grid-layout {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .examples-popup-container {
+                max-height: 98vh;
+            }
+            .example-desc-text {
+                font-size: 0.8rem;
+            }
+            .example-mini-card {
+                height: 34px;
+                font-size: 0.68rem;
+            }
         }
     </style>
 </head>
@@ -906,6 +1081,123 @@
 				</div>
     </div>
 
+    <!-- --- EXAMPLES POPUP MODAL HTML ELEMENT --- -->
+    <div class="examples-popup-overlay" id="examples-popup-modal">
+        <div class="examples-popup-container">
+            <div class="examples-inner-border">
+                <div class="examples-popup-header">
+                    <div class="examples-popup-title">Sequence Examples Walkthrough</div>
+                    <button class="examples-close-x-btn" onclick="closeExamplesPopupModal()">&times;</button>
+                </div>
+                <div class="examples-grid-layout">
+                    
+                    <!-- Example 1 -->
+                    <div class="example-row-item">
+                        <div class="example-desc-text">Some sequences are simple</div>
+                        <div class="example-cards-flexbox">
+                            <div class="example-mini-card revealed">Heads</div>
+                            <div class="example-mini-card revealed">Shoulders</div>
+                            <div class="example-mini-card revealed">Knees</div>
+                            <div class="example-mini-card" id="ex-card-0-3"><span class="mini-card-qm">???</span></div>
+                        </div>
+                        <div class="example-buttons-flexbox">
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" id="ex-btn-0-3" onclick="revealExampleClueCard(0, 'Toes')">Reveal</button>
+                        </div>
+                    </div>
+
+                    <!-- Example 2 -->
+                    <div class="example-row-item">
+                        <div class="example-desc-text">Some can be within larger sequences</div>
+                        <div class="example-cards-flexbox">
+                            <div class="example-mini-card revealed">Knees</div>
+                            <div class="example-mini-card revealed">Toes</div>
+                            <div class="example-mini-card revealed">Eyes</div>
+                            <div class="example-mini-card" id="ex-card-1-3"><span class="mini-card-qm">???</span></div>
+                        </div>
+                        <div class="example-buttons-flexbox">
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" id="ex-btn-1-3" onclick="revealExampleClueCard(1, 'Ears')">Reveal</button>
+                        </div>
+                    </div>
+
+                    <!-- Example 3 -->
+                    <div class="example-row-item">
+                        <div class="example-desc-text">Some can be based on the words themselves</div>
+                        <div class="example-cards-flexbox">
+                            <div class="example-mini-card revealed">Toes</div>
+                            <div class="example-mini-card revealed">Eyes</div>
+                            <div class="example-mini-card revealed">Ears</div>
+                            <div class="example-mini-card" id="ex-card-2-3"><span class="mini-card-qm">???</span></div>
+                        </div>
+                        <div class="example-buttons-flexbox">
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" id="ex-btn-2-3" onclick="revealExampleClueCard(2, 'Nose')">Reveal</button>
+                        </div>
+                    </div>
+
+                    <!-- Example 4 -->
+                    <div class="example-row-item">
+                        <div class="example-desc-text">Some might be more niche</div>
+                        <div class="example-cards-flexbox">
+                            <div class="example-mini-card revealed">Shoulders</div>
+                            <div class="example-mini-card revealed">Knees</div>
+                            <div class="example-mini-card revealed">Eyes</div>
+                            <div class="example-mini-card" id="ex-card-3-3"><span class="mini-card-qm">???</span></div>
+                        </div>
+                        <div class="example-buttons-flexbox">
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" id="ex-btn-3-3" onclick="revealExampleClueCard(3, 'Ears')">Reveal</button>
+                        </div>
+                    </div>
+
+                    <!-- Example 5 -->
+                    <div class="example-row-item">
+                        <div class="example-desc-text">Some might have red herrings</div>
+                        <div class="example-cards-flexbox">
+                            <div class="example-mini-card revealed">Heads</div>
+                            <div class="example-mini-card revealed">Shoulders</div>
+                            <div class="example-mini-card revealed">Above</div>
+                            <div class="example-mini-card" id="ex-card-4-3"><span class="mini-card-qm">???</span></div>
+                        </div>
+                        <div class="example-buttons-flexbox">
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" id="ex-btn-4-3" onclick="revealExampleClueCard(4, 'The Rest')">Reveal</button>
+                        </div>
+                    </div>
+
+                    <!-- Example 6 -->
+                    <div class="example-row-item">
+                        <div class="example-desc-text">Some might be more riddle-like</div>
+                        <div class="example-cards-flexbox">
+                            <div class="example-mini-card revealed" style="font-size:0.6rem;">Not Tails</div>
+                            <div class="example-mini-card revealed" style="font-size:0.55rem;">Hard sides of motorway</div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem;">Leg hinges</div>
+                            <div class="example-mini-card" id="ex-card-5-3"><span class="mini-card-qm">???</span></div>
+                        </div>
+                        <div class="example-buttons-flexbox">
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" disabled>Revealed</button>
+                            <button class="example-mini-btn" id="ex-btn-5-3" onclick="revealExampleClueCard(5, \"Cats' beans\")">Reveal</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="dev-sandbox-toolbox" id="dev-toolbox-wrapper">
         <div class="dev-close-btn" onclick="closeDevToolsOverlay()">&times;</div>
         <div class="dev-title">⚠️ Local Testing Sandbox Tools</div>
@@ -931,6 +1223,34 @@
         let activePanelTab = "help"; 
         let userFinalAnswerLabel = "None";
         let finalStatusOutcome = "lose"; 
+
+        /* --- EXAMPLES OVERLAY INTERACTION LOGIC --- */
+        function openExamplesPopupModal() {
+            document.getElementById("examples-popup-modal").style.display = "flex";
+        }
+
+        function closeExamplesPopupModal() {
+            document.getElementById("examples-popup-modal").style.display = "none";
+            // Reset state upon closure so they can interact next time
+            for(let i=0; i<6; i++) {
+                const card = document.getElementById(`ex-card-${i}-3`);
+                const btn = document.getElementById(`ex-btn-${i}-3`);
+                card.className = "example-mini-card";
+                card.innerHTML = `<span class="mini-card-qm">???</span>`;
+                btn.disabled = false;
+                btn.textContent = "Reveal";
+            }
+        }
+
+        function revealExampleClueCard(rowIdx, answerString) {
+            const card = document.getElementById(`ex-card-${rowIdx}-3`);
+            const btn = document.getElementById(`ex-btn-${rowIdx}-3`);
+            card.className = "example-mini-card revealed";
+            if(rowIdx === 5) card.style.fontSize = "0.65rem";
+            card.innerHTML = answerString;
+            btn.disabled = true;
+            btn.textContent = "Revealed";
+        }
 
         function getHistoricalUserStats() {
             let stats = localStorage.getItem("td_sequence_daily_stats");
@@ -1187,7 +1507,7 @@
                     <div class="feedback-title info">How To Play</div>
                     <div class="feedback-msg" style="display:block; margin-bottom: 0;">
                         <ul class="rules-bullet-list">
-                            <li class="rules-bullet-item">Reveal clues to find the 4th in the sequence</li>
+                            <li class="rules-bullet-item">Reveal clues to find the 4th in the sequence <span onclick="openExamplesPopupModal()" style="color:var(--answer-highlight); font-weight:bold; cursor:pointer; text-decoration:underline;">(see examples here)</span></li>
                             <li class="rules-bullet-item">Reveal <span style="font-weight:bold;">CLUE 1</span> to start the game and <span class="green-rule-text" style="font-weight:bold;">gain</span> <span class="orange-score-text" style="font-weight:bold;">3 POINTS</span></li>
                             <li class="rules-bullet-item"><span class="red-rule-text">Lose</span> <span class="orange-score-text">1 POINT</span> for each subsequent CLUE revealed</li>
                             <li class="rules-bullet-item">Max 2 attempts per question - An incorrect first attempt will <span class="red-rule-text">halve</span> your score</li>
