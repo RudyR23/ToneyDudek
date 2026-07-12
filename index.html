@@ -823,15 +823,16 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(137, 197, 247, 0.15);
-            padding-bottom: 8px;
+            padding-bottom: 10px;
             margin-bottom: 12px;
         }
 
-        .examples-popup-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--answer-highlight);
+        .examples-popup-title-text {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--pure-white);
+            line-height: 1.4;
+            padding-right: 25px;
         }
 
         .examples-close-x-btn {
@@ -843,6 +844,7 @@
             cursor: pointer;
             line-height: 1;
             transition: color 0.2s;
+            flex-shrink: 0;
         }
 
         .examples-close-x-btn:hover {
@@ -853,7 +855,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: repeat(3, auto);
-            grid-auto-flow: column; /* Orders 1, 2, 3 down left column, then 4, 5, 6 down right column */
+            grid-auto-flow: column; 
             gap: 14px;
         }
 
@@ -868,10 +870,10 @@
             transition: opacity 0.3s ease, filter 0.3s ease;
         }
 
-        /* Inaccessible/Greyed-out state structure */
+        /* Heavily grayed out / masked locked rows */
         .example-row-item.locked-state {
-            opacity: 0.35;
-            filter: grayscale(80%);
+            opacity: 0.12;
+            filter: grayscale(100%) blur(1px);
             pointer-events: none;
         }
 
@@ -921,8 +923,7 @@
         }
 
         .example-buttons-flexbox {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
             gap: 6px;
             margin-bottom: 6px;
         }
@@ -931,8 +932,9 @@
             background: transparent;
             border: 1px solid var(--light-blue);
             color: var(--light-blue);
-            height: 20px;
-            font-size: 0.6rem;
+            height: 22px;
+            padding: 0 8px;
+            font-size: 0.65rem;
             text-transform: uppercase;
             border-radius: 3px;
             cursor: pointer;
@@ -951,24 +953,33 @@
             cursor: not-allowed;
         }
 
+        .example-mini-next-btn {
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid var(--purple-alt);
+            color: var(--purple-alt);
+            height: 22px;
+            padding: 0 10px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            display: none;
+        }
+
+        .example-mini-next-btn:hover {
+            background: var(--purple-alt);
+            color: var(--pure-white);
+        }
+
         .example-explanation-why-text {
-            font-size: 0.78rem;
-            font-style: italic;
+            font-size: 0.85rem;
             color: var(--answer-highlight);
             border-top: 1px solid rgba(137, 197, 247, 0.1);
             padding-top: 5px;
             margin-top: 2px;
-        }
-
-        .examples-bottom-outro-statement {
-            margin-top: 16px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(137, 197, 247, 0.15);
-            font-size: 0.92rem;
-            font-weight: bold;
-            color: var(--pure-white);
-            text-align: center;
-            line-height: 1.4;
+            display: none; /* Only reveals when requested */
         }
 
         @media (max-width: 768px) {
@@ -1006,7 +1017,6 @@
                 overflow: visible;
             }
 			
-            /* Popup Mobile layout stacks normally */
             .examples-grid-layout {
                 grid-template-columns: 1fr;
                 grid-auto-flow: row;
@@ -1113,17 +1123,15 @@
 				</div>
     </div>
 
-    <!-- --- EXAMPLES POPUP MODAL HTML ELEMENT --- -->
     <div class="examples-popup-overlay" id="examples-popup-modal">
         <div class="examples-popup-container">
             <div class="examples-inner-border">
                 <div class="examples-popup-header">
-                    <div class="examples-popup-title">example sequences</div>
+                    <div class="examples-popup-title-text">The game requires you to balance broad general football knowledge with the ability to spot subtle, sometimes cryptic, patterns. Good luck!</div>
                     <button class="examples-close-x-btn" onclick="closeExamplesPopupModal()">&times;</button>
                 </div>
                 <div class="examples-grid-layout">
                     
-                    <!-- Example 1 -->
                     <div class="example-row-item" id="ex-row-0">
                         <div class="example-desc-text">Some sequences are simple</div>
                         <div class="example-cards-flexbox">
@@ -1133,15 +1141,12 @@
                             <div class="example-mini-card" id="ex-card-0-3"><span class="mini-card-qm">???</span></div>
                         </div>
                         <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
                             <button class="example-mini-btn" id="ex-btn-0-3" onclick="revealExampleClueCard(0, 'Toes')">Reveal</button>
+                            <button class="example-mini-next-btn" id="ex-next-btn-0" onclick="goToNextExampleRow(0)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text">"the start of the famous sequence"</div>
+                        <div class="example-explanation-why-text" id="ex-why-0">"the start of the famous sequence"</div>
                     </div>
 
-                    <!-- Example 2 -->
                     <div class="example-row-item locked-state" id="ex-row-1">
                         <div class="example-desc-text">Some can be within larger sequences</div>
                         <div class="example-cards-flexbox">
@@ -1151,15 +1156,12 @@
                             <div class="example-mini-card" id="ex-card-1-3"><span class="mini-card-qm">???</span></div>
                         </div>
                         <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
                             <button class="example-mini-btn" id="ex-btn-1-3" onclick="revealExampleClueCard(1, 'Ears')">Reveal</button>
+                            <button class="example-mini-next-btn" id="ex-next-btn-1" onclick="goToNextExampleRow(1)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text">"the middle part of the famous sequence"</div>
+                        <div class="example-explanation-why-text" id="ex-why-1">"the middle part of the famous sequence"</div>
                     </div>
 
-                    <!-- Example 3 -->
                     <div class="example-row-item locked-state" id="ex-row-2">
                         <div class="example-desc-text">Some can be based on the words themselves</div>
                         <div class="example-cards-flexbox">
@@ -1169,15 +1171,12 @@
                             <div class="example-mini-card" id="ex-card-2-3"><span class="mini-card-qm">???</span></div>
                         </div>
                         <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
                             <button class="example-mini-btn" id="ex-btn-2-3" onclick="revealExampleClueCard(2, 'Nose')">Reveal</button>
+                            <button class="example-mini-next-btn" id="ex-next-btn-2" onclick="goToNextExampleRow(2)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text">"the 4 four-letter words in the famous sequence, in order"</div>
+                        <div class="example-explanation-why-text" id="ex-why-2">"the 4 four-letter words in the famous sequence, in order"</div>
                     </div>
 
-                    <!-- Example 4 -->
                     <div class="example-row-item locked-state" id="ex-row-3">
                         <div class="example-desc-text">Some might be more niche</div>
                         <div class="example-cards-flexbox">
@@ -1187,15 +1186,12 @@
                             <div class="example-mini-card" id="ex-card-3-3"><span class="mini-card-qm">???</span></div>
                         </div>
                         <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
                             <button class="example-mini-btn" id="ex-btn-3-3" onclick="revealExampleClueCard(3, 'Ears')">Reveal</button>
+                            <button class="example-mini-next-btn" id="ex-next-btn-3" onclick="goToNextExampleRow(3)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text">"everything in the famous sequence that humans have have two of, in order"</div>
+                        <div class="example-explanation-why-text" id="ex-why-3">"everything in the famous sequence that humans have have two of, in order"</div>
                     </div>
 
-                    <!-- Example 5 -->
                     <div class="example-row-item locked-state" id="ex-row-4">
                         <div class="example-desc-text">Some might have red herrings</div>
                         <div class="example-cards-flexbox">
@@ -1205,37 +1201,26 @@
                             <div class="example-mini-card" id="ex-card-4-3"><span class="mini-card-qm">???</span></div>
                         </div>
                         <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
                             <button class="example-mini-btn" id="ex-btn-4-3" onclick="revealExampleClueCard(4, 'The Rest')">Reveal</button>
+                            <button class="example-mini-next-btn" id="ex-next-btn-4" onclick="goToNextExampleRow(4)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text">"sike, you thought"</div>
+                        <div class="example-explanation-why-text" id="ex-why-4">"Another famous sequence of words"</div>
                     </div>
 
-                    <!-- Example 6 -->
                     <div class="example-row-item locked-state" id="ex-row-5">
                         <div class="example-desc-text">Some might be more riddle-like</div>
                         <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed" style="font-size:0.6rem;">Not Tails</div>
-                            <div class="example-mini-card revealed" style="font-size:0.55rem;">Hard sides of motorway</div>
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">Leg hinges</div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at the front)</div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at the side)</div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem;">1 (at the front)</div>
                             <div class="example-mini-card" id="ex-card-5-3"><span class="mini-card-qm">???</span></div>
                         </div>
                         <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" disabled>Revealed</button>
-                            <button class="example-mini-btn" id="ex-btn-5-3" onclick="revealExampleClueCard(5, 'Cats\' beans')">Reveal</button>
+                            <button class="example-mini-btn" id="ex-btn-5-3" onclick="revealExampleClueCard(5, '1 (at the front)')">Reveal</button>
                         </div>
-                        <div class="example-explanation-why-text">"alternative ways to call the famous sequence"</div>
+                        <div class="example-explanation-why-text" id="ex-why-5">"Fingers used (and where) to point to the second half of the famous sequence"</div>
                     </div>
 
-                </div>
-
-                <!-- Bottom visible closing statement -->
-                <div class="examples-bottom-outro-statement">
-                    The game requires you to balance broad general football knowledge with the ability to spot subtle, sometimes cryptic, patterns. Good luck!
                 </div>
             </div>
         </div>
@@ -1274,11 +1259,13 @@
 
         function closeExamplesPopupModal() {
             document.getElementById("examples-popup-modal").style.display = "none";
-            // Reset modal sequence flow layout completely upon closure
+            // Reset state upon closing
             for(let i=0; i<6; i++) {
                 const row = document.getElementById(`ex-row-${i}`);
                 const card = document.getElementById(`ex-card-${i}-3`);
                 const btn = document.getElementById(`ex-btn-${i}-3`);
+                const nxtBtn = document.getElementById(`ex-next-btn-${i}`);
+                const whyText = document.getElementById(`ex-why-${i}`);
                 
                 if (i === 0) {
                     row.classList.remove("locked-state");
@@ -1288,21 +1275,33 @@
                 
                 card.className = "example-mini-card";
                 card.innerHTML = `<span class="mini-card-qm">???</span>`;
-                btn.disabled = false;
-                btn.textContent = "Reveal";
+                if(btn) {
+                    btn.disabled = false;
+                    btn.style.display = "block";
+                }
+                if(nxtBtn) nxtBtn.style.display = "none";
+                if(whyText) whyText.style.display = "none";
             }
         }
 
         function revealExampleClueCard(rowIdx, answerString) {
             const card = document.getElementById(`ex-card-${rowIdx}-3`);
             const btn = document.getElementById(`ex-btn-${rowIdx}-3`);
-            card.className = "example-mini-card revealed";
-            if(rowIdx === 5) card.style.fontSize = "0.65rem";
-            card.innerHTML = answerString;
-            btn.disabled = true;
-            btn.textContent = "Revealed";
+            const nxtBtn = document.getElementById(`ex-next-btn-${rowIdx}`);
+            const whyText = document.getElementById(`ex-why-${rowIdx}`);
 
-            // Unlock next numerical line items dynamically
+            card.className = "example-mini-card revealed";
+            card.innerHTML = answerString;
+            
+            if(btn) btn.style.display = "none";
+            if(whyText) whyText.style.display = "block";
+            if(nxtBtn) nxtBtn.style.display = "block";
+        }
+
+        function goToNextExampleRow(rowIdx) {
+            const nxtBtn = document.getElementById(`ex-next-btn-${rowIdx}`);
+            if(nxtBtn) nxtBtn.style.display = "none";
+            
             const nextRowIdx = rowIdx + 1;
             if (nextRowIdx < 6) {
                 const nextRow = document.getElementById(`ex-row-${nextRowIdx}`);
@@ -1571,8 +1570,8 @@
                             <li class="rules-bullet-item">Reveal <span style="font-weight:bold;">CLUE 1</span> to start the game and <span class="green-rule-text" style="font-weight:bold;">GAIN</span> <span class="orange-score-text" style="font-weight:bold;">3 POINTS</span></li>
                             <li class="rules-bullet-item"><span class="red-rule-text">LOSE</span> <span class="orange-score-text">1 POINT</span> for each subsequent CLUE revealed</li>
                             <li class="rules-bullet-item">Max 2 attempts per question - An incorrect first attempt will <span class="red-rule-text">halve</span> your score</li>
-                            <li class="rules-bullet-item"><span style="color:var(--purple-alt); font-weight:bold;">ALT</span> questions have multiple correct answers, sometimes alternative clues are shown to help but you only ever need to give one answer</li>
-                            <li class="rules-bullet-item" style="font-weight: bold; color: var(--answer-highlight);">New sequence every 24 hours!</li>
+                            <li class="rules-bullet-item">Questions marked <span style="color:var(--purple-alt); font-weight:bold;">ALT</span> have multiple correct answers, sometimes alternative clues are shown to help but you only ever need to give one answer</li>
+                            <li class="rules-bullet-item" style="font-weight: bold; color: var(--answer-highlight);">Come back for a brand new sequence every day!</li>
                         </ul>
                     </div>
                 `;
