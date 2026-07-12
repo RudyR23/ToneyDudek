@@ -820,19 +820,10 @@
 
         .examples-popup-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
-            border-bottom: 1px solid rgba(137, 197, 247, 0.15);
-            padding-bottom: 10px;
-            margin-bottom: 12px;
-        }
-
-        .examples-popup-title-text {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: var(--pure-white);
-            line-height: 1.4;
-            padding-right: 25px;
+            padding-bottom: 2px;
+            margin-bottom: 4px;
         }
 
         .examples-close-x-btn {
@@ -866,8 +857,12 @@
             padding: 10px 12px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
             transition: opacity 0.3s ease, filter 0.3s ease;
+            position: relative;
+            min-height: 122px;
+            max-height: 122px;
+            overflow: hidden;
         }
 
         /* Heavily grayed out / masked locked rows */
@@ -882,13 +877,16 @@
             font-weight: 600;
             color: var(--off-white);
             margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .example-cards-flexbox {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .example-mini-card {
@@ -922,10 +920,13 @@
             font-weight: bold;
         }
 
-        .example-buttons-flexbox {
+        .example-bottom-layout-container {
             display: flex;
-            gap: 6px;
-            margin-bottom: 6px;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            height: 24px;
+            position: relative;
         }
 
         .example-mini-btn {
@@ -940,6 +941,9 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .example-mini-btn:hover:not(:disabled) {
@@ -954,9 +958,9 @@
         }
 
         .example-mini-next-btn {
-            background: rgba(168, 85, 247, 0.2);
-            border: 1px solid var(--purple-alt);
-            color: var(--purple-alt);
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success-green);
+            color: var(--success-green);
             height: 22px;
             padding: 0 10px;
             font-size: 0.65rem;
@@ -966,20 +970,35 @@
             font-weight: bold;
             transition: all 0.2s;
             display: none;
+            position: absolute;
+            right: 0;
+            bottom: 0;
         }
 
         .example-mini-next-btn:hover {
-            background: var(--purple-alt);
+            background: var(--success-green);
             color: var(--pure-white);
         }
 
         .example-explanation-why-text {
             font-size: 0.85rem;
-            color: var(--answer-highlight);
-            border-top: 1px solid rgba(137, 197, 247, 0.1);
-            padding-top: 5px;
-            margin-top: 2px;
-            display: none; /* Only reveals when requested */
+            color: var(--light-blue);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: none; 
+            width: calc(100% - 60px); 
+        }
+
+        .examples-popup-footer-text {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--pure-white);
+            line-height: 1.4;
+            text-align: center;
+            margin-top: 16px;
+            border-top: 1px solid rgba(137, 197, 247, 0.15);
+            padding-top: 12px;
         }
 
         @media (max-width: 768px) {
@@ -1024,6 +1043,10 @@
             }
             .examples-popup-container {
                 max-height: 98vh;
+            }
+            .example-row-item {
+                min-height: 122px;
+                max-height: 122px;
             }
             .example-desc-text {
                 font-size: 0.8rem;
@@ -1127,7 +1150,6 @@
         <div class="examples-popup-container">
             <div class="examples-inner-border">
                 <div class="examples-popup-header">
-                    <div class="examples-popup-title-text">The game requires you to balance broad general football knowledge with the ability to spot subtle, sometimes cryptic, patterns. Good luck!</div>
                     <button class="examples-close-x-btn" onclick="closeExamplesPopupModal()">&times;</button>
                 </div>
                 <div class="examples-grid-layout">
@@ -1140,11 +1162,11 @@
                             <div class="example-mini-card revealed">Knees</div>
                             <div class="example-mini-card" id="ex-card-0-3"><span class="mini-card-qm">???</span></div>
                         </div>
-                        <div class="example-buttons-flexbox">
+                        <div class="example-bottom-layout-container">
+                            <div class="example-explanation-why-text" id="ex-why-0">The start of the famous sequence.</div>
                             <button class="example-mini-btn" id="ex-btn-0-3" onclick="revealExampleClueCard(0, 'Toes')">Reveal</button>
                             <button class="example-mini-next-btn" id="ex-next-btn-0" onclick="goToNextExampleRow(0)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-0">"the start of the famous sequence"</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-1">
@@ -1155,11 +1177,11 @@
                             <div class="example-mini-card revealed">Eyes</div>
                             <div class="example-mini-card" id="ex-card-1-3"><span class="mini-card-qm">???</span></div>
                         </div>
-                        <div class="example-buttons-flexbox">
+                        <div class="example-bottom-layout-container">
+                            <div class="example-explanation-why-text" id="ex-why-1">The middle part of the famous sequence.</div>
                             <button class="example-mini-btn" id="ex-btn-1-3" onclick="revealExampleClueCard(1, 'Ears')">Reveal</button>
                             <button class="example-mini-next-btn" id="ex-next-btn-1" onclick="goToNextExampleRow(1)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-1">"the middle part of the famous sequence"</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-2">
@@ -1170,11 +1192,11 @@
                             <div class="example-mini-card revealed">Ears</div>
                             <div class="example-mini-card" id="ex-card-2-3"><span class="mini-card-qm">???</span></div>
                         </div>
-                        <div class="example-buttons-flexbox">
+                        <div class="example-bottom-layout-container">
+                            <div class="example-explanation-why-text" id="ex-why-2">The 4 four-letter words in the famous sequence, in order.</div>
                             <button class="example-mini-btn" id="ex-btn-2-3" onclick="revealExampleClueCard(2, 'Nose')">Reveal</button>
                             <button class="example-mini-next-btn" id="ex-next-btn-2" onclick="goToNextExampleRow(2)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-2">"the 4 four-letter words in the famous sequence, in order"</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-3">
@@ -1185,11 +1207,11 @@
                             <div class="example-mini-card revealed">Eyes</div>
                             <div class="example-mini-card" id="ex-card-3-3"><span class="mini-card-qm">???</span></div>
                         </div>
-                        <div class="example-buttons-flexbox">
+                        <div class="example-bottom-layout-container">
+                            <div class="example-explanation-why-text" id="ex-why-3">Everything in the famous sequence that humans have have two of, in order.</div>
                             <button class="example-mini-btn" id="ex-btn-3-3" onclick="revealExampleClueCard(3, 'Ears')">Reveal</button>
                             <button class="example-mini-next-btn" id="ex-next-btn-3" onclick="goToNextExampleRow(3)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-3">"everything in the famous sequence that humans have have two of, in order"</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-4">
@@ -1200,28 +1222,29 @@
                             <div class="example-mini-card revealed">Above</div>
                             <div class="example-mini-card" id="ex-card-4-3"><span class="mini-card-qm">???</span></div>
                         </div>
-                        <div class="example-buttons-flexbox">
+                        <div class="example-bottom-layout-container">
+                            <div class="example-explanation-why-text" id="ex-why-4">Another famous sequence of words.</div>
                             <button class="example-mini-btn" id="ex-btn-4-3" onclick="revealExampleClueCard(4, 'The Rest')">Reveal</button>
                             <button class="example-mini-next-btn" id="ex-next-btn-4" onclick="goToNextExampleRow(4)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-4">"Another famous sequence of words"</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-5">
                         <div class="example-desc-text">Some might be more riddle-like</div>
                         <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at the front)</div>
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at the side)</div>
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">1 (at the front)</div>
-                            <div class="example-mini-card" id="ex-card-5-3"><span class="mini-card-qm">???</span></div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem; line-height:1.15;">2 (at the front)</div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem; line-height:1.15;">2 (at the side)</div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem; line-height:1.15;">1 (at the front)</div>
+                            <div class="example-mini-card" id="ex-card-5-3" style="font-size:0.65rem; line-height:1.15;"><span class="mini-card-qm">???</span></div>
                         </div>
-                        <div class="example-buttons-flexbox">
+                        <div class="example-bottom-layout-container">
+                            <div class="example-explanation-why-text" id="ex-why-5">Fingers used (and where) to point to the second half of the famous sequence.</div>
                             <button class="example-mini-btn" id="ex-btn-5-3" onclick="revealExampleClueCard(5, '1 (at the front)')">Reveal</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-5">"Fingers used (and where) to point to the second half of the famous sequence"</div>
                     </div>
 
                 </div>
+                <div class="examples-popup-footer-text">The game requires you to balance broad general football knowledge with the ability to spot subtle, sometimes cryptic, patterns. Good luck!</div>
             </div>
         </div>
     </div>
@@ -1914,7 +1937,7 @@
 
                 if(i < 3) {
                     document.getElementById(`rev-btn-${i}`).disabled = true;
-                    document.getElementById(`rev-btn-${i}`).textContent = "Revealed";
+                    document.getElementById(`rev-btn-${i}).textContent = "Revealed"`;
                 }
             }
 
