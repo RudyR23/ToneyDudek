@@ -21,1974 +21,1656 @@
             --answer-highlight: #7dd3fc;
             --success-green: #10b981;
             --alert-red: #ef4444;
-            --purple-alt: #a855f7;
-            --seq-badge-blue: #38bdf8;
+            --button-blue: #3b82f6;
+            --button-blue-hover: #2563eb;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background: var(--body-bg);
             color: var(--pure-white);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            padding: 20px;
-        }
-
-        .game-overlay {
-            width: 100%;
-            max-width: 900px;
-            min-height: 540px; 
-            background-color: var(--panel-bg);
-            border: 2px solid rgba(137, 197, 247, 0.25);
-            border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            padding: 2px;
-            backdrop-filter: blur(10px);
-            position: relative;
-        }
-
-        .game-inner-border {
-            border: 1px solid rgba(137, 197, 247, 0.2);
-            border-radius: 10px;
-            padding: 22px 25px;
-            height: 100%;
             display: flex;
             flex-direction: column;
-            position: relative;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+            overflow-x: hidden;
         }
 
-        .game-header {
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            color: var(--grey-text);
-            padding-bottom: 8px;
+        .game-container {
+            width: 100%;
+            max-width: 500px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        header {
+            display: flex;
             justify-content: space-between;
-            flex-shrink: 0;
-            border-bottom: 1px solid rgba(137, 197, 247, 0.15);
-        }
-
-        .game-title {
-            display: flex;
             align-items: center;
-        }
-        
-        .game-logo-img {
-            height: 42px;
-            max-width: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        .clock-wrapper-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .clock-prepend-text {
-            color: var(--pure-white);
-            font-weight: bold;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .header-clock-box {
-            background-color: var(--dark-blue);
-            border: 1px solid var(--seq-badge-blue);
-            color: var(--seq-badge-blue);
-            font-weight: bold;
-            font-size: 0.75rem;
-            padding: 1px 10px;
-            border-radius: 4px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 22px;
-            font-family: monospace;
-        }
-
-        .glow-red { animation: redPulse 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .glow-green { animation: greenPulse 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
-
-        @keyframes redPulse {
-            0% { border-color: var(--alert-red); box-shadow: 0 0 14px rgba(239, 68, 68, 0.9); }
-            100% { border-color: rgba(137, 197, 247, 0.4); box-shadow: none; }
-        }
-
-        @keyframes greenPulse {
-            0% { border-color: var(--success-green); box-shadow: 0 0 14px rgba(16, 185, 129, 0.9); }
-            100% { border-color: rgba(137, 197, 247, 0.4); box-shadow: none; }
-        }
-
-        .orange-score-text { color: var(--points-orange); }
-        .green-rule-text { color: var(--success-green); }
-        .red-rule-text { color: var(--alert-red); }
-
-        .meta-sub-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 30px;
-            height: 22px;
-            position: relative;
-            top: 15px; 
-            z-index: 10;
-        }
-
-        .meta-left-badges {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; 
             width: 100%;
         }
 
-        .meta-left-inner-group {
+        .header-title-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .header-title-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.5rem;
+        }
+
+        h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #ffffff, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .seq-badge-box {
-			display: none !important;
-            background-color: rgba(56, 189, 248, 0.15);
-            border: 1px solid var(--seq-badge-blue);
-            color: var(--seq-badge-blue);
-            font-weight: bold;
+            display: none !important;
+        }
+
+        .header-day-label {
             font-size: 0.75rem;
-            padding: 1px 6px;
-            border-radius: 4px;
-            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--light-blue);
             text-transform: uppercase;
-            height: 22px;
-            display: flex;
-            align-items: center;
+            letter-spacing: 0.05em;
         }
 
-        .alt-badge-box {
-            background-color: rgba(168, 85, 247, 0.15);
-            border: 1px solid var(--purple-alt);
-            color: var(--purple-alt);
-            font-weight: bold;
-            font-size: 0.75rem;
-            padding: 1px 6px;
-            border-radius: 4px;
-            letter-spacing: 1px;
-            height: 22px;
+        .header-icons {
             display: flex;
-            align-items: center;
+            gap: 0.5rem;
         }
 
-        .header-score-box {
-            background-color: rgba(16, 37, 82, 0.85);
-            border: 1px solid rgba(137, 197, 247, 0.4);
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--pure-white);
-            font-weight: bold;
-            font-size: 0.75rem;
-            padding: 1px 6px;
-            border-radius: 4px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            height: 22px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .game-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 30px;
-            flex-grow: 1;
-            padding-top: 15px;
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
         }
 
-        .clues-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto;
-            row-gap: 18px; 
-            column-gap: 15px;
-            margin-top: 25px; 
-            margin-bottom: 5px;
-        }
-
-        .clue-wrapper {
+        .score-banner {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 0.85rem 1.25rem;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        .clues-container > .clue-wrapper:nth-child(1),
-        .clues-container > .clue-wrapper:nth-child(2) {
-            position: relative;
-            top: -3px;
-        }
-
-        .clues-container > .clue-wrapper:nth-child(3),
-        .clues-container > .clue-wrapper:nth-child(4) {
-            position: relative;
-            top: -15px;
-        }
-
-        .clue-card {
-            background-color: var(--card-inactive);
-            border: 1px solid rgba(137, 197, 247, 0.15); 
-            border-radius: 8px;
-            height: 112px;
-            display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            padding: 10px;
-            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .score-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .score-label {
+            font-size: 0.7rem;
+            font-weight: 700;
             color: var(--grey-text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .score-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--pure-white);
+        }
+
+        .points-orange {
+            color: var(--points-orange);
+            font-size: 1.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-rows: repeat(4, auto);
+            gap: 0.65rem;
+            width: 100%;
+        }
+
+        .grid-card {
+            background: var(--card-inactive);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 1.1rem;
+            display: flex;
+            flex-direction: column;
             position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
         }
 
-        .clue-card.revealed {
-            background-color: var(--steel-blue);
-            color: var(--pure-white);
-            box-shadow: 4px 4px 15px var(--accent-glow);
-            border: 1px solid var(--light-blue);
-            font-weight: 700;
-        }
-
-        .hint-text-wrapper {
-            font-size: 0.95rem;
-            font-weight: 700;
-            width: 100%;
-            word-wrap: break-word;
-            z-index: 5;
-        }
-
-        .club-sub-line {
-            display: block;
-            font-size: 0.8rem;
-            color: #b0d4ff;
-            font-weight: normal;
-            margin-top: 4px;
-        }
-
-        .alt-clue-span {
-            font-weight: normal; 
-            font-size: 0.9rem; 
-            color: var(--grey-text);
-        }
-
-        .clue-placeholder {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--grey-text);
-            letter-spacing: 1.5px;
-            z-index: 5;
-        }
-
-        .card-qm {
+        .grid-card::before {
+            content: '';
             position: absolute;
-            color: var(--light-blue);
-            font-weight: bold;
-            user-select: none;
-            pointer-events: none;
-            line-height: 1;
-            z-index: 1;
-        }
-
-        .card-inline-metric {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: var(--light-blue); 
-            margin-top: 6px;
-            z-index: 5;
-        }
-
-        .reveal-btn {
-            margin-top: 6px;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
             background: transparent;
-            border: 1px solid var(--light-blue);
-            color: var(--light-blue);
-            padding: 5px 10px;
-            height: 28px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
         }
 
-        .reveal-btn:hover:not(:disabled) {
+        .grid-card.active {
+            background: var(--panel-bg);
+            border: 1px solid rgba(137, 197, 247, 0.35);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .grid-card.active::before {
             background: var(--light-blue);
-            color: var(--dark-blue);
-            box-shadow: 0 0 10px var(--light-blue);
         }
 
-        .reveal-btn:disabled {
-            border-color: var(--muted-grey);
-            color: var(--muted-grey);
-            cursor: not-allowed;
-            box-shadow: none;
+        .grid-card.revealed {
+            background: rgba(14, 30, 61, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .card-input-element {
-            background-color: rgba(5, 12, 28, 0.6);
-            border: 1px solid var(--light-blue);
-            color: var(--pure-white);
-            padding: 5px 10px;
-            height: 28px;
-            font-size: 0.8rem;
-            border-radius: 4px;
-            outline: none;
-            width: 100%;
-            text-align: center;
-            font-weight: bold;
-            transition: all 0.2s ease;
-        }
-
-        .card-input-element::placeholder {
-            color: var(--light-blue);
-            opacity: 0.8;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-        }
-
-        .card-input-element:disabled {
-            cursor: not-allowed;
-        }
-
-        .card-input-element.state-correct {
-            border-color: var(--success-green) !important;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6) !important;
-            color: var(--success-green) !important;
-            background-color: rgba(16, 185, 129, 0.1) !important;
-            font-size: 0.75rem !important;
-            text-transform: uppercase;
-        }
-
-        .card-input-element.state-incorrect {
-            border-color: var(--alert-red) !important;
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.6) !important;
-            color: var(--alert-red) !important;
-            background-color: rgba(239, 68, 68, 0.1) !important;
-            font-size: 0.75rem !important;
-            text-transform: uppercase;
-        }
-
-        .square-submit-btn {
-            background: transparent;
-            border: 1px solid var(--light-blue);
-            color: var(--light-blue);
-            height: 28px;
-            width: 28px;
-            border-radius: 4px;
-            cursor: pointer;
+        .card-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.3rem;
         }
 
-        .square-submit-btn:hover:not(:disabled) {
-            background: var(--light-blue);
-            color: var(--dark-blue);
-            box-shadow: 0 0 10px var(--light-blue);
+        .card-number {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--grey-text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .square-submit-btn:disabled {
-            border-color: var(--muted-grey);
-            color: var(--muted-grey);
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .control-panel {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            top: -22px; 
-            height: calc(100% + 22px);
-            min-height: 420px;
-            max-height: 420px;
-        }
-
-        .input-box-wrapper {
-            background-color: var(--card-inactive);
-            border: 1px solid rgba(137, 197, 247, 0.15);
-            border-radius: 8px;
-            padding: 16px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);
-        }
-
-        .inline-feedback-container {
-            background-color: rgba(5, 12, 28, 0.6);
-            border: 1px solid rgba(137, 197, 247, 0.15);
+        .card-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--points-orange);
+            background: rgba(255, 140, 0, 0.12);
+            border: 1px solid rgba(255, 140, 0, 0.25);
+            padding: 0.15rem 0.45rem;
             border-radius: 6px;
-            padding: 14px;
-            font-size: 0.95rem;
-            color: var(--off-white);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            flex: 1; 
-            height: 100%;
-            min-height: 100%;
-            max-height: 100%;
-            overflow-y: auto; 
-            position: relative;
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
 
-        .top-nav-buttons-group {
-            position: absolute;
-            top: 10px;
-            right: 12px;
-            display: flex;
-            gap: 6px;
-            z-index: 100;
+        .grid-card.revealed .card-badge {
+            color: var(--grey-text);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
-        .help-toggle-btn, .ans-toggle-btn, .stats-toggle-btn {
-            background: rgba(137, 197, 247, 0.2);
-            border: 1px solid var(--light-blue);
-            color: var(--light-blue);
-            border-radius: 4px;
-            width: 26px;
-            height: 26px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
+        .card-body {
+            min-height: 2.2rem;
             display: flex;
             align-items: center;
-            justify-content: center;
+        }
+
+        .clue-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.25;
+            color: rgba(255, 255, 255, 0.3);
+            transition: color 0.3s;
+        }
+
+        .grid-card.active .clue-text,
+        .grid-card.revealed .clue-text {
+            color: var(--pure-white);
+        }
+
+        .card-bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .alt-text {
+            color: var(--grey-text);
+            font-style: italic;
+        }
+
+        .count-text {
+            color: var(--light-blue);
+            background: rgba(137, 197, 247, 0.1);
+            padding: 0.15rem 0.45rem;
+            border-radius: 6px;
+        }
+
+        .grid-card:not(.active):not(.revealed) .alt-text,
+        .grid-card:not(.active):not(.revealed) .count-text {
+            visibility: hidden;
+        }
+
+        .input-area {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .guess-form {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .guess-input {
+            flex: 1;
+            background: rgba(10, 20, 41, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 0.85rem 1rem;
+            color: var(--pure-white);
+            font-size: 0.95rem;
+            font-weight: 500;
+            outline: none;
             transition: all 0.2s;
         }
 
-        .help-toggle-btn:hover:not(:disabled), .ans-toggle-btn:hover:not(:disabled), .stats-toggle-btn:hover:not(:disabled) {
-            background: var(--light-blue);
-            color: var(--dark-blue);
-        }
-        
-        .stats-toggle-btn:hover:not(:disabled) .bar-icon {
-            background: var(--dark-blue);
+        .guess-input:focus {
+            border-color: var(--light-blue);
+            box-shadow: 0 0 10px rgba(137, 197, 247, 0.15);
         }
 
-        .help-toggle-btn.active-nav, .ans-toggle-btn.active-nav, .stats-toggle-btn.active-nav {
-            background: var(--light-blue);
-            color: var(--dark-blue);
-            box-shadow: 0 0 8px var(--light-blue);
+        .guess-input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
         }
 
-        .stats-toggle-btn.active-nav .bar-icon {
-            background: var(--dark-blue);
-        }
-
-        .ans-toggle-btn:disabled, .stats-toggle-btn:disabled {
-            border-color: var(--muted-grey) !important;
-            color: var(--muted-grey) !important;
-            background: transparent !important;
-            cursor: not-allowed !important;
-            box-shadow: none !important;
-        }
-        
-        .stats-toggle-btn:disabled .bar-icon {
-            background: var(--muted-grey) !important;
-        }
-
-        .bar-icon-wrapper {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 2px;
-            width: 14px;
-            height: 12px;
-        }
-
-        .bar-icon {
-            width: 2px;
-            background: #ffffff;
-            border-radius: 1px;
-            transition: background 0.2s;
-        }
-
-        .stats-toggle-btn:not(.active-nav) .bar-icon {
-            background: var(--light-blue);
-        }
-
-        .feedback-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            padding-right: 95px; 
-        }
-        
-        .feedback-title.win { color: #10b981; }
-        .feedback-title.lose { color: #ef4444; }
-        .feedback-title.alert { color: #eab308; }
-        .feedback-title.info { color: #7dd3fc; }
-        .feedback-title.summary { color: #7dd3fc; }
-
-        .feedback-msg {
-            font-weight: 700;
-            margin-bottom: 12px;
-            font-size: 0.95rem;
-        }
-
-        .rules-bullet-list {
-            list-style-type: disc;
-            margin-left: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 0px;
-        }
-
-        .section-header-pill {
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #f8fafc;
-            font-size: 0.75rem;
-            margin-top: 4px;
-            background-color: rgba(137, 197, 247, 0.2);
-            padding: 2px 8px;
-            border-radius: 4px;
-            align-self: flex-start;
-            width: max-content;
-        }
-
-        .feedback-reveal-text {
-            font-weight: normal;
-            font-size: 1.65rem; 
-            color: var(--answer-highlight);
-            margin-top: 4px;
-            line-height: 1.2;
-            font-family: 'Segoe UI';
-        }
-
-        .feedback-secondary-reveal {
-            font-size: 0.88rem;
-            font-weight: normal;
-            color: var(--grey-text);
-            margin-top: 2px;
-            margin-bottom: 4px;
-            font-family: inherit;
-        }
-
-        #fb-explanation-text {
-            font-weight: 700;
+        .btn {
+            background: var(--button-blue);
+            border: none;
             color: var(--pure-white);
-            margin-top: 4px;
-            font-size: 0.92rem;
-            line-height: 1.35;
+            font-weight: 700;
+            padding: 0 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            background: var(--button-blue-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attempts-counter {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--grey-text);
+        }
+
+        .text-btn {
+            background: none;
+            border: none;
+            color: var(--light-blue);
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .text-btn:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .feedback-message {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0.4rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-message.incorrect {
+            display: block;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--alert-red);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .explanation-panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .explanation-header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--light-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .explanation-text {
+            font-size: 0.95rem;
+            line-height: 1.45;
+            color: #d1e2f6;
         }
 
         .highlighted-explanation-span {
-            color: var(--answer-highlight);
+            font-weight: 700;
+            color: var(--light-blue);
         }
 
-        .continue-stats-panel-btn {
-            background: rgba(56, 189, 248, 0.15);
-            border: 1px solid var(--seq-badge-blue);
-            color: var(--seq-badge-blue);
-            border-radius: 6px;
-            padding: 8px 16px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin: 12px auto 0 auto;
+        .white-text-span {
+            color: var(--pure-white);
+            font-weight: 600;
+        }
+
+        .share-container {
+            margin-top: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .share-btn {
+            background: var(--success-green);
+            padding: 0.85rem;
+            font-size: 0.95rem;
+        }
+
+        .share-btn:hover {
+            background: #059669;
+        }
+
+        .share-feedback {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #34d399;
+            text-align: center;
+            display: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(5, 10, 20, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #0d1e3d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            padding: 1.5rem;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--grey-text);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+            font-size: 1.1rem;
         }
 
-        .continue-stats-panel-btn:hover {
-            background: var(--seq-badge-blue);
-            color: var(--dark-blue);
+        .modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--pure-white);
         }
 
-        .continue-stats-panel-btn:hover .bar-icon {
-            background: var(--dark-blue);
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            color: var(--light-blue);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 6px;
-            margin-bottom: 8px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.25rem;
         }
 
-        .stat-box {
-            background: rgba(16, 37, 82, 0.6);
-            border: 1px solid rgba(137, 197, 247, 0.2);
-            border-radius: 6px;
-            padding: 8px 4px;
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 0.75rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
             text-align: center;
         }
 
-        .stat-val {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--points-orange);
-            line-height: 1.1;
-        }
-
-        .stat-lbl {
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            color: var(--grey-text);
-            margin-top: 3px;
-        }
-
-        .share-btn {
-            background-color: var(--purple-alt);
+        .stat-number {
+            font-size: 1.25rem;
+            font-weight: 800;
             color: var(--pure-white);
-            border: none;
-            border-radius: 4px;
-            height: 24px;
-            padding: 0 8px;
-            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--grey-text);
             text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 6px;
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+        }
+
+        .stats-history-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .history-title {
             font-size: 0.75rem;
-            width: 100%;
-            transition: background 0.2s;
+            font-weight: 700;
+            color: var(--grey-text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .history-row {
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            gap: 0.35rem;
+            height: 1.75rem;
         }
 
-        .share-btn:hover {
-            background-color: #9333ea;
-        }
-
-        .credits-signature {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
+        .history-day-lbl {
             font-size: 0.7rem;
-            color: var(--muted-grey);
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
+            font-weight: 700;
+            color: var(--grey-text);
+            width: 3.25rem;
         }
 
-        .footer-links-container {
-            position: absolute;
-            bottom: 12px;
-            left: 12px;
-            display: flex;
-            gap: 15px;
-        }
-
-        .footer-text-link {
-            font-family: inherit !important;
-            text-decoration: none !important;
-            color: var(--grey-text); 
-            font-size: 0.7rem;        
-            font-weight: bold;
-            transition: color 0.2s ease;
-        }
-
-        .footer-text-link:hover {
-            color: var(--light-blue); 
-            text-decoration: underline !important;
-        }
-
-        .dev-sandbox-toolbox {
-            display: none;
-            margin-top: 20px;
-            width: 100%;
-            max-width: 900px;
-            background: rgba(20, 20, 30, 0.9);
-            border: 2px dashed #f59e0b;
-            border-radius: 8px;
-            padding: 15px;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
+        .history-bar-container {
+            flex: 1;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            overflow: hidden;
             position: relative;
         }
 
-        .dev-close-btn {
-            position: absolute;
-            top: 10px;
-            right: 12px;
-            cursor: pointer;
-            color: #ef4444;
-            font-weight: bold;
-            font-size: 1.2rem;
-            line-height: 1;
-            user-select: none;
+        .history-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--steel-blue), var(--light-blue));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.5rem;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .history-bar.failed {
+            background: linear-gradient(90deg, #4b1212, var(--alert-red));
+        }
+
+        .history-bar-val {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--pure-white);
+        }
+
+        .dev-panel {
+            background: rgba(14, 30, 61, 0.95);
+            border: 1px dashed rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 1.1rem;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 1.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
         .dev-title {
-            color: #f59e0b;
-            font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--alert-red);
             text-transform: uppercase;
-            width: 100%;
-            margin-bottom: -5px;
+            letter-spacing: 0.05em;
+        }
+
+        .dev-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .dev-select {
+            flex: 1;
+            background: #0a1429;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
         }
 
         .dev-btn {
-            background: #f59e0b;
-            color: #000;
-            border: none;
-            padding: 6px 12px;
+            background: var(--alert-red);
             font-size: 0.8rem;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 0.5rem 1rem;
         }
 
-        .dev-btn:hover { background: #d97706; }
-
-        .dev-select {
-            background: #27272a;
-            color: #fff;
-            border: 1px solid #f59e0b;
-            padding: 5px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+        .dev-btn:hover {
+            background: #dc2626;
         }
 
-        /* --- EXAMPLES POPUP MODAL STYLES --- */
-        .examples-popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(5, 12, 28, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-        }
-
-        .examples-popup-container {
-            width: 100%;
-            max-width: 860px;
-            background-color: var(--panel-bg);
-            border: 2px solid rgba(137, 197, 247, 0.3);
-            border-radius: 12px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+        /* -----------------------------------------
+           EXAMPLES POPUP & EXPERIENCES CAROUSEL
+        -------------------------------------------- */
+        .how-to-section {
             display: flex;
             flex-direction: column;
-            padding: 2px;
-            max-height: 95vh;
+            gap: 1.25rem;
         }
 
-        .examples-inner-border {
-            border: 1px solid rgba(137, 197, 247, 0.15);
-            border-radius: 10px;
-            padding: 18px 22px;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
+        .how-to-p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1e2f6;
         }
 
-        .examples-popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(137, 197, 247, 0.15);
-            padding-bottom: 10px;
-            margin-bottom: 12px;
-        }
-
-        .examples-popup-title-text {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: var(--pure-white);
-            line-height: 1.4;
-            padding-right: 25px;
-        }
-
-        .examples-close-x-btn {
-            background: transparent;
-            border: none;
-            color: var(--grey-text);
-            font-size: 1.6rem;
-            font-weight: bold;
-            cursor: pointer;
-            line-height: 1;
-            transition: color 0.2s;
-            flex-shrink: 0;
-        }
-
-        .examples-close-x-btn:hover {
-            color: var(--alert-red);
-        }
-
-        .examples-grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: repeat(3, auto);
-            grid-auto-flow: column; 
-            gap: 14px;
-        }
-
-        .example-row-item {
-            background-color: rgba(16, 37, 82, 0.4);
-            border: 1px solid rgba(137, 197, 247, 0.1);
-            border-radius: 8px;
-            padding: 10px 12px;
+        /* Fixed-size example slide box styling */
+        .example-slide-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 1rem;
+            min-height: 290px;
+            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: opacity 0.3s ease, filter 0.3s ease;
         }
 
-        /* Heavily grayed out / masked locked rows */
-        .example-row-item.locked-state {
-            opacity: 0.12;
-            filter: grayscale(100%) blur(1px);
-            pointer-events: none;
+        .example-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
         }
 
-        .example-desc-text {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--off-white);
-            margin-bottom: 6px;
+        .example-index-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--light-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .example-cards-flexbox {
+        /* Example specific 4-clue Grid layout */
+        .example-grid-layout {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            margin-bottom: 4px;
+            gap: 0.4rem;
+            margin-bottom: 0.5rem;
+            align-items: stretch;
         }
 
-        .example-mini-card {
-            background-color: var(--card-inactive);
-            border: 1px solid rgba(137, 197, 247, 0.15);
-            border-radius: 5px;
-            height: 38px;
+        .example-clue-card {
+            background: rgba(14, 30, 61, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 0.45rem 0.35rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 84px;
+        }
+
+        .ex-badge-val {
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--grey-text);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+        }
+
+        .ex-clue-main-text {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--pure-white);
+            line-height: 1.2;
+            word-wrap: break-word;
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2px 4px;
-            text-align: center;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--grey-text);
-            position: relative;
-            overflow: hidden;
         }
 
-        .example-mini-card.revealed {
-            background-color: var(--steel-blue);
-            color: var(--pure-white);
-            border-color: var(--light-blue);
+        /* Ensure Clue 3 and Clue 4 have identical layout in Example 6 */
+        .example-grid-layout.ex6-layout .example-clue-card {
+            padding: 0.45rem 0.2rem;
         }
-
-        .example-mini-card .mini-card-qm {
-            position: absolute;
-            font-size: 0.9rem;
-            opacity: 0.18;
-            color: var(--light-blue);
-            font-weight: bold;
-        }
-
-        .example-buttons-flexbox {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 6px;
-        }
-
-        .example-mini-btn {
-            background: transparent;
-            border: 1px solid var(--light-blue);
-            color: var(--light-blue);
-            height: 22px;
-            padding: 0 8px;
+        .example-grid-layout.ex6-layout .ex-clue-main-text {
             font-size: 0.65rem;
-            text-transform: uppercase;
-            border-radius: 3px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
+            line-height: 1.25;
+            white-space: normal;
         }
 
-        .example-mini-btn:hover:not(:disabled) {
-            background: var(--light-blue);
-            color: var(--dark-blue);
+        .ex-clue-footer {
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: var(--light-blue);
+            margin-top: 0.25rem;
         }
 
-        .example-mini-btn:disabled {
-            border-color: var(--muted-grey);
-            color: var(--muted-grey);
-            cursor: not-allowed;
-        }
-
-        .example-mini-next-btn {
-            background: rgba(168, 85, 247, 0.2);
-            border: 1px solid var(--purple-alt);
-            color: var(--purple-alt);
-            height: 22px;
-            padding: 0 10px;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            border-radius: 3px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-            display: none;
-        }
-
-        .example-mini-next-btn:hover {
-            background: var(--purple-alt);
-            color: var(--pure-white);
-        }
-
-        .example-explanation-why-text {
+        .example-ans-box {
             font-size: 0.85rem;
-            color: var(--answer-highlight);
-            border-top: 1px solid rgba(137, 197, 247, 0.1);
-            padding-top: 5px;
-            margin-top: 2px;
-            display: none; /* Only reveals when requested */
+            font-weight: 700;
+            color: var(--pure-white);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px dashed rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 0.5rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            min-height: 34px;
         }
 
-        @media (max-width: 768px) {
-            .game-overlay {
-                height: auto;
-                min-height: auto;
-            }
-            .meta-sub-row {
-                display: flex;
-                flex-direction: column;
-                height: auto;
-                top: 0;
-                margin-top: 10px;
-            }
-            .game-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding-top: 10px;
-            }
-            .clues-container {
-                margin-top: 10px;
-            }
-            .clues-container > .clue-wrapper {
-                top: 0 !important;
-            }
-            .control-panel {
-                top: 0;
-                height: auto;
-                min-height: 310px;
-                max-height: none;
-            }
-            .inline-feedback-container {
-                min-height: 270px;
-                max-height: none;
-                overflow: visible;
-            }
-			
-            .examples-grid-layout {
-                grid-template-columns: 1fr;
-                grid-auto-flow: row;
-                gap: 10px;
-            }
-            .examples-popup-container {
-                max-height: 98vh;
-            }
-            .example-desc-text {
-                font-size: 0.8rem;
-            }
-            .example-mini-card {
-                height: 34px;
-                font-size: 0.68rem;
-            }
+        .example-ans-box.visible {
+            visibility: visible;
+        }
+
+        .example-explanation-container {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: #b3cbe7;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 0.25rem;
+            margin-bottom: 2.2rem; /* Reserve space so Next button does not overlap description */
+        }
+
+        .example-reveal-btn {
+            background: var(--button-blue);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 0.45rem 0.75rem;
+            cursor: pointer;
+            align-self: center;
+            margin-top: auto;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .example-reveal-btn:hover {
+            background: var(--button-blue-hover);
+        }
+
+        /* Next example button styled green, placed in bottom right */
+        .example-next-slide-btn {
+            background: var(--success-green);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            padding: 0.35rem 0.65rem;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            text-transform: uppercase;
+        }
+
+        .example-next-slide-btn:hover {
+            background: #059669;
+        }
+
+        /* Centered general game brief text placed at the bottom */
+        .modal-general-brief {
+            font-size: 0.8rem;
+            line-height: 1.45;
+            color: var(--grey-text);
+            text-align: center;
+            padding: 0.5rem 1rem 0;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* Utility helper classes */
+        .hidden-space {
+            visibility: hidden;
+        }
+
+        .locked-scroll {
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-overlay">
-        <div class="game-inner-border">
-            
-            <div class="game-header">
-                <div class="game-title">
-                    <img src="logo.png" alt="Toney Dudek: Daily Sequences" class="game-logo-img">
+    <div class="game-container">
+        <header>
+            <div class="header-title-area">
+                <div class="header-title-row">
+                    <h1>Daily Sequences</h1>
                 </div>
-                <div class="header-widgets-wrap">
-                    <div class="clock-wrapper-container" id="clock-wrapper-element">
-                        <span class="clock-prepend-text">New sequence:</span>
-                        <div class="header-clock-box" id="header-countdown-clock">00:00:00</div>
-                    </div>
+                <div class="header-day-label" id="top-day-badge">Day --</div>
+            </div>
+            <div class="header-icons">
+                <button class="icon-btn" onclick="openHelpModal()" aria-label="How to play">❓</button>
+                <button class="icon-btn" onclick="openStatsModal()" aria-label="Statistics">📊</button>
+            </div>
+        </header>
+
+        <div class="score-banner">
+            <div class="score-block">
+                <span class="score-label">Points Potential</span>
+                <span class="score-value points-orange" id="points-potential-val">1,000</span>
+            </div>
+            <div class="score-block" style="text-align: right;">
+                <span class="score-label">Current Streak</span>
+                <span class="score-value" id="current-streak-val">0</span>
+            </div>
+        </div>
+
+        <main class="grid-container" id="cards-grid">
+            <div class="grid-card" id="card-0">
+                <div class="card-header">
+                    <span class="card-number">Clue 1</span>
+                    <span class="card-badge" id="badge-0">1,000 pts</span>
+                </div>
+                <div class="card-body">
+                    <p class="clue-text" id="clue-text-0">--</p>
+                </div>
+                <div class="card-bottom-row">
+                    <span class="alt-text" id="alt-0"></span>
+                    <span class="count-text" id="count-0">--</span>
                 </div>
             </div>
 
-            <div class="meta-sub-row">
-                <div class="meta-left-badges">
-                    <div class="meta-left-inner-group">
-                        <div class="seq-badge-box" id="header-q-idx">Sequence #1</div>
-                        <div class="alt-badge-box" id="alt-question-badge">ALT</div>
-                    </div>
-                    <div class="header-score-box" id="header-score-box-element"><span class="orange-score-text" id="total-score-val">0</span>&nbsp;<span class="orange-score-text" id="score-unit-text">POINTS</span></div>
+            <div class="grid-card" id="card-1">
+                <div class="card-header">
+                    <span class="card-number">Clue 2</span>
+                    <span class="card-badge" id="badge-1">600 pts</span>
+                </div>
+                <div class="card-body">
+                    <p class="clue-text" id="clue-text-1">--</p>
+                </div>
+                <div class="card-bottom-row">
+                    <span class="alt-text" id="alt-1"></span>
+                    <span class="count-text" id="count-1">--</span>
                 </div>
             </div>
 
-            <div class="game-grid">
-                <div class="clues-container">
-                    <div class="clue-wrapper">
-                        <div class="clue-card" id="card-0"><span class="clue-placeholder">CLUE 1</span></div>
-                        <button class="reveal-btn" id="rev-btn-0" onclick="triggerManualReveal(0)">Reveal</button>
-                    </div>
-
-                    <div class="clue-wrapper">
-                        <div class="clue-card" id="card-1"><span class="clue-placeholder">CLUE 2</span></div>
-                        <button class="reveal-btn" id="rev-btn-1" onclick="triggerManualReveal(1)">Reveal</button>
-                    </div>
-
-                    <div class="clue-wrapper">
-                        <div class="clue-card" id="card-2"><span class="clue-placeholder">CLUE 3</span></div>
-                        <button class="reveal-btn" id="rev-btn-2" onclick="triggerManualReveal(2)">Reveal</button>
-                    </div>
-
-                    <div class="clue-wrapper">
-                        <div class="clue-card" id="card-3"></div>
-                        <div style="display: flex; gap: 6px; margin-top: 6px; width: 100%;">
-                            <input type="text" class="card-input-element" id="game-input" placeholder="enter answer here" autocomplete="off" onkeydown="handleInputBoxKeydown(event)" onmousedown="clearInputStateGlow()" disabled style="flex-grow: 1;">
-                            <button class="square-submit-btn" id="submit-btn" onclick="processGuess()" disabled>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 10 4 15 9 20"></polyline>
-                                    <path d="M20 4v7a4 4 0 0 1-4 4H4"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+            <div class="grid-card" id="card-2">
+                <div class="card-header">
+                    <span class="card-number">Clue 3</span>
+                    <span class="card-badge" id="badge-2">300 pts</span>
                 </div>
-
-                <div class="control-panel">
-                    <div class="input-box-wrapper">
-                        
-                        <div class="inline-feedback-container" id="feedback-panel">
-                            <div class="top-nav-buttons-group">
-                                <button class="help-toggle-btn" id="help-toggle-action" onclick="switchPanelTab('help')" title="How to Play">?</button>
-                                <button class="ans-toggle-btn" id="ans-toggle-action" onclick="switchPanelTab('answers')" title="View Answer" disabled>A</button>
-                                <button class="stats-toggle-btn" id="stats-toggle-action" onclick="switchPanelTab('stats')" title="View Stats" disabled>
-                                    <div class="bar-icon-wrapper" id="bar-icon-container"></div>
-                                </button>
-                            </div>
-
-                            <div id="panel-content-area" style="display: flex; flex-direction: column; height:100%; justify-content: flex-start;">
-                                <div class="feedback-title" id="fb-title">How To Play</div>
-                                <div class="feedback-msg" id="fb-msg"></div>
-                            </div>
-                        </div>
-
-                    </div>
+                <div class="card-body">
+                    <p class="clue-text" id="clue-text-2">--</p>
                 </div>
-				<div class="footer-links-container">
-					<a href="https://x.com/ToneyDudek" target="_blank" class="footer-text-link">Twitter/X</a>
-					<a href="https://paypal.me/tgdmrd" target="_blank" class="footer-text-link">Buy me a coffee ♥</a>
-				</div>
+                <div class="card-bottom-row">
+                    <span class="alt-text" id="alt-2"></span>
+                    <span class="count-text" id="count-2">--</span>
+                </div>
             </div>
 
-				<div class="credits-signature" onclick="handleFooterSignatureTrigger()">made by rudyr23, 2026.</div>
-				</div>
-    </div>
-
-    <div class="examples-popup-overlay" id="examples-popup-modal">
-        <div class="examples-popup-container">
-            <div class="examples-inner-border">
-                <div class="examples-popup-header">
-                    <div class="examples-popup-title-text">The game requires you to balance broad general football knowledge with the ability to spot subtle, sometimes cryptic, patterns. Good luck!</div>
-                    <button class="examples-close-x-btn" onclick="closeExamplesPopupModal()">&times;</button>
+            <div class="grid-card" id="card-3">
+                <div class="card-header">
+                    <span class="card-number">Clue 4 (Answer)</span>
+                    <span class="card-badge" id="badge-3">100 pts</span>
                 </div>
-                <div class="examples-grid-layout">
-                    
-                    <div class="example-row-item" id="ex-row-0">
-                        <div class="example-desc-text">Some sequences are simple</div>
-                        <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed">Heads</div>
-                            <div class="example-mini-card revealed">Shoulders</div>
-                            <div class="example-mini-card revealed">Knees</div>
-                            <div class="example-mini-card" id="ex-card-0-3"><span class="mini-card-qm">???</span></div>
-                        </div>
-                        <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" id="ex-btn-0-3" onclick="revealExampleClueCard(0, 'Toes')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-0" onclick="goToNextExampleRow(0)">Next</button>
-                        </div>
-                        <div class="example-explanation-why-text" id="ex-why-0">"the start of the famous sequence"</div>
-                    </div>
-
-                    <div class="example-row-item locked-state" id="ex-row-1">
-                        <div class="example-desc-text">Some can be within larger sequences</div>
-                        <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed">Knees</div>
-                            <div class="example-mini-card revealed">Toes</div>
-                            <div class="example-mini-card revealed">Eyes</div>
-                            <div class="example-mini-card" id="ex-card-1-3"><span class="mini-card-qm">???</span></div>
-                        </div>
-                        <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" id="ex-btn-1-3" onclick="revealExampleClueCard(1, 'Ears')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-1" onclick="goToNextExampleRow(1)">Next</button>
-                        </div>
-                        <div class="example-explanation-why-text" id="ex-why-1">"the middle part of the famous sequence"</div>
-                    </div>
-
-                    <div class="example-row-item locked-state" id="ex-row-2">
-                        <div class="example-desc-text">Some can be based on the words themselves</div>
-                        <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed">Toes</div>
-                            <div class="example-mini-card revealed">Eyes</div>
-                            <div class="example-mini-card revealed">Ears</div>
-                            <div class="example-mini-card" id="ex-card-2-3"><span class="mini-card-qm">???</span></div>
-                        </div>
-                        <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" id="ex-btn-2-3" onclick="revealExampleClueCard(2, 'Nose')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-2" onclick="goToNextExampleRow(2)">Next</button>
-                        </div>
-                        <div class="example-explanation-why-text" id="ex-why-2">"the 4 four-letter words in the famous sequence, in order"</div>
-                    </div>
-
-                    <div class="example-row-item locked-state" id="ex-row-3">
-                        <div class="example-desc-text">Some might be more niche</div>
-                        <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed">Shoulders</div>
-                            <div class="example-mini-card revealed">Knees</div>
-                            <div class="example-mini-card revealed">Eyes</div>
-                            <div class="example-mini-card" id="ex-card-3-3"><span class="mini-card-qm">???</span></div>
-                        </div>
-                        <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" id="ex-btn-3-3" onclick="revealExampleClueCard(3, 'Ears')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-3" onclick="goToNextExampleRow(3)">Next</button>
-                        </div>
-                        <div class="example-explanation-why-text" id="ex-why-3">"everything in the famous sequence that humans have have two of, in order"</div>
-                    </div>
-
-                    <div class="example-row-item locked-state" id="ex-row-4">
-                        <div class="example-desc-text">Some might have red herrings</div>
-                        <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed">Heads</div>
-                            <div class="example-mini-card revealed">Shoulders</div>
-                            <div class="example-mini-card revealed">Above</div>
-                            <div class="example-mini-card" id="ex-card-4-3"><span class="mini-card-qm">???</span></div>
-                        </div>
-                        <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" id="ex-btn-4-3" onclick="revealExampleClueCard(4, 'The Rest')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-4" onclick="goToNextExampleRow(4)">Next</button>
-                        </div>
-                        <div class="example-explanation-why-text" id="ex-why-4">"Another famous sequence of words"</div>
-                    </div>
-
-                    <div class="example-row-item locked-state" id="ex-row-5">
-                        <div class="example-desc-text">Some might be more riddle-like</div>
-                        <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at the front)</div>
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at the side)</div>
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">1 (at the front)</div>
-                            <div class="example-mini-card" id="ex-card-5-3"><span class="mini-card-qm">???</span></div>
-                        </div>
-                        <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" id="ex-btn-5-3" onclick="revealExampleClueCard(5, '1 (at the front)')">Reveal</button>
-                        </div>
-                        <div class="example-explanation-why-text" id="ex-why-5">"Fingers used (and where) to point to the second half of the famous sequence"</div>
-                    </div>
-
+                <div class="card-body">
+                    <p class="clue-text" id="clue-text-3">--</p>
                 </div>
+                <div class="card-bottom-row">
+                    <span class="alt-text" id="alt-3"></span>
+                    <span class="count-text" id="count-3">--</span>
+                </div>
+            </div>
+        </main>
+
+        <section class="input-area" id="interactive-panel">
+            <div class="feedback-message incorrect" id="incorrect-feedback">Incorrect. Keep scanning for patterns!</div>
+            <form class="guess-form" id="guess-form" onsubmit="handleGuessSubmit(event)">
+                <input type="text" class="guess-input" id="guess-input" placeholder="Type your guess here..." autocomplete="off">
+                <button type="submit" class="btn">Submit</button>
+            </form>
+            <div class="action-row">
+                <span class="attempts-counter" id="attempts-val">Attempts: 0/3</span>
+                <button class="text-btn" id="clue-reveal-btn" onclick="revealNextClueByChoice()">Reveal Next Clue</button>
+            </div>
+        </section>
+
+        <section class="explanation-panel" id="endgame-explanation-panel">
+            <div class="explanation-header">Why?</div>
+            <p class="explanation-text" id="endgame-why-text">--</p>
+            <div class="share-container">
+                <button class="btn share-btn" onclick="shareResults()">Share Result 🔗</button>
+                <div class="share-feedback" id="share-copied-feedback">Copied to clipboard!</div>
+            </div>
+        </section>
+
+        <div class="dev-panel" id="dev-sandbox">
+            <div class="dev-title">🛠️ Developer Sandbox</div>
+            <div class="dev-row">
+                <select class="dev-select" id="dev-select-sequence" onchange="devForceLoadQuestion(this.value)">
+                    </select>
+                <button class="btn dev-btn" onclick="devResetTodayLockout()">Reset State</button>
             </div>
         </div>
     </div>
 
-    <div class="dev-sandbox-toolbox" id="dev-toolbox-wrapper">
-        <div class="dev-close-btn" onclick="closeDevToolsOverlay()">&times;</div>
-        <div class="dev-title">⚠️ Local Testing Sandbox Tools</div>
-        <button class="dev-btn" onclick="devResetTodayLockout()">Reset Today's Lockout Cookie</button>
-        <div>
-            <label style="font-size:0.8rem; color:#f59e0b;" for="dev-q-select">Force Load Sequence:</label>
-            <select class="dev-select" id="dev-q-select" onchange="devForceLoadQuestion(this.value)">
-            </select>
+    <div class="modal-overlay" id="help-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeHelpModal()">✕</button>
+            
+            <div class="how-to-section">
+                <div class="example-slide-box">
+                    <div class="example-top-row">
+                        <span class="example-index-label" id="example-tracker-label">Example 1 of 3</span>
+                    </div>
+
+                    <div id="example-grid-container" class="example-grid-layout">
+                        </div>
+
+                    <div class="example-ans-box" id="example-ans-slot">
+                        <span style="color: #10b981; font-weight: 800;">✓</span>
+                        <span id="example-ans-text">--</span>
+                    </div>
+
+                    <div class="example-explanation-container">
+                        <p id="example-explanation-text">--</p>
+                    </div>
+
+                    <button class="example-reveal-btn" id="example-reveal-btn" onclick="revealExampleAnswer()">Reveal Answer</button>
+
+                    <button class="example-next-slide-btn" id="example-next-btn" onclick="advanceExampleSlide()">Next</button>
+                </div>
+            </div>
+
+            <p class="modal-general-brief">
+                The game requires you to balance broad general football knowledge with the ability to spot subtle, sometimes cryptic, patterns. Good luck!
+            </p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="stats-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeStatsModal()">✕</button>
+            <h2 class="modal-title">Your Stats</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-played">0</span>
+                    <span class="stat-label">Played</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-winpct">0%</span>
+                    <span class="stat-label">Win %</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-streak">0</span>
+                    <span class="stat-label">Current Streak</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-maxstreak">0</span>
+                    <span class="stat-label">Max Streak</span>
+                </div>
+            </div>
+
+            <div class="stats-history-block">
+                <h3 class="history-title">Points History (Last 5 Days)</h3>
+                <div id="points-history-rows-wrapper">
+                    </div>
+            </div>
         </div>
     </div>
 
     <script>
-        let currentQIdx = 0;
-        let todaysQuestionData = null; 
-        let resolvedServerAnswerPayload = null; 
-
-        let highestActiveClue = -1; 
-        let questionIncorrectAttempts = 0; 
-        let currentEarnedPoints = 0;
-        let isQuestionFinalized = false;
-        let countdownTickerInterval = null;
-
-        let activePanelTab = "help"; 
-        let userFinalAnswerLabel = "None";
-        let finalStatusOutcome = "lose"; 
-
-        /* --- EXAMPLES OVERLAY INTERACTION LOGIC --- */
-        function openExamplesPopupModal() {
-            document.getElementById("examples-popup-modal").style.display = "flex";
-        }
-
-        function closeExamplesPopupModal() {
-            document.getElementById("examples-popup-modal").style.display = "none";
-            // Reset state upon closing
-            for(let i=0; i<6; i++) {
-                const row = document.getElementById(`ex-row-${i}`);
-                const card = document.getElementById(`ex-card-${i}-3`);
-                const btn = document.getElementById(`ex-btn-${i}-3`);
-                const nxtBtn = document.getElementById(`ex-next-btn-${i}`);
-                const whyText = document.getElementById(`ex-why-${i}`);
-                
-                if (i === 0) {
-                    row.classList.remove("locked-state");
-                } else {
-                    row.classList.add("locked-state");
+        // Safe localStorage wrapper to prevent private browser crashes
+        const safeStorage = {
+            getItem(key) {
+                try {
+                    return localStorage.getItem(key);
+                } catch (e) {
+                    return null;
                 }
-                
-                card.className = "example-mini-card";
-                card.innerHTML = `<span class="mini-card-qm">???</span>`;
-                if(btn) {
-                    btn.disabled = false;
-                    btn.style.display = "block";
-                }
-                if(nxtBtn) nxtBtn.style.display = "none";
-                if(whyText) whyText.style.display = "none";
+            },
+            setItem(key, value) {
+                try {
+                    localStorage.setItem(key, value);
+                } catch (e) {}
+            },
+            removeItem(key) {
+                try {
+                    localStorage.removeItem(key);
+                } catch (e) {}
             }
-        }
+        };
 
-        function revealExampleClueCard(rowIdx, answerString) {
-            const card = document.getElementById(`ex-card-${rowIdx}-3`);
-            const btn = document.getElementById(`ex-btn-${rowIdx}-3`);
-            const nxtBtn = document.getElementById(`ex-next-btn-${rowIdx}`);
-            const whyText = document.getElementById(`ex-why-${rowIdx}`);
+        const API_ENDPOINT = '/api/game';
+        
+        let globalQuestionIndex = 0;
+        let globalActualDatasetIndex = 0;
+        let activeClueIndex = 0;
+        let attemptsCount = 0;
+        const maxAttempts = 3;
+        let isGameConcluded = false;
 
-            card.className = "example-mini-card revealed";
-            card.innerHTML = answerString;
-            
-            if(btn) btn.style.display = "none";
-            if(whyText) whyText.style.display = "block";
-            if(nxtBtn) nxtBtn.style.display = "block";
-        }
+        let activeClues = [];
+        let activeAlts = [];
+        let activeCounts = [];
 
-        function goToNextExampleRow(rowIdx) {
-            const nxtBtn = document.getElementById(`ex-next-btn-${rowIdx}`);
-            if(nxtBtn) nxtBtn.style.display = "none";
-            
-            const nextRowIdx = rowIdx + 1;
-            if (nextRowIdx < 6) {
-                const nextRow = document.getElementById(`ex-row-${nextRowIdx}`);
-                if (nextRow) {
-                    nextRow.classList.remove("locked-state");
-                }
+        // Carousel Examples Data
+        const EX_SLIDES = [
+            {
+                indexLabel: "Example 1 of 3",
+                isSpecialEx6: false,
+                clues: ["Dunfermline Athletic", "Borussia Mönchengladbach", "Lille", "Wolverhampton Wanderers"],
+                alts: ["(or Debrecen)", "(or Fiorentina)", "(or Columbus Crew)", "(or Salford City)"],
+                counts: ["3 sides", "4 sides", "5 sides", "6 sides"],
+                answers: ["Wolverhampton Wanderers", "Salford City"],
+                whyText: "The number of sides of the club's crest increases by one each time."
+            },
+            {
+                indexLabel: "Example 2 of 3",
+                isSpecialEx6: false,
+                clues: ["England", "France", "Argentina", "Germany"],
+                alts: ["(or Spain)", "(or Uruguay)", "", "(or Italy)"],
+                counts: [1, 2, 3, 4],
+                answers: ["Germany", "Italy"],
+                whyText: "The number of World Cups won by the international team increases by one each time."
+            },
+            {
+                indexLabel: "Example 3 of 3",
+                isSpecialEx6: true, // Example 6 in previous dataset
+                clues: ["19 in Spain", "10 in Spain", "30 in France", "10 in USA"],
+                alts: ["", "", "", ""],
+                counts: ["Barcelona", "Barcelona", "PSG", "Inter Miami"],
+                answers: ["10", "10 in USA"],
+                whyText: "These are the last 4 shirt numbers worn by Lionel Messi in club football."
             }
-        }
+        ];
+        let currentExampleIndex = 0;
+        let isExampleAnswerRevealed = false;
 
         function getHistoricalUserStats() {
-            let stats = localStorage.getItem("td_sequence_daily_stats");
-            if (stats) return JSON.parse(stats);
-            return { played: 0, currentStreak: 0, maxStreak: 0, totalPoints: 0, highScore: 0, lastPlayedDayStamp: null, lastDayResult: null, lastUsedClues: 0 };
+            let data = safeStorage.getItem("td_seq_stats_v3");
+            if (!data) {
+                return {
+                    playedCount: 0,
+                    wonCount: 0,
+                    currentStreak: 0,
+                    maxStreak: 0,
+                    lastPlayedDayStamp: null,
+                    lastDayResult: null,
+                    lastUsedClues: 0,
+                    dayHistory: []
+                };
+            }
+            try {
+                return JSON.parse(data);
+            } catch(e) {
+                return {
+                    playedCount: 0,
+                    wonCount: 0,
+                    currentStreak: 0,
+                    maxStreak: 0,
+                    lastPlayedDayStamp: null,
+                    lastDayResult: null,
+                    lastUsedClues: 0,
+                    dayHistory: []
+                };
+            }
         }
 
         function saveHistoricalUserStats(statsObj) {
-            localStorage.setItem("td_sequence_daily_stats", JSON.stringify(statsObj));
+            safeStorage.setItem("td_seq_stats_v3", JSON.stringify(statsObj));
         }
 
-        function triggerScoreGlow(type) {
-            const element = document.getElementById("header-score-box-element");
-            element.classList.remove("glow-red", "glow-green");
-            void element.offsetWidth; 
-            element.classList.add(type === "red" ? "glow-red" : "glow-green");
-        }
-
-        function calculateCurrentAvailablePoints() {
-            if (highestActiveClue === -1 || questionIncorrectAttempts >= 2) return 0;
-            let available = 3 - highestActiveClue; 
-            return questionIncorrectAttempts === 1 ? available / 2 : available;
-        }
-
-        function updateHeaderScoreDisplay(pointsVal) {
-            let previousScore = parseInt(document.getElementById("total-score-val").textContent) || 0;
-            document.getElementById("total-score-val").textContent = pointsVal;
-            document.getElementById("score-unit-text").textContent = (pointsVal === 1) ? "POINT" : "POINTS";
-            
-            if (highestActiveClue >= 0 && !isQuestionFinalized) {
-                if (pointsVal > previousScore) {
-                    triggerScoreGlow("green");
-                } else if (pointsVal < previousScore) {
-                    triggerScoreGlow("red");
-                }
-            }
-        }
-
-        function getStaticBarGraphHtml(colorStyle) {
-            let color = colorStyle || 'currentColor';
-            return `
-                <div class="bar-icon-wrapper">
-                    <div class="bar-icon" style="height: 5px; background: ${color};"></div>
-                    <div class="bar-icon" style="height: 11px; background: ${color};"></div>
-                    <div class="bar-icon" style="height: 7px; background: ${color};"></div>
-                </div>
-            `;
-        }
-
-        function renderStaticBarGraphIcon() {
-            const container = document.getElementById("bar-icon-container");
-            container.innerHTML = getStaticBarGraphHtml(null);
-        }
-
-        function renderAbstractCardBackground() {
-            const card = document.getElementById("card-3");
-            card.innerHTML = `<span class="clue-placeholder">???</span>`;
-            
-            const qmConfig = [
-                { top: "5%", left: "10%", size: "2.8rem", rot: "-15deg" },
-                { top: "12%", left: "35%", size: "1.4rem", rot: "20deg" },
-                { top: "8%", left: "68%", size: "2.1rem", rot: "-35deg" },
-                { top: "32%", left: "15%", size: "1.9rem", rot: "45deg" },
-                { top: "44%", left: "42%", size: "2.5rem", rot: "12deg" },
-                { top: "28%", left: "80%", size: "1.6rem", rot: "-10deg" },
-                { top: "70%", left: "8%", size: "2.2rem", rot: "30deg" },
-                { top: "68%", left: "55%", size: "1.5rem", rot: "-25deg" },
-                { top: "58%", left: "78%", size: "2.7rem", rot: "18deg" },
-                { top: "48%", left: "22%", size: "1.2rem", rot: "-5deg" }
-            ];
-
-            qmConfig.forEach(cfg => {
-                let qmSpan = document.createElement("div");
-                qmSpan.className = "card-qm";
-                qmSpan.style.top = cfg.top;
-                qmSpan.style.left = cfg.left;
-                qmSpan.style.fontSize = cfg.size;
-                qmSpan.style.opacity = "0.35"; 
-                qmSpan.style.transform = `rotate(${cfg.rot})`;
-                qmSpan.textContent = "?";
-                card.appendChild(qmSpan);
-            });
-        }
-
-        function triggerManualReveal(clueIndex) {
-            if (clueIndex !== highestActiveClue + 1 || isQuestionFinalized) return;
-            highestActiveClue = clueIndex;
-            
-            if (localStorage.getItem("dev_force_q_index") === null) {
-                localStorage.setItem("td_midgame_active_clue", highestActiveClue);
-            }
-            
-            refreshUiLayout();
-        }
-
-        function handleFooterSignatureTrigger() {
-            let passInput = prompt("Enter access credentials:");
-            if (passInput && btoa(passInput) === "aXZhbmplcnp5MTcxMw==") {
-                localStorage.setItem("td_dev_unlocked_session", "true");
-                document.getElementById("dev-toolbox-wrapper").style.display = "flex";
-            }
-        }
-
-        function closeDevToolsOverlay() {
-            localStorage.removeItem("td_dev_unlocked_session");
-            localStorage.removeItem("dev_force_q_index"); 
-            localStorage.removeItem("td_today_match_idx");
-            localStorage.removeItem("td_midgame_active_clue");
-            localStorage.removeItem("td_midgame_attempts");
-            document.getElementById("dev-toolbox-wrapper").style.display = "none";
-            location.reload(); 
-        }
-
-        function handleInputBoxKeydown(event) {
-            const inputField = document.getElementById("game-input");
-            if (inputField.classList.contains("state-incorrect")) {
-                clearInputStateGlow();
-                event.preventDefault();
-                return;
-            }
-            if (event.key === "Enter" && highestActiveClue !== -1) {
-                processGuess();
-            }
-        }
-
-        async function runGameInitializationLifecycle() {
-            devBuildQuestionDropdownOptions();
-            renderStaticBarGraphIcon();
-            runLiveMidnightClockEngine();
-
-            if (localStorage.getItem("td_dev_unlocked_session") === "true") {
-                document.getElementById("dev-toolbox-wrapper").style.display = "flex";
-            }
-
-            const forcedParam = localStorage.getItem("dev_force_q_index") || "";
-            let fetchUrl = `/api/game`;
-            if (forcedParam !== "") {
-                fetchUrl += `?forcedIndex=${forcedParam}`;
-            }
-
-            const stats = getHistoricalUserStats();
-            const currentDayStamp = new Date().toDateString();
-            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
-
-            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
-                isQuestionFinalized = true;
-                highestActiveClue = 2;
-                currentEarnedPoints = parseInt(localStorage.getItem("td_today_score_cached") || "0");
-                
-                document.getElementById("game-input").disabled = true;
-                document.getElementById("submit-btn").disabled = true;
-
-                try {
-                    const response = await fetch(fetchUrl, {
-                        headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {}
-                    });
-                    const data = await response.json();
-                    currentQIdx = data.questionIndex;
-                    todaysQuestionData = data.question;
-
-                    await fetchFullFinalAnswersData(forcedParam);
-                    
-                    let savedMatchIdx = parseInt(localStorage.getItem("td_today_match_idx") || "0");
-                    if (savedMatchIdx === 999) savedMatchIdx = 0;
-                    
-                    let fallbackVal = resolvedServerAnswerPayload?.answers[savedMatchIdx] || resolvedServerAnswerPayload?.answers[0] || "Answered";
-                    
-                    let targetAltText = todaysQuestionData?.alts[3] || "";
-                    if (todaysQuestionData?.hasAlt && resolvedServerAnswerPayload?.answers) {
-                        if (savedMatchIdx > 0 && todaysQuestionData.alts[0]) {
-                            let cleanPrimary = resolvedServerAnswerPayload.answers[0];
-                            targetAltText = `(or ${cleanPrimary})`;
-                        }
-                    }
-
-                    finalizeCurrentQuestion(fallbackVal, stats.lastDayResult === "win" ? "win" : "lose", targetAltText);
-                    switchPanelTab('answers');
-                } catch(e) {
-                    console.error("Initialization error under lockout conditions:", e);
-                }
-                return;
+        async function fetchSequenceConfig() {
+            let url = API_ENDPOINT;
+            const forceParam = safeStorage.getItem("dev_force_q_index");
+            if (forceParam !== null) {
+                url += `?forcedIndex=${forceParam}`;
             }
 
             try {
-                const response = await fetch(fetchUrl, {
-                    headers: forcedParam !== "" ? { 'x-forced-index': forcedParam } : {}
-                });
-                const data = await response.json();
+                const res = await fetch(url);
+                if (!res.ok) throw new Error("HTTP connection error");
+                const payload = await res.json();
                 
-                currentQIdx = data.questionIndex;
-                todaysQuestionData = data.question;
-                
-                if (!sessionForced) {
-                    let cachedClueState = localStorage.getItem("td_midgame_active_clue");
-                    if (cachedClueState !== null) {
-                        highestActiveClue = parseInt(cachedClueState);
-                    } else {
-                        highestActiveClue = -1;
-                    }
-                    
-                    let cachedAttempts = localStorage.getItem("td_midgame_attempts");
-                    if (cachedAttempts !== null) {
-                        questionIncorrectAttempts = parseInt(cachedAttempts);
-                    } else {
-                        questionIncorrectAttempts = 0;
-                    }
-                } else {
-                    highestActiveClue = -1;
-                    questionIncorrectAttempts = 0;
+                globalQuestionIndex = payload.questionIndex;
+                globalActualDatasetIndex = payload.actualDatasetIndex;
+
+                activeClues = payload.question.clues;
+                activeAlts = payload.question.alts;
+
+                // Sync day displays
+                document.getElementById("top-day-badge").textContent = `Day ${globalQuestionIndex + 1}`;
+
+                // Validate if a new sequence loaded vs last seen to prevent mid-game state bleeding
+                const lastRecordedSeq = safeStorage.getItem("td_last_recorded_sequence_index");
+                if (lastRecordedSeq !== null && parseInt(lastRecordedSeq, 10) !== globalQuestionIndex) {
+                    // Wipe mid-game cached elements of previous days
+                    safeStorage.removeItem("td_midgame_active_clue");
+                    safeStorage.removeItem("td_midgame_attempts");
+                    safeStorage.removeItem("td_today_score_cached");
+                    safeStorage.removeItem("td_today_match_idx");
+                    safeStorage.removeItem("td_today_won_state");
                 }
+                safeStorage.setItem("td_last_recorded_sequence_index", globalQuestionIndex);
+
+                // Setup Developer tools
+                setupDeveloperDropdown();
+
+                // Evaluate state locks or load cache
+                evaluateSetupState(payload);
+
             } catch (err) {
-                console.error("Error connecting to backend sequence module API:", err);
+                console.error("Initialization failure: ", err);
+            }
+        }
+
+        function evaluateSetupState(serverPayload) {
+            let stats = getHistoricalUserStats();
+
+            // If user previously finished today
+            if (stats.lastPlayedDayStamp === globalQuestionIndex) {
+                concludeDailySessionUI({
+                    success: stats.lastDayResult === "won",
+                    revealedCluesCount: stats.lastUsedClues
+                });
                 return;
             }
 
-            isQuestionFinalized = false;
-            currentEarnedPoints = calculateCurrentAvailablePoints();
+            // Restore partial daily game states
+            const savedClueIdx = safeStorage.getItem("td_midgame_active_clue");
+            const savedAttempts = safeStorage.getItem("td_midgame_attempts");
 
-            refreshUiLayout();
-            switchPanelTab('help');
+            if (savedClueIdx !== null) {
+                activeClueIndex = parseInt(savedClueIdx, 10);
+            } else {
+                activeClueIndex = 0;
+            }
+
+            if (savedAttempts !== null) {
+                attemptsCount = parseInt(savedAttempts, 10);
+            } else {
+                attemptsCount = 0;
+            }
+
+            renderSequenceCards();
+            updateUIRowsForTurn();
         }
 
-        async function fetchFullFinalAnswersData(forcedParam) {
-            let fetchUrl = `/api/game`;
-            if (forcedParam) fetchUrl += `?forcedIndex=${forcedParam}`;
+        function renderSequenceCards() {
+            const potentialValues = [1000, 600, 300, 100];
             
-            const res = await fetch(fetchUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ guess: "####REVEAL_FORCE_STATE####" })
-            });
-            const data = await res.json();
-            resolvedServerAnswerPayload = data;
-        }
-
-        function switchPanelTab(tabName) {
-            if ((tabName === 'answers' || tabName === 'stats') && !isQuestionFinalized) {
-                return; 
-            }
-
-            activePanelTab = tabName;
-            
-            document.getElementById("help-toggle-action").classList.remove("active-nav");
-            document.getElementById("ans-toggle-action").classList.remove("active-nav");
-            document.getElementById("stats-toggle-action").classList.remove("active-nav");
-
-            document.getElementById(tabName === 'help' ? "help-toggle-action" : tabName === 'answers' ? "ans-toggle-action" : "stats-toggle-action").classList.add("active-nav");
-
-            const displayArea = document.getElementById("panel-content-area");
-            displayArea.innerHTML = ""; 
-
-            if (tabName === 'help') {
-                displayArea.innerHTML = `
-                    <div class="feedback-title info">How To Play</div>
-                    <div class="feedback-msg" style="display:block; margin-bottom: 0;">
-                        <ul class="rules-bullet-list">
-                            <li class="rules-bullet-item">Reveal clues to find the 4th in the sequence <span onclick="openExamplesPopupModal()" style="color:var(--answer-highlight); font-weight:bold; cursor:pointer; text-decoration:underline;">SEE EXAMPLES HERE</span></li>
-                            <li class="rules-bullet-item">Reveal <span style="font-weight:bold;">CLUE 1</span> to start the game and <span class="green-rule-text" style="font-weight:bold;">GAIN</span> <span class="orange-score-text" style="font-weight:bold;">3 POINTS</span></li>
-                            <li class="rules-bullet-item"><span class="red-rule-text">LOSE</span> <span class="orange-score-text">1 POINT</span> for each subsequent CLUE revealed</li>
-                            <li class="rules-bullet-item">Max 2 attempts per question - An incorrect first attempt will <span class="red-rule-text">halve</span> your score</li>
-                            <li class="rules-bullet-item">Questions marked <span style="color:var(--purple-alt); font-weight:bold;">ALT</span> have multiple correct answers, sometimes alternative clues are shown to help but you only ever need to give one answer</li>
-                            <li class="rules-bullet-item" style="font-weight: bold; color: var(--answer-highlight);">Come back for a brand new sequence every day!</li>
-                        </ul>
-                    </div>
-                `;
-            } 
-            else if (tabName === 'answers') {
-                let secondaryTextReveal = "";
-                const answersArray = resolvedServerAnswerPayload?.answers || [userFinalAnswerLabel];
-                const whyTextVal = resolvedServerAnswerPayload?.whyText || "Explanation securely verified by cloud.";
-
-                if (todaysQuestionData?.hasAlt) {
-                    let alternativesList = answersArray.filter(ans => ans.toLowerCase() !== userFinalAnswerLabel.toLowerCase());
-                    if (currentQIdx === 7 && alternativesList.length === answersArray.length) {
-                        alternativesList = ["Darren Anderton", "Darren Ambrose"];
-                    }
-                    if (alternativesList.length > 0) {
-                        secondaryTextReveal = `Also ${alternativesList.join(', ')}`;
-                    }
-                }
-
-                let statusTitle = (finalStatusOutcome === "win") ? "CONGRATULATIONS" : "UNLUCKY";
-                let statusClass = (finalStatusOutcome === "win") ? "win" : "lose";
-                let msgSummary = (finalStatusOutcome === "win") ? `Fantastic job! You earned ${currentEarnedPoints} points.` : "Better luck next time on the daily puzzle.";
-
-                displayArea.innerHTML = `
-                    <div class="feedback-title ${statusClass}">${statusTitle}</div>
-                    <div class="feedback-msg" style="display:block;">${msgSummary}</div>
-                    <div style="display:flex; flex-direction:column; margin-bottom: 2px;">
-                        <div class="section-header-pill">Answer</div>
-                        <div class="feedback-reveal-text">${userFinalAnswerLabel}</div>
-                        <div class="feedback-secondary-reveal" style="display: ${secondaryTextReveal ? 'block' : 'none'};">${secondaryTextReveal}</div>
-                    </div>
-                    <div style="display:flex; flex-direction:column; margin-bottom: 2px;">
-                        <div class="section-header-pill">Why</div>
-                        <div id="fb-explanation-text">${whyTextVal}</div>
-                    </div>
-                    <button class="continue-stats-panel-btn" onclick="switchPanelTab('stats')">
-                        Continue to Stats ${getStaticBarGraphHtml('currentColor')}
-                    </button>
-                `;
-            } 
-            else if (tabName === 'stats') {
-                const stats = getHistoricalUserStats();
-                let statusTitle = "STATISTICS";
-                let statusClass = "summary";
-
-                let outcomeSymbol = (stats.lastPlayedDayStamp === new Date().toDateString()) ? ((stats.lastDayResult === "win") ? "✅" : "❌") : "-";
-                let todayPointsValue = (stats.lastPlayedDayStamp === new Date().toDateString()) ? (localStorage.getItem("td_today_score_cached") || "0") : "0";
-                let todayCluesValue = (stats.lastPlayedDayStamp === new Date().toDateString()) ? (stats.lastUsedClues || "0") : "0";
-                let average = stats.played > 0 ? (stats.totalPoints / stats.played).toFixed(1) : "0.0";
-
-                displayArea.innerHTML = `
-                    <div class="feedback-title ${statusClass}">${statusTitle}</div>
-                    <div style="display:flex; flex-direction:column; justify-content: space-between; height:100%;">
-                        <div>
-                            <div class="section-header-pill" style="width: max-content;">Today's Summary</div>
-                            <div class="stats-grid" id="today-stats-grid-element">
-                                <div class="stat-box"><div class="stat-val">${outcomeSymbol}</div><div class="stat-lbl">Result</div></div>
-                                <div class="stat-box"><div class="stat-val">${todayPointsValue}</div><div class="stat-lbl">Points Gained</div></div>
-                                <div class="stat-box"><div class="stat-val">${todayCluesValue}</div><div class="stat-lbl">Clues Used</div></div>
-                            </div>
-                            <button class="share-btn" id="share-today-btn" onclick="copySharePayload('today', 'share-today-btn')" style="margin-bottom: 6px;">Share Result</button>
-
-                            <div class="section-header-pill" style="margin-top: 14px; width: max-content;">All-Time Statistics</div>
-                            <div class="stats-grid">
-                                <div class="stat-box"><div class="stat-val">${stats.played}</div><div class="stat-lbl">Played</div></div>
-                                <div class="stat-box"><div class="stat-val">${stats.currentStreak}</div><div class="stat-lbl">Current Streak</div></div>
-                                <div class="stat-box"><div class="stat-val">${stats.maxStreak}</div><div class="stat-lbl">Max Streak</div></div>
-                                <div class="stat-box"><div class="stat-val">${stats.totalPoints}</div><div class="stat-lbl">Total Points</div></div>
-                                <div class="stat-box"><div class="stat-val">${average}</div><div class="stat-lbl">Average Score</div></div>
-                                <div class="stat-box"><div class="stat-val">${stats.highScore}</div><div class="stat-lbl">High Score</div></div>
-                            </div>
-                            <button class="share-btn" id="share-alltime-btn" onclick="copySharePayload('alltime', 'share-alltime-btn')">Share Career Stats</button>
-                        </div>
-                    </div>
-                `;
-                
-                setTimeout(() => {
-                    const grid = document.getElementById("today-stats-grid-element");
-                    if (grid) {
-                        const targetWidth = grid.offsetWidth;
-                        document.getElementById("share-today-btn").style.width = targetWidth + "px";
-                        document.getElementById("share-alltime-btn").style.width = targetWidth + "px";
-                    }
-                }, 1);
-            }
-        }
-
-        function clearInputStateGlow() {
-            const inputField = document.getElementById("game-input");
-            if (inputField.classList.contains("state-incorrect") && questionIncorrectAttempts < 2) {
-                inputField.classList.remove("state-incorrect");
-                inputField.disabled = false;
-                inputField.value = "";
-                inputField.placeholder = "enter answer here";
-                document.getElementById("submit-btn").disabled = false;
-                inputField.focus();
-            }
-        }
-
-        function refreshUiLayout() {
-            if (!todaysQuestionData) return;
-            
-            const stats = getHistoricalUserStats();
-            const currentDayStamp = new Date().toDateString();
-            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
-            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
-                return; 
-            }
-
-            const q = todaysQuestionData;
-            document.getElementById("header-q-idx").textContent = `Sequence #${currentQIdx + 1}`;
-            document.getElementById("alt-question-badge").style.display = q.hasAlt ? "inline-block" : "none";
-            
-            const isClueOneActive = (highestActiveClue >= 0);
-            
-            if (!isQuestionFinalized) {
-                const inputField = document.getElementById("game-input");
-                if (!inputField.classList.contains("state-incorrect")) {
-                    inputField.disabled = !isClueOneActive;
-                    if (!isClueOneActive) inputField.value = "";
-                }
-                document.getElementById("submit-btn").disabled = !isClueOneActive;
-            }
-
-            const hideBracketsUpfront = (currentQIdx === 7 || currentQIdx === 9 || !q.hasAlt);
-
             for (let i = 0; i < 4; i++) {
                 const card = document.getElementById(`card-${i}`);
-                if (i < 3) {
-                    const btn = document.getElementById(`rev-btn-${i}`);
-                    if (i <= highestActiveClue) {
-                        card.className = "clue-card revealed";
-                        let mainText = q.clues[i];
-                        if (currentQIdx === 8) {
-                            let parts = mainText.split(', ');
-                            mainText = `${parts[0]}<span class="club-sub-line">${parts[1]}</span>`;
-                        }
-                        
-                        if (q.hasAlt && q.alts[i] && !hideBracketsUpfront) {
-                            card.innerHTML = `<div class="hint-text-wrapper">${mainText}<br><span class="alt-clue-span">${q.alts[i]}</span></div>`;
-                        } else {
-                            card.innerHTML = `<div class="hint-text-wrapper">${mainText}</div>`;
-                        }
-                        btn.textContent = "Revealed";
-                        btn.disabled = true;
+                const clueTxt = document.getElementById(`clue-text-${i}`);
+                const altTxt = document.getElementById(`alt-${i}`);
+                const countTxt = document.getElementById(`count-${i}`);
+                const badge = document.getElementById(`badge-${i}`);
+
+                card.className = "grid-card";
+
+                if (i <= activeClueIndex) {
+                    clueTxt.textContent = activeClues[i];
+                    altTxt.textContent = activeAlts[i] || "";
+                    
+                    // Show points or completed labels
+                    if (isGameConcluded) {
+                        card.classList.add("revealed");
+                        badge.textContent = "Revealed";
                     } else {
-                        card.className = "clue-card";
-                        card.innerHTML = `<span class="clue-placeholder">CLUE ${i + 1}</span>`;
-                        btn.textContent = "Reveal";
-                        btn.disabled = (i !== highestActiveClue + 1) || isQuestionFinalized;
+                        if (i === activeClueIndex) {
+                            card.classList.add("active");
+                            badge.textContent = `${potentialValues[i]} pts`;
+                        } else {
+                            card.classList.add("revealed");
+                            badge.textContent = "Revealed";
+                        }
                     }
                 } else {
-                    card.className = "clue-card";
-                    renderAbstractCardBackground();
+                    clueTxt.textContent = "• • • • • • • • •";
+                    altTxt.textContent = "";
+                    badge.textContent = `${potentialValues[i]} pts`;
                 }
             }
-            if (!isQuestionFinalized) updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
         }
 
-        async function processGuess() {
-            if (isQuestionFinalized || highestActiveClue === -1) return;
+        function updateUIRowsForTurn() {
+            const potentialValues = [1000, 600, 300, 100];
+            const displayPotential = potentialValues[activeClueIndex];
             
-            const stats = getHistoricalUserStats();
-            const currentDayStamp = new Date().toDateString();
-            const sessionForced = localStorage.getItem("dev_force_q_index") !== null;
-            if (stats.lastPlayedDayStamp === currentDayStamp && !sessionForced) {
-                return; 
+            document.getElementById("points-potential-val").textContent = displayPotential.toLocaleString();
+            document.getElementById("attempts-val").textContent = `Attempts: ${attemptsCount}/${maxAttempts}`;
+
+            // Handle bottom-most clue progression locks
+            const revealBtn = document.getElementById("clue-reveal-btn");
+            if (activeClueIndex >= 3) {
+                revealBtn.style.display = "none";
+            } else {
+                revealBtn.style.display = "block";
             }
 
-            const inputField = document.getElementById("game-input");
-            const submitBtn = document.getElementById("submit-btn");
-            const userText = inputField.value;
-            
-            if (inputField.classList.contains("state-incorrect")) {
-                clearInputStateGlow();
-                return;
-            }
-            if (!userText.trim()) return;
+            let stats = getHistoricalUserStats();
+            document.getElementById("current-streak-val").textContent = stats.currentStreak;
+        }
 
-            const forcedParam = localStorage.getItem("dev_force_q_index") || "";
-            let apiEndpoint = `/api/game`;
-            if (forcedParam !== "") apiEndpoint += `?forcedIndex=${forcedParam}`;
+        function revealNextClueByChoice() {
+            if (isGameConcluded) return;
+            if (activeClueIndex < 3) {
+                activeClueIndex++;
+                attemptsCount = 0; // reset individual clue attempts
+                
+                safeStorage.setItem("td_midgame_active_clue", activeClueIndex);
+                safeStorage.setItem("td_midgame_attempts", attemptsCount);
+
+                renderSequenceCards();
+                updateUIRowsForTurn();
+                document.getElementById("incorrect-feedback").style.display = "none";
+            }
+        }
+
+        async function handleGuessSubmit(e) {
+            e.preventDefault();
+            if (isGameConcluded) return;
+
+            const inputEl = document.getElementById("guess-input");
+            const rawGuess = inputEl.value;
+            if (!rawGuess.trim()) return;
+
+            inputEl.value = "";
+            document.getElementById("incorrect-feedback").style.display = "none";
 
             try {
-                const response = await fetch(apiEndpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ guess: userText.trim() })
+                let url = API_ENDPOINT;
+                const forceParam = safeStorage.getItem("dev_force_q_index");
+                if (forceParam !== null) {
+                    url += `?forcedIndex=${forceParam}`;
+                }
+
+                const res = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ guess: rawGuess })
                 });
-                const serverResult = await response.json();
 
-                if (serverResult.correct) {
-                    resolvedServerAnswerPayload = serverResult;
-                    currentEarnedPoints = calculateCurrentAvailablePoints();
-                    
-                    inputField.className = "card-input-element state-correct";
-                    inputField.value = "CORRECT";
-                    inputField.disabled = true;
-                    if (submitBtn) submitBtn.disabled = true;
+                if (!res.ok) throw new Error("Verification failed");
+                const reply = await res.json();
 
-                    localStorage.setItem("td_today_match_idx", serverResult.matchIndex);
-                    
-                    localStorage.removeItem("td_midgame_active_clue");
-                    localStorage.removeItem("td_midgame_attempts");
-
-                    let targetAltText = todaysQuestionData.alts[3] || "";
-                    if (todaysQuestionData?.hasAlt && serverResult.matchIndex > 0 && serverResult.answers) {
-                        let cleanPrimary = serverResult.answers[0];
-                        targetAltText = `(or ${cleanPrimary})`;
-                    }
-
-                    commitResultsToPersistentCookies(true, currentEarnedPoints);
-                    finalizeCurrentQuestion(serverResult.primaryAnswer, "win", targetAltText);
-                    switchPanelTab('answers');
+                if (reply.correct) {
+                    recordSessionEndState(true);
                 } else {
-                    questionIncorrectAttempts++;
-                    
-                    if (localStorage.getItem("dev_force_q_index") === null) {
-                        localStorage.setItem("td_midgame_attempts", questionIncorrectAttempts);
-                    }
+                    attemptsCount++;
+                    safeStorage.setItem("td_midgame_attempts", attemptsCount);
 
-                    triggerScoreGlow("red");
-
-                    if (questionIncorrectAttempts < 2) {
-                        inputField.className = "card-input-element state-incorrect";
-                        inputField.value = "INCORRECT";
-                        
-                        updateHeaderScoreDisplay(calculateCurrentAvailablePoints());
-                        
-                        document.getElementById("fb-title").textContent = "Incorrect Attempt";
-                        document.getElementById("fb-title").className = "feedback-title alert";
-                        document.getElementById("fb-msg").innerHTML = "Your score has been halved and you have one attempt remaining. Click or type anywhere to retry.";
+                    if (attemptsCount >= maxAttempts) {
+                        if (activeClueIndex < 3) {
+                            revealNextClueByChoice();
+                        } else {
+                            recordSessionEndState(false);
+                        }
                     } else {
-                        currentEarnedPoints = 0;
-                        await fetchFullFinalAnswersData(forcedParam);
-                        
-                        localStorage.setItem("td_today_match_idx", "0");
-                        
-                        localStorage.removeItem("td_midgame_active_clue");
-                        localStorage.removeItem("td_midgame_attempts");
-
-                        let fallbackLabel = resolvedServerAnswerPayload?.answers[0] || "Unknown";
-                        let defaultFailSubtext = todaysQuestionData?.hasAlt ? todaysQuestionData?.alts[3] || "" : "";
-
-                        inputField.className = "card-input-element state-incorrect";
-                        inputField.value = "INCORRECT";
-                        inputField.disabled = true;
-                        if (submitBtn) submitBtn.disabled = true;
-
-                        commitResultsToPersistentCookies(false, 0);
-                        finalizeCurrentQuestion(fallbackLabel, "lose", defaultFailSubtext);
-                        switchPanelTab('answers');
+                        updateUIRowsForTurn();
+                        document.getElementById("incorrect-feedback").style.display = "block";
                     }
                 }
-            } catch(e) {
-                console.error("Cloud validation connection error:", e);
+
+            } catch (err) {
+                console.error("Verification error: ", err);
             }
         }
 
-        function commitResultsToPersistentCookies(isWin, pointsScored) {
+        async function recordSessionEndState(isWin) {
             let stats = getHistoricalUserStats();
-            const todayStamp = new Date().toDateString();
-            const yesterdayStamp = new Date(Date.now() - 86400000).toDateString();
+            stats.lastPlayedDayStamp = globalQuestionIndex;
+            stats.lastDayResult = isWin ? "won" : "lost";
+            stats.lastUsedClues = activeClueIndex;
 
-            if (stats.lastPlayedDayStamp === todayStamp && localStorage.getItem("dev_force_q_index") === null) return;
-
-            localStorage.setItem("td_today_score_cached", pointsScored);
-
-            stats.played += 1;
-            stats.totalPoints += pointsScored;
-            stats.lastUsedClues = highestActiveClue + 1;
-            if (pointsScored > stats.highScore) stats.highScore = pointsScored;
-
+            stats.playedCount += 1;
             if (isWin) {
-                if (stats.lastPlayedDayStamp === yesterdayStamp) {
-                    stats.currentStreak += 1;
-                } else {
-                    stats.currentStreak = 1;
+                stats.wonCount += 1;
+                stats.currentStreak += 1;
+                if (stats.currentStreak > stats.maxStreak) {
+                    stats.maxStreak = stats.currentStreak;
                 }
-                if (stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak;
-                stats.lastDayResult = "win";
             } else {
                 stats.currentStreak = 0;
-                stats.lastDayResult = "lose";
             }
 
-            stats.lastPlayedDayStamp = todayStamp;
+            // Calculate score earned
+            const scores = [1000, 600, 300, 100];
+            const finalScore = isWin ? scores[activeClueIndex] : 0;
+
+            // Push into recent points history
+            stats.dayHistory.push({
+                day: globalQuestionIndex + 1,
+                score: finalScore,
+                wasSuccess: isWin
+            });
+
+            // Restrict recent history arrays to last 5
+            if (stats.dayHistory.length > 5) {
+                stats.dayHistory.shift();
+            }
+
             saveHistoricalUserStats(stats);
-        }
 
-        function finalizeCurrentQuestion(primaryLabelToDisplay, statusOutcome, structuralCardAltText) {
-            isQuestionFinalized = true; 
-            userFinalAnswerLabel = primaryLabelToDisplay;
-            finalStatusOutcome = statusOutcome;
-            
-			document.getElementById("alt-question-badge").style.display = (todaysQuestionData && todaysQuestionData.hasAlt) ? "inline-block" : "none";
-            document.getElementById("ans-toggle-action").disabled = false;
-            document.getElementById("stats-toggle-action").disabled = false;
-            
-            const inputField = document.getElementById("game-input");
-            const submitBtn = document.getElementById("submit-btn");
-            
-            if (statusOutcome === "win") {
-                inputField.className = "card-input-element state-correct";
-                inputField.value = "CORRECT";
-            } else {
-                inputField.className = "card-input-element state-incorrect";
-                inputField.value = "INCORRECT";
-            }
-            inputField.disabled = true;
-            if (submitBtn) submitBtn.disabled = true;
+            // Clean active in-play caches
+            safeStorage.removeItem("td_midgame_active_clue");
+            safeStorage.removeItem("td_midgame_attempts");
 
-            const countsArray = resolvedServerAnswerPayload?.counts || ["?", "?", "?", "?"];
-
-            for(let i = 0; i < 4; i++) {
-                const card = document.getElementById(`card-${i}`);
-                card.className = "clue-card revealed";
-                let explanationMetric = `${countsArray[i]}`; 
-                let labelText = (i === 3) ? primaryLabelToDisplay : todaysQuestionData.clues[i];
-                
-                if (currentQIdx === 8) {
-                    let parts = labelText.split(', ');
-                    if (parts.length > 1) labelText = `${parts[0]}<span class="club-sub-line">${parts[1]}</span>`;
-                    else if (i === 3) labelText = primaryLabelToDisplay.toLowerCase().includes("januzaj") ? "Adnan Januzaj<span class=\"club-sub-line\">Manchester United</span>" : "Kostas Manolas<span class=\"club-sub-line\">Roma</span>";
-                }
-
-                if (currentQIdx === 7 && i === 3) {
-                    const words = primaryLabelToDisplay.split(' ');
-                    if (words.length >= 2) explanationMetric = `${words[0].charAt(0).toUpperCase()}${words[words.length - 1].charAt(0).toUpperCase()}`;
-                }
-
-                let displayBracketText = `[${explanationMetric}]`;
-
-                if (i === 3 && structuralCardAltText) {
-                    card.innerHTML = `<div class="hint-text-wrapper">${labelText}<br><span class="alt-clue-span">${structuralCardAltText}</span></div><div class="card-inline-metric">${displayBracketText}</div>`;
-                } else {
-                    let altTextHtml = (todaysQuestionData.hasAlt && todaysQuestionData.alts[i]) ? `<br><span class="alt-clue-span">${todaysQuestionData.alts[i]}</span>` : "";
-                    card.innerHTML = `<div class="hint-text-wrapper">${labelText}${altTextHtml}</div><div class="card-inline-metric">${displayBracketText}</div>`;
-                }
-
-                if(i < 3) {
-                    document.getElementById(`rev-btn-${i}`).disabled = true;
-                    document.getElementById(`rev-btn-${i}`).textContent = "Revealed";
-                }
-            }
-
-            updateHeaderScoreDisplay(currentEarnedPoints);
-        }
-
-        function runLiveMidnightClockEngine() {
-            if (countdownTickerInterval) clearInterval(countdownTickerInterval);
-            
-            const clockWidget = document.getElementById("header-countdown-clock");
-
-            function tick() {
-                const now = new Date();
-                const midnightUtc = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
-                const diff = midnightUtc - now.getTime();
-                
-                if (diff <= 0) {
-                    clearInterval(countdownTickerInterval);
-                    location.reload();
-                    return;
-                }
-
-                let hrs = Math.floor(diff / (1000 * 60 * 60));
-                let mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                let secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-                clockWidget.textContent = 
-                    `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            }
-
-            tick();
-            countdownTickerInterval = setInterval(tick, 1000);
-        }
-
-        function copySharePayload(mode, buttonId) {
-            const stats = getHistoricalUserStats();
-            let textToCopy = "";
-
-            if (mode === 'today') {
-                const symbol = (stats.lastDayResult === "win") ? "✅" : "❌";
-                const todayPts = localStorage.getItem("td_today_score_cached") || "0";
-                textToCopy = `Tony Dudek Sequences #${currentQIdx + 1}\nToday's Result: ${symbol}\nClues used: ${stats.lastUsedClues || 0} of 3\nPoints Gained: ${todayPts}\n\nPlay: ${window.location.origin}`;
-            } else {
-                let average = stats.played > 0 ? (stats.totalPoints / stats.played).toFixed(1) : "0.0";
-                textToCopy = `Tony Dudek Sequences: Career Stats\nPlayed: ${stats.played}\nActive Streak: ${stats.currentStreak} days\nMax Streak: ${stats.maxStreak} days\nTotal Points: ${stats.totalPoints}\nAvg Points: ${average}\n\nJoin the sequence: ${window.location.origin}`;
-            }
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const targetBtn = document.getElementById(buttonId);
-                if (targetBtn) {
-                    targetBtn.textContent = "COPIED TO CLIPBOARD";
-                    targetBtn.style.backgroundColor = "var(--success-green)";
-                    setTimeout(() => {
-                        targetBtn.textContent = (mode === 'today') ? "SHARE RESULT" : "SHARE CAREER STATS";
-                        targetBtn.style.backgroundColor = "var(--purple-alt)";
-                    }, 2000);
-                }
+            concludeDailySessionUI({
+                success: isWin,
+                revealedCluesCount: activeClueIndex
             });
         }
 
-        function devBuildQuestionDropdownOptions() {
-            const select = document.getElementById("dev-q-select");
-            select.innerHTML = "";
+        async function concludeDailySessionUI({ success, revealedCluesCount }) {
+            isGameConcluded = true;
+            activeClueIndex = 3; 
+
+            renderSequenceCards();
+
+            // Reveal full counts lists on all columns
+            try {
+                let url = API_ENDPOINT;
+                const forceParam = safeStorage.getItem("dev_force_q_index");
+                if (forceParam !== null) {
+                    url += `?forcedIndex=${forceParam}`;
+                }
+
+                const res = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ guess: "####REVEAL_FORCE_STATE####" })
+                });
+
+                if (res.ok) {
+                    const payload = await res.json();
+                    
+                    // Reveal count texts
+                    for (let i = 0; i < 4; i++) {
+                        const cellText = document.getElementById(`clue-text-${i}`);
+                        cellText.textContent = payload.answers[0] && i === 3 ? payload.answers[0] : activeClues[i];
+
+                        const countCell = document.getElementById(`count-${i}`);
+                        countCell.textContent = payload.counts[i] || "";
+                        countCell.style.visibility = "visible";
+
+                        const altCell = document.getElementById(`alt-${i}`);
+                        altCell.style.visibility = "visible";
+                    }
+
+                    // Show endgame summary blocks
+                    const panel = document.getElementById("endgame-explanation-panel");
+                    panel.style.display = "flex";
+                    document.getElementById("endgame-why-text").innerHTML = payload.whyText;
+                }
+            } catch(e) {
+                console.error("Endgame fetch breakdown: ", e);
+            }
+
+            // Mask input container
+            document.getElementById("interactive-panel").style.display = "none";
             
+            // Sync dashboard counters
+            let stats = getHistoricalUserStats();
+            document.getElementById("current-streak-val").textContent = stats.currentStreak;
+            
+            const scores = [1000, 600, 300, 100];
+            const displayPotential = success ? scores[revealedCluesCount] : 0;
+            document.getElementById("points-potential-val").textContent = displayPotential.toLocaleString();
+        }
+
+        function shareResults() {
+            let stats = getHistoricalUserStats();
+            const scores = [1000, 600, 300, 100];
+            const finalScore = (stats.lastDayResult === "won") ? scores[stats.lastUsedClues] : 0;
+
+            let shareEmojiGrid = "";
+            for (let i = 0; i < 4; i++) {
+                if (stats.lastDayResult === "won") {
+                    if (i < stats.lastUsedClues) {
+                        shareEmojiGrid += "🟦 "; // Revealed
+                    } else if (i === stats.lastUsedClues) {
+                        shareEmojiGrid += "🟩 "; // Solved on this
+                    } else {
+                        shareEmojiGrid += "⬛ "; // Unused
+                    }
+                } else {
+                    shareEmojiGrid += "🟥 "; // Failed
+                }
+            }
+
+            const shareText = `Toney Dudek: Daily Sequences\nDay ${globalQuestionIndex + 1}\nScore: ${finalScore.toLocaleString()} pts\n\n${shareEmojiGrid.trim()}\n\nPlay here: https://toney-dudek-sequences.vercel.app`;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    const fb = document.getElementById("share-copied-feedback");
+                    fb.style.display = "block";
+                    setTimeout(() => fb.style.display = "none", 2500);
+                });
+            } else {
+                alert("Sharing is not supported on this browser. Here is your result:\n\n" + shareText);
+            }
+        }
+
+        /* -----------------------------------------
+           MODALS CONTROLLERS & CAROUSEL SETUP
+        -------------------------------------------- */
+        function openHelpModal() {
+            document.getElementById("help-modal").style.display = "flex";
+            document.body.classList.add("locked-scroll");
+            currentExampleIndex = 0;
+            isExampleAnswerRevealed = false;
+            renderExampleSlide();
+        }
+
+        function closeHelpModal() {
+            document.getElementById("help-modal").style.display = "none";
+            document.body.classList.remove("locked-scroll");
+        }
+
+        function openStatsModal() {
+            document.getElementById("stats-modal").style.display = "flex";
+            document.body.classList.add("locked-scroll");
+            renderStatsDashboard();
+        }
+
+        function closeStatsModal() {
+            document.getElementById("stats-modal").style.display = "none";
+            document.body.classList.remove("locked-scroll");
+        }
+
+        function renderExampleSlide() {
+            const slide = EX_SLIDES[currentExampleIndex];
+            
+            // Set slide index header tracker
+            document.getElementById("example-tracker-label").textContent = slide.indexLabel;
+
+            // Generate card clues HTML dynamically
+            const gridContainer = document.getElementById("example-grid-container");
+            gridContainer.innerHTML = "";
+
+            // Special grid style logic for Example 3 (Lionel Messi Clues wrap matching)
+            if (slide.isSpecialEx6) {
+                gridContainer.className = "example-grid-layout ex6-layout";
+            } else {
+                gridContainer.className = "example-grid-layout";
+            }
+
+            for (let i = 0; i < 4; i++) {
+                const cardDiv = document.createElement("div");
+                cardDiv.className = "example-clue-card";
+
+                const badgeSpan = document.createElement("span");
+                badgeSpan.className = "ex-badge-val";
+                badgeSpan.textContent = `Clue ${i + 1}`;
+                cardDiv.appendChild(badgeSpan);
+
+                const clueTextSpan = document.createElement("span");
+                clueTextSpan.className = "ex-clue-main-text";
+                clueTextSpan.textContent = slide.clues[i];
+                cardDiv.appendChild(clueTextSpan);
+
+                const footerSpan = document.createElement("span");
+                footerSpan.className = "ex-clue-footer";
+                // Show count when revealed
+                footerSpan.textContent = isExampleAnswerRevealed ? (slide.counts[i] || "") : "";
+                cardDiv.appendChild(footerSpan);
+
+                gridContainer.appendChild(cardDiv);
+            }
+
+            // Sync explanation text container
+            const expText = document.getElementById("example-explanation-text");
+            if (isExampleAnswerRevealed) {
+                expText.innerHTML = slide.whyText;
+            } else {
+                expText.innerHTML = "Study the sequence. Can you spot the pattern before revealing?";
+            }
+
+            // Sync answer display slot
+            const ansSlot = document.getElementById("example-ans-slot");
+            const ansText = document.getElementById("example-ans-text");
+            if (isExampleAnswerRevealed) {
+                ansSlot.classList.add("visible");
+                ansText.textContent = slide.answers[0];
+            } else {
+                ansSlot.classList.remove("visible");
+                ansText.textContent = "";
+            }
+
+            // Reveal and Next buttons management
+            const revealBtn = document.getElementById("example-reveal-btn");
+            const nextBtn = document.getElementById("example-next-btn");
+
+            if (isExampleAnswerRevealed) {
+                revealBtn.style.display = "none";
+                nextBtn.style.display = "flex";
+            } else {
+                revealBtn.style.display = "block";
+                nextBtn.style.display = "none";
+            }
+        }
+
+        function revealExampleAnswer() {
+            isExampleAnswerRevealed = true;
+            renderExampleSlide();
+        }
+
+        function advanceExampleSlide() {
+            currentExampleIndex = (currentExampleIndex + 1) % EX_SLIDES.length;
+            isExampleAnswerRevealed = false;
+            renderExampleSlide();
+        }
+
+        function renderStatsDashboard() {
+            const stats = getHistoricalUserStats();
+
+            document.getElementById("stat-played").textContent = stats.playedCount;
+            
+            const winPct = stats.playedCount > 0 ? Math.round((stats.wonCount / stats.playedCount) * 100) : 0;
+            document.getElementById("stat-winpct").textContent = `${winPct}%`;
+            
+            document.getElementById("stat-streak").textContent = stats.currentStreak;
+            document.getElementById("stat-maxstreak").textContent = stats.maxStreak;
+
+            // Render 5-day historical bar graphs
+            const wrapper = document.getElementById("points-history-rows-wrapper");
+            wrapper.innerHTML = "";
+
+            if (stats.dayHistory.length === 0) {
+                const emptyMsg = document.createElement("p");
+                emptyMsg.style.fontSize = "0.8rem";
+                emptyMsg.style.color = "var(--grey-text)";
+                emptyMsg.style.textAlign = "center";
+                emptyMsg.style.padding = "1rem";
+                emptyMsg.textContent = "No history recorded yet. Complete today's puzzle!";
+                wrapper.appendChild(emptyMsg);
+                return;
+            }
+
+            // Iterate reverse to show most recent days at top
+            for (let i = stats.dayHistory.length - 1; i >= 0; i--) {
+                const historyItem = stats.dayHistory[i];
+
+                const row = document.createElement("div");
+                row.className = "history-row";
+
+                const label = document.createElement("span");
+                label.className = "history-day-lbl";
+                label.textContent = `Day ${historyItem.day}`;
+                row.appendChild(label);
+
+                const barContainer = document.createElement("div");
+                barContainer.className = "history-bar-container";
+
+                const bar = document.createElement("div");
+                bar.className = "history-bar";
+                if (!historyItem.wasSuccess) {
+                    bar.classList.add("failed");
+                }
+
+                // Width calculation based on maximum 1000 points
+                const percentage = Math.max(8, (historyItem.score / 1000) * 100);
+                // Set zero width initially to trigger transition animations
+                bar.style.width = "0%";
+                
+                const valSpan = document.createElement("span");
+                valSpan.className = "history-bar-val";
+                valSpan.textContent = historyItem.score.toLocaleString();
+                bar.appendChild(valSpan);
+
+                barContainer.appendChild(bar);
+                row.appendChild(barContainer);
+                wrapper.appendChild(row);
+
+                // Trigger animation transition after render
+                setTimeout(() => {
+                    bar.style.width = `${percentage}%`;
+                }, 50);
+            }
+        }
+
+        /* -----------------------------------------
+           DEVELOPER ENVIRONMENT UTILS
+        -------------------------------------------- */
+        function setupDeveloperDropdown() {
+            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+            const devPanel = document.getElementById("dev-sandbox");
+            
+            if (isLocal) {
+                devPanel.style.display = "flex";
+            } else {
+                devPanel.style.display = "none";
+                return;
+            }
+
+            const select = document.getElementById("dev-select-sequence");
+            select.innerHTML = "";
+
             let defaultOpt = document.createElement("option");
             defaultOpt.value = "";
-            defaultOpt.textContent = "-- Choose Variable Override --";
+            defaultOpt.textContent = "--- Active Sequence Config ---";
             select.appendChild(defaultOpt);
 
             for (let idx = 0; idx < 11; idx++) {
                 let opt = document.createElement("option");
                 opt.value = idx;
                 opt.textContent = `Sequence ${idx + 1}`;
-                if(localStorage.getItem("dev_force_q_index") == idx) opt.selected = true;
+                if (safeStorage.getItem("dev_force_q_index") == idx) opt.selected = true;
                 select.appendChild(opt);
             }
         }
@@ -1999,26 +1681,28 @@
             stats.lastDayResult = null;
             stats.lastUsedClues = 0;
             saveHistoricalUserStats(stats);
-            localStorage.removeItem("dev_force_q_index");
-            localStorage.removeItem("td_today_score_cached");
-            localStorage.removeItem("td_today_match_idx");
-            localStorage.removeItem("td_midgame_active_clue");
-            localStorage.removeItem("td_midgame_attempts");
+            safeStorage.removeItem("dev_force_q_index");
+            safeStorage.removeItem("td_today_score_cached");
+            safeStorage.removeItem("td_today_match_idx");
+            safeStorage.removeItem("td_midgame_active_clue");
+            safeStorage.removeItem("td_midgame_attempts");
             location.reload();
         }
 
         function devForceLoadQuestion(val) {
-            if(val === "") {
-                localStorage.removeItem("dev_force_q_index");
+            if (val === "") {
+                safeStorage.removeItem("dev_force_q_index");
             } else {
-                localStorage.setItem("dev_force_q_index", val);
+                safeStorage.setItem("dev_force_q_index", val);
             }
-            localStorage.removeItem("td_midgame_active_clue");
-            localStorage.removeItem("td_midgame_attempts");
+            safeStorage.removeItem("td_midgame_active_clue");
+            safeStorage.removeItem("td_midgame_attempts");
             location.reload();
         }
 
-        window.onload = runGameInitializationLifecycle;
+        window.onload = function() {
+            fetchSequenceConfig();
+        };
     </script>
 </body>
 </html>

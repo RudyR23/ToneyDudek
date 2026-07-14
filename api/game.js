@@ -167,7 +167,6 @@ export default async function handler(req, res) {
     }
 
     const poolSize = dailyDataset.length;
-    // Sequential progression linked directly to timeline days
     const mappedDatasetIndex = daysSinceLaunch % poolSize;
     const entry = dailyDataset[mappedDatasetIndex];
 
