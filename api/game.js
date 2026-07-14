@@ -50,8 +50,8 @@ const dailyDataset = [
         alts: ["", "", "", ""],
         counts: ["Barcelona", "Barcelona", "PSG", "Inter Miami"],
         whyText: 'These are the <span class="highlighted-explanation-span">last 4 shirt numbers worn by Lionel Messi</span> <span class="white-text-span">in club football</span>.',
-        answers: ["10", "10 in USA"],
-        accepted: [["10", "10 in usa"]]
+        answers: ["10 in USA", "10"],
+        accepted: [["10 in usa", "10"]]
     },
     {
         hasAlt: true,
@@ -167,6 +167,7 @@ export default async function handler(req, res) {
     }
 
     const poolSize = dailyDataset.length;
+    // Sequential progression linked directly to timeline days
     const mappedDatasetIndex = daysSinceLaunch % poolSize;
     const entry = dailyDataset[mappedDatasetIndex];
 
