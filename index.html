@@ -820,19 +820,25 @@
 
         .examples-popup-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             border-bottom: 1px solid rgba(137, 197, 247, 0.15);
             padding-bottom: 10px;
             margin-bottom: 12px;
         }
 
-        .examples-popup-title-text {
-            font-size: 0.85rem;
+        .examples-popup-footer {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(137, 197, 247, 0.15);
+            text-align: center;
+        }
+
+        .examples-popup-footer-text {
+            font-size: 0.9rem;
             font-weight: bold;
             color: var(--pure-white);
             line-height: 1.4;
-            padding-right: 25px;
         }
 
         .examples-close-x-btn {
@@ -863,11 +869,16 @@
             background-color: rgba(16, 37, 82, 0.4);
             border: 1px solid rgba(137, 197, 247, 0.1);
             border-radius: 8px;
-            padding: 10px 12px;
+            padding: 12px 14px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             transition: opacity 0.3s ease, filter 0.3s ease;
+            position: relative;
+            /* Force static fixed layout box height */
+            height: 180px;
+            min-height: 180px;
+            max-height: 180px;
         }
 
         /* Heavily grayed out / masked locked rows */
@@ -888,7 +899,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
 
         .example-mini-card {
@@ -906,6 +917,7 @@
             color: var(--grey-text);
             position: relative;
             overflow: hidden;
+            white-space: nowrap; /* Ensure they remain single lines */
         }
 
         .example-mini-card.revealed {
@@ -924,8 +936,9 @@
 
         .example-buttons-flexbox {
             display: flex;
-            gap: 6px;
-            margin-bottom: 6px;
+            justify-content: flex-start;
+            margin-top: 4px;
+            height: 24px;
         }
 
         .example-mini-btn {
@@ -954,9 +967,9 @@
         }
 
         .example-mini-next-btn {
-            background: rgba(168, 85, 247, 0.2);
-            border: 1px solid var(--purple-alt);
-            color: var(--purple-alt);
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success-green);
+            color: var(--success-green);
             height: 22px;
             padding: 0 10px;
             font-size: 0.65rem;
@@ -965,21 +978,31 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
+            position: absolute;
+            bottom: 12px;
+            right: 14px;
             display: none;
+            z-index: 10;
         }
 
         .example-mini-next-btn:hover {
-            background: var(--purple-alt);
-            color: var(--pure-white);
+            background: var(--success-green);
+            color: var(--dark-blue);
         }
 
         .example-explanation-why-text {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            line-height: 1.25;
             color: var(--answer-highlight);
             border-top: 1px solid rgba(137, 197, 247, 0.1);
             padding-top: 5px;
-            margin-top: 2px;
+            margin-top: 4px;
             display: none; /* Only reveals when requested */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
 
         @media (max-width: 768px) {
@@ -1024,6 +1047,12 @@
             }
             .examples-popup-container {
                 max-height: 98vh;
+            }
+            .example-row-item {
+                height: auto;
+                min-height: 160px;
+                max-height: none;
+                padding-bottom: 42px; /* make space for absolute next button */
             }
             .example-desc-text {
                 font-size: 0.8rem;
@@ -1127,7 +1156,6 @@
         <div class="examples-popup-container">
             <div class="examples-inner-border">
                 <div class="examples-popup-header">
-                    <div class="examples-popup-title-text">The game requires you to balance broad general football knowledge with the ability to spot subtle, sometimes cryptic, patterns. Good luck!</div>
                     <button class="examples-close-x-btn" onclick="closeExamplesPopupModal()">&times;</button>
                 </div>
                 <div class="examples-grid-layout">
@@ -1142,9 +1170,9 @@
                         </div>
                         <div class="example-buttons-flexbox">
                             <button class="example-mini-btn" id="ex-btn-0-3" onclick="revealExampleClueCard(0, 'Toes')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-0" onclick="goToNextExampleRow(0)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-0">The start of the famous sequence</div>
+                        <button class="example-mini-next-btn" id="ex-next-btn-0" onclick="goToNextExampleRow(0)">Next</button>
+                        <div class="example-explanation-why-text" id="ex-why-0">The start of the famous sequence.</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-1">
@@ -1157,9 +1185,9 @@
                         </div>
                         <div class="example-buttons-flexbox">
                             <button class="example-mini-btn" id="ex-btn-1-3" onclick="revealExampleClueCard(1, 'Ears')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-1" onclick="goToNextExampleRow(1)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-1">The middle section of the famous sequence</div>
+                        <button class="example-mini-next-btn" id="ex-next-btn-1" onclick="goToNextExampleRow(1)">Next</button>
+                        <div class="example-explanation-why-text" id="ex-why-1">The middle section of the famous sequence.</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-2">
@@ -1172,9 +1200,9 @@
                         </div>
                         <div class="example-buttons-flexbox">
                             <button class="example-mini-btn" id="ex-btn-2-3" onclick="revealExampleClueCard(2, 'Nose')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-2" onclick="goToNextExampleRow(2)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-2">The 4 four-letter words in the famous sequence, in order</div>
+                        <button class="example-mini-next-btn" id="ex-next-btn-2" onclick="goToNextExampleRow(2)">Next</button>
+                        <div class="example-explanation-why-text" id="ex-why-2">The four four-letter words in the famous sequence, in order.</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-3">
@@ -1187,9 +1215,9 @@
                         </div>
                         <div class="example-buttons-flexbox">
                             <button class="example-mini-btn" id="ex-btn-3-3" onclick="revealExampleClueCard(3, 'Ears')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-3" onclick="goToNextExampleRow(3)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-3">Everything in the famous sequence that humans have have two of, in order</div>
+                        <button class="example-mini-next-btn" id="ex-next-btn-3" onclick="goToNextExampleRow(3)">Next</button>
+                        <div class="example-explanation-why-text" id="ex-why-3">Everything in the famous sequence that humans have two of, in order.</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-4">
@@ -1202,25 +1230,28 @@
                         </div>
                         <div class="example-buttons-flexbox">
                             <button class="example-mini-btn" id="ex-btn-4-3" onclick="revealExampleClueCard(4, 'The Rest')">Reveal</button>
-                            <button class="example-mini-next-btn" id="ex-next-btn-4" onclick="goToNextExampleRow(4)">Next</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-4">Another famous sequence of words</div>
+                        <button class="example-mini-next-btn" id="ex-next-btn-4" onclick="goToNextExampleRow(4)">Next</button>
+                        <div class="example-explanation-why-text" id="ex-why-4">Another famous sequence of words.</div>
                     </div>
 
                     <div class="example-row-item locked-state" id="ex-row-5">
                         <div class="example-desc-text">Some might be more riddle-like</div>
                         <div class="example-cards-flexbox">
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at the front)</div>
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at the side)</div>
-                            <div class="example-mini-card revealed" style="font-size:0.65rem;">1 (at the front)</div>
-                            <div class="example-mini-card" id="ex-card-5-3"><span class="mini-card-qm">???</span></div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at front)</div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem;">2 (at side)</div>
+                            <div class="example-mini-card revealed" style="font-size:0.65rem;">1 (at front)</div>
+                            <div class="example-mini-card" id="ex-card-5-3" style="font-size:0.65rem;"><span class="mini-card-qm">???</span></div>
                         </div>
                         <div class="example-buttons-flexbox">
-                            <button class="example-mini-btn" id="ex-btn-5-3" onclick="revealExampleClueCard(5, '1 (at the front)')">Reveal</button>
+                            <button class="example-mini-btn" id="ex-btn-5-3" onclick="revealExampleClueCard(5, '1 (at front)')">Reveal</button>
                         </div>
-                        <div class="example-explanation-why-text" id="ex-why-5">Fingers used (and where) to point to the second half of the famous sequence</div>
+                        <div class="example-explanation-why-text" id="ex-why-5">Fingers used (and where) to point to the second half of the famous sequence.</div>
                     </div>
 
+                </div>
+                <div class="examples-popup-footer">
+                    <div class="examples-popup-footer-text">The game requires you to balance broad general football knowledge with the ability to spot subtle, sometimes cryptic, patterns. Good luck!</div>
                 </div>
             </div>
         </div>
@@ -1294,7 +1325,9 @@
             card.innerHTML = answerString;
             
             if(btn) btn.style.display = "none";
-            if(whyText) whyText.style.display = "block";
+            
+            // Set style to 'display: -webkit-box' to preserve -webkit-line-clamp constraints
+            if(whyText) whyText.style.display = "-webkit-box";
             if(nxtBtn) nxtBtn.style.display = "block";
         }
 
@@ -1400,6 +1433,7 @@
             
             if (localStorage.getItem("dev_force_q_index") === null) {
                 localStorage.setItem("td_midgame_active_clue", highestActiveClue);
+                localStorage.setItem("td_midgame_seq_idx", currentQIdx); // Cache current active sequence index
             }
             
             refreshUiLayout();
@@ -1419,6 +1453,7 @@
             localStorage.removeItem("td_today_match_idx");
             localStorage.removeItem("td_midgame_active_clue");
             localStorage.removeItem("td_midgame_attempts");
+            localStorage.removeItem("td_midgame_seq_idx");
             document.getElementById("dev-toolbox-wrapper").style.display = "none";
             location.reload(); 
         }
@@ -1503,17 +1538,28 @@
                 todaysQuestionData = data.question;
                 
                 if (!sessionForced) {
-                    let cachedClueState = localStorage.getItem("td_midgame_active_clue");
-                    if (cachedClueState !== null) {
-                        highestActiveClue = parseInt(cachedClueState);
+                    let cachedSeqIdx = localStorage.getItem("td_midgame_seq_idx");
+                    // Verify if saved midgame cache matches the current sequence[cite: 8, 9]
+                    if (cachedSeqIdx !== null && parseInt(cachedSeqIdx) === currentQIdx) {
+                        let cachedClueState = localStorage.getItem("td_midgame_active_clue");
+                        if (cachedClueState !== null) {
+                            highestActiveClue = parseInt(cachedClueState);
+                        } else {
+                            highestActiveClue = -1;
+                        }
+                        
+                        let cachedAttempts = localStorage.getItem("td_midgame_attempts");
+                        if (cachedAttempts !== null) {
+                            questionIncorrectAttempts = parseInt(cachedAttempts);
+                        } else {
+                            questionIncorrectAttempts = 0;
+                        }
                     } else {
+                        // Wipe outdated game-state cookies so new sequence gets fresh start[cite: 8]
+                        localStorage.removeItem("td_midgame_active_clue");
+                        localStorage.removeItem("td_midgame_attempts");
+                        localStorage.removeItem("td_midgame_seq_idx");
                         highestActiveClue = -1;
-                    }
-                    
-                    let cachedAttempts = localStorage.getItem("td_midgame_attempts");
-                    if (cachedAttempts !== null) {
-                        questionIncorrectAttempts = parseInt(cachedAttempts);
-                    } else {
                         questionIncorrectAttempts = 0;
                     }
                 } else {
@@ -1776,6 +1822,7 @@
                     
                     localStorage.removeItem("td_midgame_active_clue");
                     localStorage.removeItem("td_midgame_attempts");
+                    localStorage.removeItem("td_midgame_seq_idx");
 
                     let targetAltText = todaysQuestionData.alts[3] || "";
                     if (todaysQuestionData?.hasAlt && serverResult.matchIndex > 0 && serverResult.answers) {
@@ -1791,6 +1838,7 @@
                     
                     if (localStorage.getItem("dev_force_q_index") === null) {
                         localStorage.setItem("td_midgame_attempts", questionIncorrectAttempts);
+                        localStorage.setItem("td_midgame_seq_idx", currentQIdx);
                     }
 
                     triggerScoreGlow("red");
@@ -1812,6 +1860,7 @@
                         
                         localStorage.removeItem("td_midgame_active_clue");
                         localStorage.removeItem("td_midgame_attempts");
+                        localStorage.removeItem("td_midgame_seq_idx");
 
                         let fallbackLabel = resolvedServerAnswerPayload?.answers[0] || "Unknown";
                         let defaultFailSubtext = todaysQuestionData?.hasAlt ? todaysQuestionData?.alts[3] || "" : "";
@@ -2004,6 +2053,7 @@
             localStorage.removeItem("td_today_match_idx");
             localStorage.removeItem("td_midgame_active_clue");
             localStorage.removeItem("td_midgame_attempts");
+            localStorage.removeItem("td_midgame_seq_idx");
             location.reload();
         }
 
@@ -2015,6 +2065,7 @@
             }
             localStorage.removeItem("td_midgame_active_clue");
             localStorage.removeItem("td_midgame_attempts");
+            localStorage.removeItem("td_midgame_seq_idx");
             location.reload();
         }
 
